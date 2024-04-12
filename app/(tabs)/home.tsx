@@ -12,8 +12,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
-import Celulas from './celulas';
-import Eventos from './eventos';
+import Celulas from '../(tabs)/celulas';
+import Eventos from '../(tabs)/eventos';
 
 const statusBarHeight = StatusBar.currentHeight;
 
@@ -28,7 +28,7 @@ export default function Home() {
 
         <View style={styles.content}>
           <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={() => Eventos}>
+            <TouchableOpacity>
               <Image style={styles.images} source={require('../../assets/img/imersao.png')} />
               <View style={styles.textContainer}>
                 <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>
