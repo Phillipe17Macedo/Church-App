@@ -34,7 +34,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.phillipe17macedo.churchApp"
     },
     "extra": {
       "router": {
