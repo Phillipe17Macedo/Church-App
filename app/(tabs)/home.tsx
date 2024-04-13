@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   Image,
@@ -12,13 +13,17 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
-import Celulas from '../(tabs)/celulas';
-import Eventos from '../(tabs)/eventos';
-
 const statusBarHeight = StatusBar.currentHeight;
 
 export default function Home() {
+  const navigation = useNavigation<any>();
   const windowWidth = useWindowDimensions().width;
+  const handlePressEventos = () => {
+    navigation.navigate('eventos');
+  };
+  const handlePressCelulas = () => {
+    navigation.navigate('celulas');
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -28,7 +33,7 @@ export default function Home() {
 
         <View style={styles.content}>
           <View style={styles.containerEventos}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handlePressEventos}>
               <Image style={styles.images} source={require('../../assets/img/imersao.png')} />
               <View style={styles.textContainer}>
                 <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>
@@ -53,7 +58,7 @@ export default function Home() {
 
         <View style={styles.content}>
           <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={() => Eventos}>
+            <TouchableOpacity onPress={handlePressEventos}>
               <Image style={styles.images} source={require('../../assets/img/cultoIgreja.png')} />
               <View style={styles.textContainer}>
                 <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>
@@ -72,7 +77,7 @@ export default function Home() {
 
         <View style={styles.content}>
           <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={() => Eventos}>
+            <TouchableOpacity onPress={handlePressEventos}>
               <Image
                 style={styles.images}
                 source={require('../../assets/img/RK/encontro-kids.png')}
@@ -94,7 +99,7 @@ export default function Home() {
 
         <View style={styles.content}>
           <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={() => Celulas}>
+            <TouchableOpacity onPress={handlePressCelulas}>
               <Image style={styles.images} source={require('../../assets/img/RL/Jesus.jpeg')} />
               <View style={styles.textContainer}>
                 <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>CÉLULAS</Text>
@@ -111,7 +116,7 @@ export default function Home() {
 
         <View style={styles.content}>
           <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={() => Eventos}>
+            <TouchableOpacity onPress={handlePressEventos}>
               <Image style={styles.images} source={require('../../assets/img/RL/rl-united.jpg')} />
               <View style={styles.textContainer}>
                 <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>
@@ -134,7 +139,7 @@ export default function Home() {
 
         <View style={[styles.content, { marginBottom: 100 }]}>
           <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={() => Eventos}>
+            <TouchableOpacity onPress={handlePressEventos}>
               <Image style={styles.images} source={require('../../assets/img/encontro.png')} />
               <View style={styles.textContainer}>
                 <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>

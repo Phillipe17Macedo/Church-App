@@ -8,18 +8,25 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: '#B8D9D3',
         tabBarInactiveTintColor: '#fff',
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
         tabBarStyle: {
           position: 'absolute',
           backgroundColor: '#282A36',
           borderTopWidth: 0,
-
+          width: '90%',
           bottom: 15,
+          alignSelf: 'center',
           left: 15,
           right: 15,
           elevation: 0,
-          borderRadius: 15,
+          borderRadius: 20,
           height: 70,
+          paddingTop: 10,
+          paddingBottom: 12,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: 'bold',
         },
       }}>
       <Tabs.Screen
@@ -172,9 +179,5 @@ const styles = StyleSheet.create({
   },
   tabBarIcon: {
     marginBottom: -3,
-  },
-  tabBarLabel: {
-    fontSize: 12,
-    fontWeight: 'bold',
   },
 });
