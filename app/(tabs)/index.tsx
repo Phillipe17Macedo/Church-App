@@ -21,13 +21,16 @@ export default function Home() {
   const handlePressCelulas = () => {
     navigation.navigate('celulas');
   };
+  const CategoriaItem = ({ title }: { title: string }) => (
+    <View style={[styles.category]}>
+      <Text style={[styles.textCategory, { fontSize: windowWidth * 0.06 }]}>{title}</Text>
+    </View>
+  );
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <ScrollView>
-        <View style={[styles.category]}>
-          <Text style={[styles.textCategory, { fontSize: windowWidth * 0.05 }]}>Esta Semana</Text>
-        </View>
+        <CategoriaItem title="Esta Semana" />
 
         <View style={styles.content}>
           <View style={styles.containerEventos}>
@@ -48,11 +51,7 @@ export default function Home() {
           </View>
         </View>
 
-        <View style={styles.category}>
-          <Text style={[styles.textCategory, { fontSize: windowWidth * 0.05 }]}>
-            Eventos Final de Semana
-          </Text>
-        </View>
+        <CategoriaItem title="Este Final de Semana" />
 
         <View style={styles.content}>
           <View style={styles.containerEventos}>
@@ -131,9 +130,7 @@ export default function Home() {
           </View>
         </View>
 
-        <View style={styles.category}>
-          <Text style={[styles.textCategory, { fontSize: windowWidth * 0.05 }]}>Próximo Mês</Text>
-        </View>
+        <CategoriaItem title="Próximo Mês" />
 
         <View style={[styles.content, { marginBottom: 100 }]}>
           <View style={styles.containerEventos}>
