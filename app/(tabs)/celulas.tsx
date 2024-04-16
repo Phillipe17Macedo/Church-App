@@ -1,3 +1,4 @@
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {
   Image,
@@ -5,12 +6,10 @@ import {
   Text,
   View,
   ScrollView,
-  Platform,
   TouchableOpacity,
   Linking,
   useWindowDimensions,
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 
 export default function Celulas() {
   const windowWidth = useWindowDimensions().width;
@@ -69,6 +68,14 @@ export default function Celulas() {
             time="19:30"
             onPress={() => openGoogleMaps(-18.961282, -46.987652)}
           />
+
+          <CelulaItem
+            imageSource={require('../../assets/img/celulaAdonai.png')}
+            title="CÉLULA ADONAI"
+            date="Todos os Sábados"
+            time="15:30"
+            onPress={() => openGoogleMaps(-18.927672, -46.970893)}
+          />
         </ScrollView>
       </View>
     </>
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     flex: 1,
-    width: '100%',
+    width: '85%',
     height: 200,
     marginBottom: 20,
     backgroundColor: '#f1f1f1',

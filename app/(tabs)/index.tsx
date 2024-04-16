@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {
   Image,
@@ -6,12 +7,10 @@ import {
   Text,
   View,
   ScrollView,
-  Platform,
   SafeAreaView,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 
 export default function Home() {
   const navigation = useNavigation<any>();
