@@ -26,130 +26,91 @@ export default function Home() {
       <Text style={[styles.textCategory, { fontSize: windowWidth * 0.06 }]}>{title}</Text>
     </View>
   );
+  const EventosItem = ({
+    imageSource,
+    title,
+    date,
+    time,
+    onPress,
+    ultimoItem,
+  }: {
+    imageSource: any;
+    title: string;
+    date: string;
+    time: string;
+    onPress: () => void;
+    ultimoItem?: boolean;
+  }) => (
+    <View style={[styles.content, { marginBottom: ultimoItem ? 100 : 20 }]}>
+      <View style={[styles.containerEventos]}>
+        <TouchableOpacity onPress={handlePressEventos || handlePressCelulas}>
+          <Image source={imageSource} style={[styles.images]} />
+          <View style={styles.textContainer}>
+            <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>{title}</Text>
+            <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>Data: {date}</Text>
+            <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
+              Horário: {time}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <ScrollView>
         <CategoriaItem title="Esta Semana" />
 
-        <View style={styles.content}>
-          <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={handlePressEventos}>
-              <Image style={styles.images} source={require('../../assets/img/imersao.png')} />
-              <View style={styles.textContainer}>
-                <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>
-                  IMERSÃO MARCADOS PELO ESPIRÍTO
-                </Text>
-                <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>
-                  Data: 16 e 17 de Março
-                </Text>
-                <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-                  Valor: R$25,00
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <EventosItem
+          imageSource={require('../../assets/img/imersao.png')}
+          title="IMERSÃO MARCADOS PELO ESPIRÍTO"
+          date="27/04/2024"
+          time="19h - 22h"
+          onPress={() => handlePressEventos}
+        />
 
         <CategoriaItem title="Este Final de Semana" />
 
-        <View style={styles.content}>
-          <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={handlePressEventos}>
-              <Image style={styles.images} source={require('../../assets/img/cultoIgreja.png')} />
-              <View style={styles.textContainer}>
-                <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>
-                  CULTO DA FAMÍLIA
-                </Text>
-                <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>
-                  Data: Aos Domingos
-                </Text>
-                <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-                  Horário: 18:00
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.content}>
-          <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={handlePressEventos}>
-              <Image
-                style={styles.images}
-                source={require('../../assets/img/RK/encontro-kids.png')}
-              />
-              <View style={styles.textContainer}>
-                <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>
-                  CULTO RADICAIS KIDS
-                </Text>
-                <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>
-                  Data: Aos Domingos
-                </Text>
-                <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-                  Horário: 18:00
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.content}>
-          <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={handlePressCelulas}>
-              <Image style={styles.images} source={require('../../assets/img/RL/Jesus.jpeg')} />
-              <View style={styles.textContainer}>
-                <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>CÉLULAS</Text>
-                <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>
-                  Todas as Informações - Horários e Endereços
-                </Text>
-                <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-                  Valor: Grátis
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.content}>
-          <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={handlePressEventos}>
-              <Image style={styles.images} source={require('../../assets/img/RL/rl-united.jpg')} />
-              <View style={styles.textContainer}>
-                <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>
-                  REUNIÃO RADICAIS LIVRES
-                </Text>
-                <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>
-                  Data: 16 de Março
-                </Text>
-                <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-                  Horário: 18:00
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <EventosItem
+          imageSource={require('../../assets/img/cultoIgreja.png')}
+          title="CULTO DA FAMÍLIA"
+          date="21/04/2024"
+          time="18h - 20h"
+          onPress={() => handlePressEventos}
+        />
+        <EventosItem
+          imageSource={require('../../assets/img/RK/encontro-kids.png')}
+          title="CULTO RADICAIS KIDS"
+          date="21/04/2024"
+          time="18h - 20h"
+          onPress={() => handlePressEventos}
+        />
+        <EventosItem
+          imageSource={require('../../assets/img/RL/Jesus.jpeg')}
+          title="NOSSAS CÉLULAS"
+          date="TODA SEMANA"
+          time="18h - 20h"
+          onPress={() => handlePressCelulas}
+        />
+        <EventosItem
+          imageSource={require('../../assets/img/RL/rl-united.jpg')}
+          title="CULTOS E REUNIÕES RADICAIS LUVRES"
+          date="TODO SÁBADO"
+          time="15h - 21h"
+          onPress={() => handlePressCelulas}
+        />
 
         <CategoriaItem title="Próximo Mês" />
 
-        <View style={[styles.content, { marginBottom: 100 }]}>
-          <View style={styles.containerEventos}>
-            <TouchableOpacity onPress={handlePressEventos}>
-              <Image style={styles.images} source={require('../../assets/img/encontro.png')} />
-              <View style={styles.textContainer}>
-                <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>
-                  ENCONTRO COM DEUS
-                </Text>
-                <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>
-                  Data: 26 à 28 de Abril
-                </Text>
-                <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-                  Valor: R$50,00
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <EventosItem
+          imageSource={require('../../assets/img/encontro.png')}
+          title="ENCONTRO COM DEUS"
+          date="27 À 28 DE ABRIL"
+          time="INTEGRAL"
+          onPress={() => handlePressCelulas}
+          ultimoItem
+        />
       </ScrollView>
     </SafeAreaView>
   );
