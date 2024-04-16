@@ -31,20 +31,12 @@ export default function Home() {
   };
   const eventos: Evento[] = [
     {
-      imageSource: require('../../assets/img/imersao.png'),
-      title: 'IMERSÃO MARCADOS PELO ESPIRÍTO',
-      date: '27/04/2024',
-      time: '19h - 22h',
+      imageSource: require('../../assets/img/encontro.png'),
+      title: 'ENCONTRO COM DEUS',
+      date: '27 À 28 DE ABRIL',
+      time: 'INTEGRAL',
       onPress: handlePressEventos,
     },
-    {
-      imageSource: require('../../assets/img/cultoIgreja.png'),
-      title: 'CULTO DA FAMÍLIA',
-      date: '21/04/2024',
-      time: '18h - 20h',
-      onPress: handlePressEventos,
-    },
-    // Adicione mais eventos conforme necessário
   ];
   const CategoriaItem = ({ title }: { title: string }) => (
     <View style={[styles.category]}>
@@ -91,6 +83,47 @@ export default function Home() {
       <ScrollView>
         <CategoriaItem title="Esta Semana" />
 
+        <EventosItem
+          imageSource={require('../../assets/img/imersao.png')}
+          title="IMERSÃO MARCADOS PELO ESPIRÍTO"
+          date="27/04/2024"
+          time="19h - 22h"
+          onPress={handlePressEventos}
+        />
+
+        <CategoriaItem title="Este Final de Semana" />
+
+        <EventosItem
+          imageSource={require('../../assets/img/cultoIgreja.png')}
+          title="CULTO DA FAMÍLIA"
+          date="21/04/2024"
+          time="18h - 20h"
+          onPress={handlePressEventos}
+        />
+        <EventosItem
+          imageSource={require('../../assets/img/RK/encontro-kids.png')}
+          title="CULTO RADICAIS KIDS"
+          date="21/04/2024"
+          time="18h - 20h"
+          onPress={handlePressEventos}
+        />
+        <EventosItem
+          imageSource={require('../../assets/img/RL/Jesus.jpeg')}
+          title="NOSSAS CÉLULAS"
+          date="TODA SEMANA"
+          time="18h - 20h"
+          onPress={handlePressCelulas}
+        />
+        <EventosItem
+          imageSource={require('../../assets/img/RL/rl-united.jpg')}
+          title="CULTOS E REUNIÕES RADICAIS LUVRES"
+          date="TODO SÁBADO"
+          time="15h - 21h"
+          onPress={handlePressEventos}
+        />
+
+        <CategoriaItem title="Próximo Mês" />
+
         {eventos.map((evento, index) => (
           <EventosItem
             key={index}
@@ -102,54 +135,6 @@ export default function Home() {
             ultimoItem={index === eventos.length - 1}
           />
         ))}
-        <EventosItem
-          imageSource={require('../../assets/img/imersao.png')}
-          title="IMERSÃO MARCADOS PELO ESPIRÍTO"
-          date="27/04/2024"
-          time="19h - 22h"
-          onPress={() => handlePressEventos}
-        />
-
-        <CategoriaItem title="Este Final de Semana" />
-
-        <EventosItem
-          imageSource={require('../../assets/img/cultoIgreja.png')}
-          title="CULTO DA FAMÍLIA"
-          date="21/04/2024"
-          time="18h - 20h"
-          onPress={() => handlePressEventos}
-        />
-        <EventosItem
-          imageSource={require('../../assets/img/RK/encontro-kids.png')}
-          title="CULTO RADICAIS KIDS"
-          date="21/04/2024"
-          time="18h - 20h"
-          onPress={() => handlePressEventos}
-        />
-        <EventosItem
-          imageSource={require('../../assets/img/RL/Jesus.jpeg')}
-          title="NOSSAS CÉLULAS"
-          date="TODA SEMANA"
-          time="18h - 20h"
-          onPress={() => handlePressCelulas}
-        />
-        <EventosItem
-          imageSource={require('../../assets/img/RL/rl-united.jpg')}
-          title="CULTOS E REUNIÕES RADICAIS LUVRES"
-          date="TODO SÁBADO"
-          time="15h - 21h"
-          onPress={() => handlePressCelulas}
-        />
-
-        <CategoriaItem title="Próximo Mês" />
-
-        <EventosItem
-          imageSource={require('../../assets/img/encontro.png')}
-          title="ENCONTRO COM DEUS"
-          date="27 À 28 DE ABRIL"
-          time="INTEGRAL"
-          onPress={() => handlePressCelulas}
-        />
       </ScrollView>
     </SafeAreaView>
   );
