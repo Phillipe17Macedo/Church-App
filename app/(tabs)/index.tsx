@@ -7,13 +7,11 @@ import {
   View,
   ScrollView,
   Platform,
-  StatusBar,
   SafeAreaView,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-
-const statusBarHeight = StatusBar.currentHeight;
+import { StatusBar } from 'expo-status-bar';
 
 export default function Home() {
   const navigation = useNavigation<any>();
@@ -26,6 +24,7 @@ export default function Home() {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="auto" />
       <ScrollView>
         <View style={[styles.category]}>
           <Text style={[styles.textCategory, { fontSize: windowWidth * 0.05 }]}>Esta Semana</Text>
@@ -164,7 +163,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#040316',
-    paddingTop: Platform.OS === 'android' ? statusBarHeight : 25,
   },
   content: {
     alignItems: 'center',

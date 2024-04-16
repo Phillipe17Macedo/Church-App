@@ -5,12 +5,12 @@ import {
   Text,
   View,
   ScrollView,
-  StatusBar,
   Platform,
   TouchableOpacity,
   Linking,
   useWindowDimensions,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Celulas() {
   const windowWidth = useWindowDimensions().width;
@@ -51,6 +51,7 @@ export default function Celulas() {
 
   return (
     <>
+      <StatusBar style="auto" />
       <View style={styles.container}>
         <ScrollView>
           <CelulaItem
