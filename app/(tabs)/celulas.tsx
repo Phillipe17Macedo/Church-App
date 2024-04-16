@@ -11,54 +11,89 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
+interface Celula {
+  imageSource: any;
+  title: string;
+  date: string;
+  time: string;
+  endereco: string;
+  onPress: () => void;
+}
+
 export default function Celulas() {
   const windowWidth = useWindowDimensions().width;
 
-  const openGoogleMaps = (lat: number, lng: number) => {
-    const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+  const openGoogleMaps = (endereco: string) => {
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(endereco)}`;
     Linking.openURL(url);
   };
-
+  const celulas: Celula[] = [
+    {
+      imageSource: require('../../assets/img/encontro.png'),
+      title: 'CÉLULA TETELESTAI',
+      date: '27 À 28 DE ABRIL',
+      time: 'INTEGRAL',
+      endereco: 'Av. Brasil, 531, Serra Negra, Patrocínio',
+      onPress: () => openGoogleMaps('Av. Brasil, 531, Serra Negra, Patrocínio'),
+    },
+  ];
+  const CategoriaItem = ({ title }: { title: string }) => (
+    <View style={[styles.category]}>
+      <Text style={[styles.textCategory, { fontSize: windowWidth * 0.06 }]}>{title}</Text>
+    </View>
+  );
   const CelulaItem = ({
     imageSource,
     title,
     date,
     time,
+    endereco,
     onPress,
+    ultimoItem = false,
   }: {
     imageSource: any;
     title: string;
     date: string;
     time: string;
+    endereco: string;
     onPress: () => void;
-  }) => (
-    <View style={[styles.content, { marginTop: 20 }]}>
-      <View style={styles.containerEventos}>
-        <TouchableOpacity onPress={onPress}>
-          <Image source={imageSource} style={styles.images} />
-          <View style={styles.textContainer}>
-            <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>{title}</Text>
-            <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>Data: {date}</Text>
-            <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-              Horário: {time}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+    ultimoItem?: boolean;
+  }) => {
+    const marginBottom = ultimoItem ? 105 : 0;
 
+    return (
+      <View style={[styles.content, { marginBottom }, { marginTop: 20 }]}>
+        <View style={styles.containerEventos}>
+          <TouchableOpacity onPress={onPress}>
+            <Image source={imageSource} style={styles.images} />
+            <View style={styles.textContainer}>
+              <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>{title}</Text>
+              <Text style={[styles.textTwo, { fontSize: windowWidth * 0.03 }]}>Data: {date}</Text>
+              <Text style={[styles.textThree, { fontSize: windowWidth * 0.03 }]}>
+                Horário: {time}
+              </Text>
+              <Text style={[styles.textThree, { fontSize: windowWidth * 0.03 }]}>
+                Endereço: {endereco}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
   return (
     <>
       <StatusBar style="auto" />
       <View style={styles.container}>
         <ScrollView>
+          <CategoriaItem title="Célula de Jovens" />
           <CelulaItem
             imageSource={require('../../assets/img/celulaAdonai.png')}
             title="CÉLULA ADONAI"
             date="Todos os Sábados"
             time="15:30"
-            onPress={() => openGoogleMaps(-18.927672, -46.970893)}
+            endereco="Rua Sostenes Santos Souza, 401, Patrocínio"
+            onPress={() => openGoogleMaps('Rua Sostenes Santos Souza, 401, Patrocínio')}
           />
 
           <CelulaItem
@@ -66,16 +101,23 @@ export default function Celulas() {
             title="CÉLULA REVIVED"
             date="Todos os Sábados"
             time="19:30"
-            onPress={() => openGoogleMaps(-18.961282, -46.987652)}
+            endereco="Av Marciano Pires, 37, Patrocínio"
+            onPress={() => openGoogleMaps('Av Marciano Pires, 37, Patrocínio')}
           />
-
-          <CelulaItem
-            imageSource={require('../../assets/img/celulaAdonai.png')}
-            title="CÉLULA TETELESTAI"
-            date="Todos as Quartas-Feiras"
-            time="20:00"
-            onPress={() => openGoogleMaps(-18.927672, -46.970893)}
-          />
+          <CategoriaItem title="Célula de Adultos" />
+          {celulas.length > 0 &&
+            celulas.map((celula, index) => (
+              <CelulaItem
+                key={index}
+                imageSource={celula.imageSource}
+                title={celula.title}
+                date={celula.date}
+                time={celula.time}
+                endereco={celula.endereco}
+                onPress={celula.onPress}
+                ultimoItem={index === celulas.length - 1}
+              />
+            ))}
         </ScrollView>
       </View>
     </>
@@ -102,7 +144,7 @@ const styles = StyleSheet.create({
   containerEventos: {
     position: 'relative',
     width: '100%',
-    height: '65.08%',
+    height: '75%',
     textAlign: 'center',
     bottom: 35,
   },
@@ -118,7 +160,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 70,
+    height: 80,
     backgroundColor: '#3E4A59',
     paddingTop: 10,
     paddingLeft: 10,
@@ -134,11 +176,25 @@ const styles = StyleSheet.create({
   textTwo: {
     color: '#fff',
     textAlign: 'left',
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   textThree: {
     color: '#fff',
     textAlign: 'left',
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  category: {
+    marginTop: 20,
+    marginBottom: 5,
+    width: '85%',
+    height: 'auto',
+    alignSelf: 'center',
+  },
+  textCategory: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });
