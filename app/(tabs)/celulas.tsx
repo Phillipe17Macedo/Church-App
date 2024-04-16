@@ -71,9 +71,9 @@ export default function Celulas() {
 
           <CelulaItem
             imageSource={require('../../assets/img/celulaAdonai.png')}
-            title="CÉLULA ADONAI"
-            date="Todos os Sábados"
-            time="15:30"
+            title="CÉLULA TETELESTAI"
+            date="Todos as Quartas-Feiras"
+            time="20:00"
             onPress={() => openGoogleMaps(-18.927672, -46.970893)}
           />
         </ScrollView>
