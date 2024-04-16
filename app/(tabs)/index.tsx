@@ -12,6 +12,14 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
+interface Evento {
+  imageSource: any;
+  title: string;
+  date: string;
+  time: string;
+  onPress: () => void;
+}
+
 export default function Home() {
   const navigation = useNavigation<any>();
   const windowWidth = useWindowDimensions().width;
@@ -21,6 +29,23 @@ export default function Home() {
   const handlePressCelulas = () => {
     navigation.navigate('celulas');
   };
+  const eventos: Evento[] = [
+    {
+      imageSource: require('../../assets/img/imersao.png'),
+      title: 'IMERSÃO MARCADOS PELO ESPIRÍTO',
+      date: '27/04/2024',
+      time: '19h - 22h',
+      onPress: handlePressEventos,
+    },
+    {
+      imageSource: require('../../assets/img/cultoIgreja.png'),
+      title: 'CULTO DA FAMÍLIA',
+      date: '21/04/2024',
+      time: '18h - 20h',
+      onPress: handlePressEventos,
+    },
+    // Adicione mais eventos conforme necessário
+  ];
   const CategoriaItem = ({ title }: { title: string }) => (
     <View style={[styles.category]}>
       <Text style={[styles.textCategory, { fontSize: windowWidth * 0.06 }]}>{title}</Text>
@@ -32,7 +57,7 @@ export default function Home() {
     date,
     time,
     onPress,
-    ultimoItem,
+    ultimoItem = false,
   }: {
     imageSource: any;
     title: string;
@@ -40,28 +65,43 @@ export default function Home() {
     time: string;
     onPress: () => void;
     ultimoItem?: boolean;
-  }) => (
-    <View style={[styles.content, { marginBottom: ultimoItem ? 100 : 20 }]}>
-      <View style={[styles.containerEventos]}>
-        <TouchableOpacity onPress={handlePressEventos || handlePressCelulas}>
-          <Image source={imageSource} style={[styles.images]} />
-          <View style={styles.textContainer}>
-            <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>{title}</Text>
-            <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>Data: {date}</Text>
-            <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-              Horário: {time}
-            </Text>
-          </View>
-        </TouchableOpacity>
+  }) => {
+    const marginBottom = ultimoItem ? 100 : 20;
+
+    return (
+      <View style={[styles.content, { marginBottom }]}>
+        <View style={styles.containerEventos}>
+          <TouchableOpacity onPress={onPress}>
+            <Image source={imageSource} style={styles.images} />
+            <View style={styles.textContainer}>
+              <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>{title}</Text>
+              <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>Data: {date}</Text>
+              <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
+                Horário: {time}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <ScrollView>
         <CategoriaItem title="Esta Semana" />
 
+        {eventos.map((evento, index) => (
+          <EventosItem
+            key={index}
+            imageSource={evento.imageSource}
+            title={evento.title}
+            date={evento.date}
+            time={evento.time}
+            onPress={evento.onPress}
+            ultimoItem={index === eventos.length - 1}
+          />
+        ))}
         <EventosItem
           imageSource={require('../../assets/img/imersao.png')}
           title="IMERSÃO MARCADOS PELO ESPIRÍTO"
@@ -109,7 +149,6 @@ export default function Home() {
           date="27 À 28 DE ABRIL"
           time="INTEGRAL"
           onPress={() => handlePressCelulas}
-          ultimoItem
         />
       </ScrollView>
     </SafeAreaView>
