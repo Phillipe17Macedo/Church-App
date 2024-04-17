@@ -120,6 +120,14 @@ export default function Celulas() {
             ))}
         </ScrollView>
       </View>
+import { Stack } from 'expo-router';
+import { StyleSheet, View } from 'react-native';
+
+export default function Celulas() {
+  return (
+    <>
+      <Stack.Screen options={{ title: 'Células' }} />
+      <View style={styles.container} />
     </>
   );
 }
@@ -196,5 +204,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 18,
+=======
+    padding: 24,
   },
 });
