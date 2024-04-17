@@ -22,7 +22,6 @@ export default function RootLayout() {
           },
         }}
       />
-      <Stack.Screen name="perfil" options={{ title: 'Perfil' }} />
     </Stack>
   );
 }

@@ -186,8 +186,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   category: {
-    marginTop: 20,
-    marginBottom: 5,
+    marginTop: 5,
+    marginBottom: -7,
     width: '85%',
     height: 'auto',
     alignSelf: 'center',
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   textCategory: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 18,
-    padding: 24,
+    fontSize: 21,
+    padding: 10,
   },
 });
