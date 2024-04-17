@@ -15,14 +15,9 @@ import {
 
 import { salvarUsuario } from '../utils/firebase';
 
-export default function Perfil() {
+export default function Login() {
   const [nome, setNome] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [email, setEmail] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
   const [senha, setSenha] = useState('');
-  const [usuario, setUsuario] = useState('');
 
   const gerarID = () => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
@@ -37,12 +32,7 @@ export default function Perfil() {
     const novoUsuario = {
       id: gerarID(),
       nome,
-      telefone,
-      endereco,
-      email,
-      dataNascimento,
       senha,
-      usuario,
     };
 
     salvarUsuario(novoUsuario);
@@ -62,51 +52,11 @@ export default function Perfil() {
           />
           <TextInput
             style={[styles.inputDados]}
-            keyboardType="phone-pad"
-            placeholder="WhatsApp"
-            editable={editMode}
-            value={telefone}
-            onChangeText={(text) => setTelefone(text)}
-          />
-          <TextInput
-            style={[styles.inputDados]}
-            keyboardType="default"
-            placeholder="Endereço"
-            editable={editMode}
-            value={endereco}
-            onChangeText={(text) => setEndereco(text)}
-          />
-          <TextInput
-            style={[styles.inputDados]}
-            keyboardType="email-address"
-            placeholder="Email"
-            editable={editMode}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-          <TextInput
-            style={[styles.inputDados]}
-            keyboardType="decimal-pad"
-            placeholder="Data de Nascimento"
-            editable={editMode}
-            value={dataNascimento}
-            onChangeText={(text) => setDataNascimento(text)}
-          />
-          <TextInput
-            style={[styles.inputDados]}
             keyboardType="visible-password"
             placeholder="Senha"
             editable={editMode}
             value={senha}
             onChangeText={(text) => setSenha(text)}
-          />
-          <TextInput
-            style={[styles.inputDados]}
-            keyboardType="default"
-            placeholder="Função"
-            editable={editMode}
-            value={usuario}
-            onChangeText={(text) => setUsuario(text)}
           />
         </View>
 
@@ -121,7 +71,6 @@ export default function Perfil() {
         )}
 
         <View style={[styles.containerTextLink]}>
-          <Link href="/login" style={[styles.textLink]}>LOGIN</Link>
           <Link href="/sign" style={[styles.textLink]} >CADASTRAR-SE</Link>
         </View>
       </ScrollView>
@@ -140,7 +89,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent:'space-between',
     flexDirection: 'column',
-    marginTop: 20,
+    marginTop: 50,
     paddingTop: 15,
     paddingBottom: 5,
     borderRadius: 20,
