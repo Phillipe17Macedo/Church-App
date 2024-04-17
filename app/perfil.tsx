@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -16,18 +16,18 @@ import {
 import { salvarUsuario } from '../utils/firebase';
 
 export default function Perfil() {
-  const [nome, setNome] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [email, setEmail] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
-  const [senha, setSenha] = useState('');
-  const [usuario, setUsuario] = useState('');
+  const router = useRouter();
+  const route = router.route;
+  const usuario = route ? route.params.usuario : {};
 
-  const gerarID = () => {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
-  };
-
+  const [nome, setNome] = useState(usuario.nome || '');
+  const [telefone, setTelefone] = useState(usuario.telefone || '');
+  const [endereco, setEndereco] = useState(usuario.endereco || '');
+  const [email, setEmail] = useState(usuario.email || '');
+  const [dataNascimento, setDataNascimento] = useState(usuario.dataNascimento || '');
+  const [senha, setSenha] = useState(usuario.senha || '');
+  const [funcao, setFuncao] = useState(usuario.funcao || '');
+  
   const [editMode, setEditMode] = useState(false);
   const handleEditPress = () => {
     setEditMode(true);
@@ -35,14 +35,14 @@ export default function Perfil() {
   const handleSavePress = () => {
     setEditMode(false);
     const novoUsuario = {
-      id: gerarID(),
+      id: usuario.id,
       nome,
       telefone,
       endereco,
       email,
       dataNascimento,
       senha,
-      usuario,
+      funcao,
     };
 
     salvarUsuario(novoUsuario);
@@ -105,8 +105,8 @@ export default function Perfil() {
             keyboardType="default"
             placeholder="Função"
             editable={editMode}
-            value={usuario}
-            onChangeText={(text) => setUsuario(text)}
+            value={funcao}
+            onChangeText={(text) => setFuncao(text)}
           />
         </View>
 

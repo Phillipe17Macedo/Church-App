@@ -26,10 +26,30 @@ interface Usuario {
   email: string;
   dataNascimento: string;
   senha: string;
-  usuario: string;
+  funcao: string;
 }
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
+
+export const loginUsuario = async (nomeUsuario: string, senha: string) => {
+  const usuariosRef = ref(database, 'usuarios');
+  try {
+    const snapshot = await get(usuariosRef);
+    let usuarioEncontrado = null; // Inicializa como null
+    snapshot.forEach((childSnapshot) => {
+      const usuario = childSnapshot.val();
+      if (usuario.nome === nomeUsuario && usuario.senha === senha) {
+        // Aqui você pode definir a lógica para o login bem-sucedido
+        console.log('Usuário logado com sucesso:', usuario);
+        usuarioEncontrado = usuario; // Define o usuário encontrado
+      }
+    });
+    return usuarioEncontrado; // Retorna o usuário encontrado ou null se não encontrou
+  } catch (error) {
+    console.error('Erro ao fazer login:', error);
+    throw error; // Lança o erro para que ele possa ser tratado em outro lugar
+  }
+};
 
 export const salvarUsuario = (usuario: Usuario) => {
   const usuariosRef = ref(database, 'usuarios');
@@ -81,7 +101,7 @@ export const buscarDadosDoBanco = async () => {
         'email' in usuarioData &&
         'dataNascimento' in usuarioData &&
         'senha' in usuarioData &&
-        'usuario' in usuarioData
+        'funcao' in usuarioData
       ) {
         // Criar um objeto Usuario manualmente a partir dos dados do snapshot
         const usuario: Usuario = {
@@ -92,7 +112,7 @@ export const buscarDadosDoBanco = async () => {
           email: usuarioData.email,
           dataNascimento: usuarioData,
           senha: usuarioData.senha,
-          usuario: usuarioData.usuario,
+          funcao: usuarioData.funcao,
         };
         dados.push(usuario);
       }
