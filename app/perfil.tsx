@@ -11,11 +11,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { salvarUsuario } from '../utils/firebase';
+
 export default function Perfil() {
   const [nome, setNome] = useState('');
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
   const [email, setEmail] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
   const [senha, setSenha] = useState('');
   const [usuario, setUsuario] = useState('');
 
@@ -33,7 +36,9 @@ export default function Perfil() {
       id: gerarID(),
       nome,
       telefone,
+      endereco,
       email,
+      dataNascimento,
       senha,
       usuario,
     };
@@ -81,8 +86,17 @@ export default function Perfil() {
         />
         <TextInput
           style={[styles.inputDados]}
+          keyboardType="decimal-pad"
+          placeholder="Data de Nascimento"
+          editable={editMode}
+          value={dataNascimento}
+          onChangeText={(text) => setDataNascimento(text)}
+        />
+        <TextInput
+          style={[styles.inputDados]}
           keyboardType="visible-password"
           placeholder="Senha"
+          editable={editMode}
           value={senha}
           onChangeText={(text) => setSenha(text)}
         />
