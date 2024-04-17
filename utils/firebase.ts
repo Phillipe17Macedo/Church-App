@@ -9,14 +9,14 @@ import { getDatabase, update, ref, set, get, push, DataSnapshot } from 'firebase
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.EXPO_PUBLIC_FIREBASE_DATABASE_URL,
-  projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  apiKey: 'AIzaSyCyhMAnKhc2y_2EzP2LyO7-AbVEBjgj2ek',
+  authDomain: 'videiraapp.firebaseapp.com',
+  databaseURL: 'https://videiraapp-default-rtdb.firebaseio.com',
+  projectId: 'videiraapp',
+  storageBucket: 'videiraapp.appspot.com',
+  messagingSenderId: '348499807286',
+  appId: '1:348499807286:web:c9bcbc26c1c9acad9adc97',
+  measurementId: 'G-KHDPWMVYNN',
 };
 interface Usuario {
   id: string;
