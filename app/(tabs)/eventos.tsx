@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Stack } from 'expo-router';
-import { StyleSheet, View, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, View, Text } from 'react-native';
 export default function Eventos() {
   return (
     <>

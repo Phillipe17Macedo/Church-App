@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
@@ -154,15 +155,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-import { Platform, View, Text} from 'react-native';
-
-export default function Perfil() {
-  return (
-    <>
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      <View>
-        <Text>Tela Perfil</Text>
-      </View>
-    </>
-  );
-}
