@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
@@ -13,7 +14,18 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { loginUsuario } from '../utils/firebase';
+import { loginUsuario} from '../utils/firebase';
+
+interface Usuario{
+  id: string;
+  nome: string;
+  telefone: string;
+  endereco: string;
+  email: string;
+  dataNascimento: string;
+  senha: string;
+  funcao: string;
+}
 
 export default function Login() {
   const navigation = useNavigation();
@@ -22,8 +34,10 @@ export default function Login() {
 
   const handleLoginPress = async () => {
     try {
-      const usuarioLogado = await loginUsuario(nome, senha);
+      const usuarioLogado: Usuario | null = await loginUsuario(nome, senha);
       if (usuarioLogado !== null) {
+        // Armazenar a chave única do usuário no AsyncStorage
+        await AsyncStorage.setItem('userId', usuarioLogado.id);
         navigation.navigate('perfil', { usuario: usuarioLogado });
       } else {
         console.log('Credenciais inválidas. Usuário não encontrado.');

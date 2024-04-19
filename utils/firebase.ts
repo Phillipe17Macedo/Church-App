@@ -31,23 +31,26 @@ interface Usuario {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-export const loginUsuario = async (nomeUsuario: string, senha: string) => {
+export const loginUsuario = async (nomeUsuario: string, senha: string): Promise<Usuario | null> => {
   const usuariosRef = ref(database, 'usuarios');
   try {
     const snapshot = await get(usuariosRef);
-    let usuarioEncontrado = null; // Inicializa como null
+    let usuarioEncontrado: Usuario | null = null; // Inicializa como null
     snapshot.forEach((childSnapshot) => {
       const usuario = childSnapshot.val();
-      if (usuario.nome === nomeUsuario && usuario.senha === senha) {
-        // Aqui você pode definir a lógica para o login bem-sucedido
+      if (usuario && usuario.nome === nomeUsuario && usuario.senha === senha) {
+        // Verifica se o usuário não é nulo e se as credenciais correspondem
         console.log('Usuário logado com sucesso:', usuario);
-        usuarioEncontrado = usuario; // Define o usuário encontrado
+        usuarioEncontrado = {
+          id: childSnapshot.key,
+          ...usuario,
+        }; // Define o usuário encontrado
       }
     });
     return usuarioEncontrado; // Retorna o usuário encontrado ou null se não encontrou
   } catch (error) {
     console.error('Erro ao fazer login:', error);
-    throw error; // Lança o erro para que ele possa ser tratado em outro lugar
+    throw new Error('Erro ao fazer login'); // Lança o erro para que ele possa ser tratado em outro lugar
   }
 };
 

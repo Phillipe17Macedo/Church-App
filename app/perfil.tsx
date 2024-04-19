@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { Link, useNavigation, useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import {
@@ -15,38 +16,50 @@ import {
 
 import { salvarUsuario, buscarDadosDoBanco } from '../utils/firebase';
 
-export default function Perfil() {
-  const route = useRouter(); // Alteração aqui
-  const usuario = route.params?.usuario || {}; // Alteração aqui
+interface Usuario {
+  id: string;
+  nome: string;
+  telefone: string;
+  endereco: string;
+  email: string;
+  dataNascimento: string;
+  senha: string;
+  funcao: string;
+}
 
-  const [nome, setNome] = useState(usuario.nome || '');
-  const [telefone, setTelefone] = useState(usuario.telefone || '');
-  const [endereco, setEndereco] = useState(usuario.endereco || '');
-  const [email, setEmail] = useState(usuario.email || '');
-  const [dataNascimento, setDataNascimento] = useState(usuario.dataNascimento || '');
-  const [senha, setSenha] = useState(usuario.senha || '');
-  const [funcao, setFuncao] = useState(usuario.funcao || '');
+export default function Perfil() {
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
+
+  const [nome, setNome] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [endereco, setEndereco] = useState('');
+  const [email, setEmail] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
+  const [senha, setSenha] = useState('');
+  const [funcao, setFuncao] = useState('');
   
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    if (usuario.id) {
-      buscarDadosUsuario(usuario.id);
-    }
-  }, [usuario.id]);
+    buscarDadosUsuario(); // Buscar os dados do usuário ao abrir a tela de perfil
+  }, []);
 
-  const buscarDadosUsuario = async (userId: string) => {
+  const buscarDadosUsuario = async () => {
     try {
-      const dados = await buscarDadosDoBanco();
-      const usuarioEncontrado = dados.find(usuario => usuario.id === userId);
-      if (usuarioEncontrado) {
-        setNome(usuarioEncontrado.nome || '');
-        setTelefone(usuarioEncontrado.telefone || '');
-        setEndereco(usuarioEncontrado.endereco || '');
-        setEmail(usuarioEncontrado.email || '');
-        setDataNascimento(usuarioEncontrado.dataNascimento || '');
-        setSenha(usuarioEncontrado.senha || '');
-        setFuncao(usuarioEncontrado.funcao || '');
+      const userId = await AsyncStorage.getItem('userId');
+      if(userId){
+        const usuarioEncontrado = await buscarDadosDoBanco(userId);
+        if (usuarioEncontrado && usuarioEncontrado.length > 0) {
+          const primeiroUsuario = usuarioEncontrado[0];
+          setUsuario(primeiroUsuario);
+          setNome(primeiroUsuario.nome || 'Não Encontrado');
+          setTelefone(primeiroUsuario.telefone || 'Não Encontrado');
+          setEndereco(primeiroUsuario.endereco || 'Não Encontrado');
+          setEmail(primeiroUsuario.email || 'Não Encontrado');
+          setDataNascimento(primeiroUsuario.dataNascimento || 'Não Encontrado');
+          setSenha(primeiroUsuario.senha || 'Não Encontrado');
+          setFuncao(primeiroUsuario.funcao || 'Não Encontrado');
+        }
       }
     } catch (error) {
       console.error('Erro ao buscar dados do usuário:', error);
@@ -59,7 +72,7 @@ export default function Perfil() {
   const handleSavePress = () => {
     setEditMode(false);
     const novoUsuario = {
-      id: usuario.id,
+      id: usuario?.id || '',
       nome,
       telefone,
       endereco,
