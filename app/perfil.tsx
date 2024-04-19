@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Link, useRouter } from 'expo-router';
+import { Link, useNavigation, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import {
@@ -13,12 +13,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { salvarUsuario } from '../utils/firebase';
+import { salvarUsuario, buscarDadosDoBanco } from '../utils/firebase';
 
 export default function Perfil() {
-  const router = useRouter();
-  const route = router.route;
-  const usuario = route ? route.params.usuario : {};
+  const route = useRouter(); // Alteração aqui
+  const usuario = route.params?.usuario || {}; // Alteração aqui
 
   const [nome, setNome] = useState(usuario.nome || '');
   const [telefone, setTelefone] = useState(usuario.telefone || '');
@@ -29,6 +28,31 @@ export default function Perfil() {
   const [funcao, setFuncao] = useState(usuario.funcao || '');
   
   const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    if (usuario.id) {
+      buscarDadosUsuario(usuario.id);
+    }
+  }, [usuario.id]);
+
+  const buscarDadosUsuario = async (userId: string) => {
+    try {
+      const dados = await buscarDadosDoBanco();
+      const usuarioEncontrado = dados.find(usuario => usuario.id === userId);
+      if (usuarioEncontrado) {
+        setNome(usuarioEncontrado.nome || '');
+        setTelefone(usuarioEncontrado.telefone || '');
+        setEndereco(usuarioEncontrado.endereco || '');
+        setEmail(usuarioEncontrado.email || '');
+        setDataNascimento(usuarioEncontrado.dataNascimento || '');
+        setSenha(usuarioEncontrado.senha || '');
+        setFuncao(usuarioEncontrado.funcao || '');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar dados do usuário:', error);
+    }
+  };
+
   const handleEditPress = () => {
     setEditMode(true);
   };

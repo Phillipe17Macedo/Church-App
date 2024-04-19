@@ -23,8 +23,7 @@ export default function Login() {
   const handleLoginPress = async () => {
     try {
       const usuarioLogado = await loginUsuario(nome, senha);
-      if (usuarioLogado) {
-        // Navegar para a tela de perfil com os dados do usuário
+      if (usuarioLogado !== null) {
         navigation.navigate('perfil', { usuario: usuarioLogado });
       } else {
         console.log('Credenciais inválidas. Usuário não encontrado.');

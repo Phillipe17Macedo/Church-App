@@ -22,18 +22,12 @@ export default function Sign() {
   const [email, setEmail] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [senha, setSenha] = useState('');
-  const [usuario, setUsuario] = useState('');
+  const [funcao, setFuncao] = useState('');
 
   const gerarID = () => {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
   };
-
-  const [editMode, setEditMode] = useState(false);
-  const handleEditPress = () => {
-    setEditMode(true);
-  };
   const handleSavePress = () => {
-    setEditMode(false);
     const novoUsuario = {
       id: gerarID(),
       nome,
@@ -42,7 +36,7 @@ export default function Sign() {
       email,
       dataNascimento,
       senha,
-      usuario,
+      funcao,
     };
 
     salvarUsuario(novoUsuario);
@@ -56,7 +50,6 @@ export default function Sign() {
             style={[styles.inputDados]}
             keyboardType="default"
             placeholder="Nome"
-            editable={editMode}
             value={nome}
             onChangeText={(text) => setNome(text)}
           />
@@ -64,7 +57,6 @@ export default function Sign() {
             style={[styles.inputDados]}
             keyboardType="phone-pad"
             placeholder="WhatsApp"
-            editable={editMode}
             value={telefone}
             onChangeText={(text) => setTelefone(text)}
           />
@@ -72,7 +64,6 @@ export default function Sign() {
             style={[styles.inputDados]}
             keyboardType="default"
             placeholder="Endereço"
-            editable={editMode}
             value={endereco}
             onChangeText={(text) => setEndereco(text)}
           />
@@ -80,7 +71,6 @@ export default function Sign() {
             style={[styles.inputDados]}
             keyboardType="email-address"
             placeholder="Email"
-            editable={editMode}
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
@@ -88,7 +78,6 @@ export default function Sign() {
             style={[styles.inputDados]}
             keyboardType="decimal-pad"
             placeholder="Data de Nascimento"
-            editable={editMode}
             value={dataNascimento}
             onChangeText={(text) => setDataNascimento(text)}
           />
@@ -96,7 +85,6 @@ export default function Sign() {
             style={[styles.inputDados]}
             keyboardType="visible-password"
             placeholder="Senha"
-            editable={editMode}
             value={senha}
             onChangeText={(text) => setSenha(text)}
           />
@@ -104,28 +92,18 @@ export default function Sign() {
             style={[styles.inputDados]}
             keyboardType="default"
             placeholder="Função"
-            editable={editMode}
-            value={usuario}
-            onChangeText={(text) => setUsuario(text)}
+            value={funcao}
+            onChangeText={(text) => setFuncao(text)}
           />
         </View>
 
-        {editMode ? (
           <TouchableOpacity style={styles.button} onPress={handleSavePress}>
             <Text style={styles.buttonText}>SALVAR</Text>
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.button} onPress={handleEditPress}>
-            <Text style={styles.buttonText}>EDITAR</Text>
-          </TouchableOpacity>
-        )}
 
         <View style={[styles.containerTextLink]}>
           <Link href="/login" style={[styles.textLink]}>
             LOGIN
-          </Link>
-          <Link href="/sign" style={[styles.textLink]}>
-            CADASTRAR-SE
           </Link>
         </View>
       </ScrollView>

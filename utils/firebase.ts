@@ -110,7 +110,7 @@ export const buscarDadosDoBanco = async () => {
           telefone: usuarioData.telefone,
           endereco: usuarioData.endereco,
           email: usuarioData.email,
-          dataNascimento: usuarioData,
+          dataNascimento: usuarioData.dataNascimento, // Alteração aqui
           senha: usuarioData.senha,
           funcao: usuarioData.funcao,
         };

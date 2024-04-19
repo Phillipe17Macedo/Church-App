@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { Stack } from 'expo-router';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: '(tabs)',
