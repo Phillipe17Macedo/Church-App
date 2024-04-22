@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';

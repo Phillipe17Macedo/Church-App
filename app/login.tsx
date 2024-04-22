@@ -14,6 +14,7 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 
@@ -50,6 +51,7 @@ export default function Login() {
       console.log('Login realizado com sucesso!');
       console.log(email);
       console.log(senha);
+      Alert.alert('Login com Sucesso!');
       navigation.navigate('perfil');
     } catch (error) {
       console.error('Erro ao fazer login:', error);
@@ -74,6 +76,11 @@ export default function Login() {
             value={senha}
             onChangeText={(text) => setSenha(text)}
           />
+          <View style={[styles.containerRedefinir]}>
+            <Link href={'https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox'} style={[styles.linkRedefinir]}>
+              Redefinir Senha
+            </Link>
+          </View>
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
@@ -128,6 +135,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 10,
     elevation: 5,
+  },
+  containerRedefinir: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'left',
+    alignSelf: 'baseline',
+    left: 20,
+    paddingBottom: 8,
+  },
+  linkRedefinir: {
+    color: '#DAFDBA',
+    fontWeight: 'bold',
+    fontSize: 16,
+    fontVariant: ['small-caps'], 
   },
   button: {
     alignSelf: 'center',
