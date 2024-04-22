@@ -34,6 +34,7 @@ export default function Login() {
       appId: '1:348499807286:web:c9bcbc26c1c9acad9adc97',
       measurementId: 'G-KHDPWMVYNN',
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const firebaseApp = initializeApp(firebaseConfig);
   }, []);
 
