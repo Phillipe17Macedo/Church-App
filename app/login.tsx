@@ -16,31 +16,21 @@ import {
 
 import { loginUsuario} from '../utils/firebase';
 
-interface Usuario{
-  id: string;
-  nome: string;
-  telefone: string;
-  endereco: string;
-  email: string;
-  dataNascimento: string;
-  senha: string;
-  funcao: string;
-}
-
 export default function Login() {
-  const navigation = useNavigation();
-  const [nome, setNome] = useState('');
+  const navigation = useNavigation<any>();
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
 
   const handleLoginPress = async () => {
     try {
-      const usuarioLogado: Usuario | null = await loginUsuario(nome, senha);
-      if (usuarioLogado !== null) {
-        // Armazenar a chave única do usuário no AsyncStorage
+      const usuarioLogado = await loginUsuario(email, senha);
+      if (usuarioLogado) {
         await AsyncStorage.setItem('userId', usuarioLogado.id);
-        navigation.navigate('perfil', { usuario: usuarioLogado });
+        navigation.navigate('perfil');
       } else {
         console.log('Credenciais inválidas. Usuário não encontrado.');
+        console.log(email);
+        console.log(senha);
       }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
@@ -54,9 +44,9 @@ export default function Login() {
           <TextInput
             style={[styles.inputDados]}
             keyboardType="default"
-            placeholder="Nome"
-            value={nome}
-            onChangeText={(text) => setNome(text)}
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
           />
           <TextInput
             style={[styles.inputDados]}

@@ -87,43 +87,41 @@ export const atualizarDadosNoBanco = async (usuarioId: string, novosDados: Usuar
     throw error;
   }
 };
-export const buscarDadosDoBanco = async () => {
+export const buscarDadosDoBanco = async (userId: string): Promise<Usuario | null> => {
   try {
-    const snapshot: DataSnapshot = await get(ref(database, 'usuarios'));
-    const dados: Usuario[] = [];
-    snapshot.forEach((childSnapshot) => {
-      // Extrair os dados de cada usuário do snapshot
-      const usuarioData = childSnapshot.val();
-      // Verificar se os dados do usuário estão completos
-      if (
-        usuarioData &&
-        typeof usuarioData === 'object' &&
-        'nome' in usuarioData &&
-        'telefone' in usuarioData &&
-        'endereco' in usuarioData &&
-        'email' in usuarioData &&
-        'dataNascimento' in usuarioData &&
-        'senha' in usuarioData &&
-        'funcao' in usuarioData
-      ) {
-        // Criar um objeto Usuario manualmente a partir dos dados do snapshot
-        const usuario: Usuario = {
-          id: childSnapshot.key, // Usar a chave do snapshot como ID do usuário
-          nome: usuarioData.nome,
-          telefone: usuarioData.telefone,
-          endereco: usuarioData.endereco,
-          email: usuarioData.email,
-          dataNascimento: usuarioData.dataNascimento, // Alteração aqui
-          senha: usuarioData.senha,
-          funcao: usuarioData.funcao,
-        };
-        dados.push(usuario);
-      }
-    });
-    return dados;
+    const snapshot: DataSnapshot = await get(ref(database, `usuarios/${userId}`));
+    const usuarioData = snapshot.val();
+    // Verificar se os dados do usuário estão completos e se o usuário foi encontrado
+    if (
+      snapshot.exists() &&
+      usuarioData &&
+      typeof usuarioData === 'object' &&
+      'nome' in usuarioData &&
+      'telefone' in usuarioData &&
+      'endereco' in usuarioData &&
+      'email' in usuarioData &&
+      'dataNascimento' in usuarioData &&
+      'senha' in usuarioData &&
+      'funcao' in usuarioData
+    ) {
+      // Criar um objeto Usuario manualmente a partir dos dados do snapshot
+      const usuario: Usuario = {
+        id: snapshot.key, // Usar a chave do snapshot como ID do usuário
+        nome: usuarioData.nome,
+        telefone: usuarioData.telefone,
+        endereco: usuarioData.endereco,
+        email: usuarioData.email,
+        dataNascimento: usuarioData.dataNascimento,
+        senha: usuarioData.senha,
+        funcao: usuarioData.funcao,
+      };
+      return usuario;
+    }
+    return null; // Retorna null se o usuário não foi encontrado ou os dados estão incompletos
   } catch (error) {
     console.error('Erro ao buscar dados no banco:', error);
     throw error;
   }
 };
+
 export default database;

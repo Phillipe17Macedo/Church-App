@@ -47,24 +47,28 @@ export default function Perfil() {
   const buscarDadosUsuario = async () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
-      if(userId){
-        const usuarioEncontrado = await buscarDadosDoBanco(userId);
-        if (usuarioEncontrado && usuarioEncontrado.length > 0) {
-          const primeiroUsuario = usuarioEncontrado[0];
-          setUsuario(primeiroUsuario);
-          setNome(primeiroUsuario.nome || 'Não Encontrado');
-          setTelefone(primeiroUsuario.telefone || 'Não Encontrado');
-          setEndereco(primeiroUsuario.endereco || 'Não Encontrado');
-          setEmail(primeiroUsuario.email || 'Não Encontrado');
-          setDataNascimento(primeiroUsuario.dataNascimento || 'Não Encontrado');
-          setSenha(primeiroUsuario.senha || 'Não Encontrado');
-          setFuncao(primeiroUsuario.funcao || 'Não Encontrado');
+      if (userId != null) {
+        const usuario = await buscarDadosDoBanco(userId);
+        if (usuario) {
+          setUsuario(usuario);
+          setNome(usuario.nome);
+          setTelefone(usuario.telefone);
+          setEndereco(usuario.endereco);
+          setEmail(usuario.email);
+          setDataNascimento(usuario.dataNascimento);
+          setSenha(usuario.senha);
+          setFuncao(usuario.funcao);
+        } else {
+          console.log('Usuário não encontrado no banco de dados.');
         }
+      } else {
+        console.log('ID do usuário não encontrado no AsyncStorage.');
       }
     } catch (error) {
       console.error('Erro ao buscar dados do usuário:', error);
     }
   };
+  
 
   const handleEditPress = () => {
     setEditMode(true);
