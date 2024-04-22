@@ -1,5 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-import { getDatabase, update, ref, set, get, push, DataSnapshot } from 'firebase/database';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, push, set, get, update, DataSnapshot } from 'firebase/database';
 // Optionally import the services that you want to use
 // import {...} from "firebase/auth";
 // import {...} from "firebase/database";
@@ -28,8 +30,9 @@ interface Usuario {
   senha: string;
   funcao: string;
 }
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+const firebaseApp = initializeApp(firebaseConfig);
+const database = getDatabase(firebaseApp);
+const auth = getAuth(firebaseApp);
 
 export const loginUsuario = async (nomeUsuario: string, senha: string): Promise<Usuario | null> => {
   const usuariosRef = ref(database, 'usuarios');
@@ -38,7 +41,9 @@ export const loginUsuario = async (nomeUsuario: string, senha: string): Promise<
     let usuarioEncontrado: Usuario | null = null; // Inicializa como null
     snapshot.forEach((childSnapshot) => {
       const usuario = childSnapshot.val();
-      if (usuario && usuario.nome === nomeUsuario && usuario.senha === senha) {
+      const usuarioNome = usuario.nome.trim().toLowerCase(); // Normaliza e remove espaços em branco
+      const usuarioSenha = usuario.senha.trim(); // Remove espaços em branco
+      if (usuarioNome === nomeUsuario.trim().toLowerCase() && usuarioSenha === senha.trim()) {
         // Verifica se o usuário não é nulo e se as credenciais correspondem
         console.log('Usuário logado com sucesso:', usuario);
         usuarioEncontrado = {
@@ -47,6 +52,9 @@ export const loginUsuario = async (nomeUsuario: string, senha: string): Promise<
         }; // Define o usuário encontrado
       }
     });
+    if (!usuarioEncontrado) {
+      console.log('Nenhum usuário encontrado para as credenciais fornecidas.');
+    }
     return usuarioEncontrado; // Retorna o usuário encontrado ou null se não encontrou
   } catch (error) {
     console.error('Erro ao fazer login:', error);
@@ -89,34 +97,37 @@ export const atualizarDadosNoBanco = async (usuarioId: string, novosDados: Usuar
 };
 export const buscarDadosDoBanco = async (userId: string): Promise<Usuario | null> => {
   try {
-    const snapshot: DataSnapshot = await get(ref(database, `usuarios/${userId}`));
-    const usuarioData = snapshot.val();
-    // Verificar se os dados do usuário estão completos e se o usuário foi encontrado
-    if (
-      snapshot.exists() &&
-      usuarioData &&
-      typeof usuarioData === 'object' &&
-      'nome' in usuarioData &&
-      'telefone' in usuarioData &&
-      'endereco' in usuarioData &&
-      'email' in usuarioData &&
-      'dataNascimento' in usuarioData &&
-      'senha' in usuarioData &&
-      'funcao' in usuarioData
-    ) {
-      // Criar um objeto Usuario manualmente a partir dos dados do snapshot
-      const usuario: Usuario = {
-        id: snapshot.key, // Usar a chave do snapshot como ID do usuário
-        nome: usuarioData.nome,
-        telefone: usuarioData.telefone,
-        endereco: usuarioData.endereco,
-        email: usuarioData.email,
-        dataNascimento: usuarioData.dataNascimento,
-        senha: usuarioData.senha,
-        funcao: usuarioData.funcao,
-      };
-      return usuario;
+    const usuarioRef = ref(database, `usuarios/${userId}`);
+    const snapshot: DataSnapshot = await get(usuarioRef);
+
+    if (snapshot.exists()) {
+      const usuarioData = snapshot.val();
+      if (
+        usuarioData &&
+        typeof usuarioData === 'object' &&
+        'nome' in usuarioData &&
+        'telefone' in usuarioData &&
+        'endereco' in usuarioData &&
+        'email' in usuarioData &&
+        'dataNascimento' in usuarioData &&
+        'senha' in usuarioData &&
+        'funcao' in usuarioData
+      ) {
+        // Criar um objeto Usuario manualmente a partir dos dados do snapshot
+        const usuario: Usuario = {
+          id: snapshot.key !== null ? snapshot.key : '', // Usar a chave do snapshot como ID do usuário, garantindo que não seja nulo
+          nome: usuarioData.nome,
+          telefone: usuarioData.telefone,
+          endereco: usuarioData.endereco,
+          email: usuarioData.email,
+          dataNascimento: usuarioData.dataNascimento,
+          senha: usuarioData.senha,
+          funcao: usuarioData.funcao,
+        };
+        return usuario;
+      }
     }
+
     return null; // Retorna null se o usuário não foi encontrado ou os dados estão incompletos
   } catch (error) {
     console.error('Erro ao buscar dados no banco:', error);

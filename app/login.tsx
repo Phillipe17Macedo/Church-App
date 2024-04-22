@@ -22,6 +22,8 @@ export default function Login() {
   const [senha, setSenha] = useState('');
 
   const handleLoginPress = async () => {
+    console.log('Email:', email);
+    console.log('Senha:', senha);
     try {
       const usuarioLogado = await loginUsuario(email, senha);
       if (usuarioLogado) {
@@ -35,7 +37,7 @@ export default function Login() {
     } catch (error) {
       console.error('Erro ao fazer login:', error);
     }
-  };
+  };  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
