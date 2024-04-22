@@ -2,7 +2,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -14,30 +16,44 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { loginUsuario} from '../utils/firebase';
 
 export default function Login() {
   const navigation = useNavigation<any>();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
 
+  // Inicializar o Firebase App
+  useEffect(() => {
+    const firebaseConfig = {
+      apiKey: 'AIzaSyCyhMAnKhc2y_2EzP2LyO7-AbVEBjgj2ek',
+      authDomain: 'videiraapp.firebaseapp.com',
+      databaseURL: 'https://videiraapp-default-rtdb.firebaseio.com',
+      projectId: 'videiraapp',
+      storageBucket: 'videiraapp.appspot.com',
+      messagingSenderId: '348499807286',
+      appId: '1:348499807286:web:c9bcbc26c1c9acad9adc97',
+      measurementId: 'G-KHDPWMVYNN',
+    };
+    const firebaseApp = initializeApp(firebaseConfig);
+  }, []);
+
   const handleLoginPress = async () => {
+    console.log('Dados de input:');
     console.log('Email:', email);
     console.log('Senha:', senha);
     try {
-      const usuarioLogado = await loginUsuario(email, senha);
-      if (usuarioLogado) {
-        await AsyncStorage.setItem('userId', usuarioLogado.id);
-        navigation.navigate('perfil');
-      } else {
-        console.log('Credenciais inválidas. Usuário não encontrado.');
-        console.log(email);
-        console.log(senha);
-      }
+      const auth = getAuth(); // Obter a instância de autenticação do Firebase
+      const userCredential = await signInWithEmailAndPassword(auth, email, senha);
+      const user = userCredential.user;
+      await AsyncStorage.setItem('userId', user.uid);
+      console.log('Login realizado com sucesso!');
+      console.log(email);
+      console.log(senha);
+      navigation.navigate('perfil');
     } catch (error) {
       console.error('Erro ao fazer login:', error);
     }
-  };  
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
