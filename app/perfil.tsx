@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars *//* eslint-disable prettier/prettier */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -43,21 +43,16 @@ export default function Perfil() {
   useEffect(() => {
     buscarDadosUsuario(); // Buscar os dados do usuário ao abrir a tela de perfil
   }, []);
-
+  
   const buscarDadosUsuario = async () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
-      if (userId != null) {
+      console.log('ID do usuário recuperado:', userId); // Adiciona este log
+      if (userId) {
         const usuario = await buscarDadosDoBanco(userId);
         if (usuario) {
+          console.log('Dados do usuário encontrados:', usuario); // Adiciona este log
           setUsuario(usuario);
-          setNome(usuario.nome);
-          setTelefone(usuario.telefone);
-          setEndereco(usuario.endereco);
-          setEmail(usuario.email);
-          setDataNascimento(usuario.dataNascimento);
-          setSenha(usuario.senha);
-          setFuncao(usuario.funcao);
         } else {
           console.log('Usuário não encontrado no banco de dados.');
         }
@@ -68,8 +63,6 @@ export default function Perfil() {
       console.error('Erro ao buscar dados do usuário:', error);
     }
   };
-  
-
   const handleEditPress = () => {
     setEditMode(true);
   };
@@ -98,56 +91,56 @@ export default function Perfil() {
             keyboardType="default"
             placeholder="Nome"
             editable={editMode}
-            value={nome}
-            onChangeText={(text) => setNome(text)}
+            value={usuario ? usuario.nome : ''}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, nome: text } : null)}
           />
           <TextInput
             style={[styles.inputDados]}
             keyboardType="phone-pad"
-            placeholder="WhatsApp"
+            placeholder="Telefone"
             editable={editMode}
-            value={telefone}
-            onChangeText={(text) => setTelefone(text)}
+            value={usuario ? usuario.telefone : ''}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, telefone: text } : null)}
           />
           <TextInput
             style={[styles.inputDados]}
             keyboardType="default"
             placeholder="Endereço"
             editable={editMode}
-            value={endereco}
-            onChangeText={(text) => setEndereco(text)}
+            value={usuario ? usuario.endereco : ''}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, endereco: text } : null)}
           />
           <TextInput
             style={[styles.inputDados]}
             keyboardType="email-address"
             placeholder="Email"
             editable={editMode}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
+            value={usuario ? usuario.email : ''}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, email: text } : null)}
           />
           <TextInput
             style={[styles.inputDados]}
             keyboardType="decimal-pad"
             placeholder="Data de Nascimento"
             editable={editMode}
-            value={dataNascimento}
-            onChangeText={(text) => setDataNascimento(text)}
+            value={usuario ? usuario.dataNascimento : ''}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, dataNascimento: text } : null)}
           />
           <TextInput
             style={[styles.inputDados]}
             keyboardType="visible-password"
             placeholder="Senha"
             editable={editMode}
-            value={senha}
-            onChangeText={(text) => setSenha(text)}
+            value={usuario ? usuario.senha : ''}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, senha: text } : null)}
           />
           <TextInput
             style={[styles.inputDados]}
             keyboardType="default"
             placeholder="Função"
             editable={editMode}
-            value={funcao}
-            onChangeText={(text) => setFuncao(text)}
+            value={usuario ? usuario.funcao : ''}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, funcao: text } : null)}
           />
         </View>
 

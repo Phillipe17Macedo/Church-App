@@ -49,6 +49,7 @@ export default function Login() {
       const user = userCredential.user;
       await AsyncStorage.setItem('userId', user.uid);
       console.log('Login realizado com sucesso!');
+      console.log('ID do User', user.uid);
       console.log(email);
       console.log(senha);
       Alert.alert('Login com Sucesso!');
@@ -77,7 +78,7 @@ export default function Login() {
             onChangeText={(text) => setSenha(text)}
           />
           <View style={[styles.containerRedefinir]}>
-            <Link href={'https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox'} style={[styles.linkRedefinir]}>
+            <Link href="https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox" style={[styles.linkRedefinir]}>
               Redefinir Senha
             </Link>
           </View>

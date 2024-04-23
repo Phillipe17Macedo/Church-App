@@ -64,29 +64,19 @@ export const loginUsuario = async (nomeUsuario: string, senha: string): Promise<
 };
 
 export const salvarUsuario = (usuario: Usuario) => {
-  const usuariosRef = ref(database, 'usuarios');
+  // Usar o UID do usuário como ID no Realtime Database
+  const usuarioRef = ref(database, `usuarios/${usuario.id}`);
 
-  push(usuariosRef)
-    .then((newUserRef) => {
-      // Obtém o ID único gerado para o novo usuário
-      const usuarioId = newUserRef.key;
-
-      // Adiciona o ID único aos dados do usuário
-      const usuarioComId = { ...usuario, id: usuarioId };
-
-      // Salva o usuário com o ID no banco de dados
-      set(ref(database, `usuarios/${usuarioId}`), usuarioComId)
-        .then(() => {
-          console.log('Novo usuário adicionado com ID: ', usuarioId);
-        })
-        .catch((error) => {
-          console.error('Erro ao adicionar novo usuário: ', error);
-        });
+  // Salvar os dados do usuário no Realtime Database
+  set(usuarioRef, usuario)
+    .then(() => {
+      console.log('Usuário cadastrado com sucesso:', usuario);
     })
     .catch((error) => {
-      console.error('Erro ao gerar ID para novo usuário: ', error);
+      console.error('Erro ao cadastrar usuário:', error);
     });
 };
+
 export const atualizarDadosNoBanco = async (usuarioId: string, novosDados: Usuario) => {
   try {
     await update(ref(database, `usuarios/${usuarioId}`), novosDados);
