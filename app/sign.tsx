@@ -123,8 +123,6 @@ export default function Sign() {
             value={senha}
             onChangeText={(text) => setSenha(text)}
           />
-        </View>
-
         <TouchableOpacity style={styles.button} onPress={handleSavePress}>
           <Text style={styles.buttonText}>SALVAR</Text>
         </TouchableOpacity>
@@ -133,6 +131,7 @@ export default function Sign() {
           <Link href="/login" style={[styles.textLink]}>
             LOGIN
           </Link>
+        </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -184,36 +183,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#DAFDBA',
     paddingVertical: 10,
     paddingHorizontal: 25,
-    borderRadius: 50,
-    marginTop: 40,
-    marginBottom: 25,
-    width: 150,
-    height: 60,
+    borderRadius: 18,
+    marginTop: 15,
+    marginBottom: 10,
+    width: '90%',
+    height: 50,
     textAlign: 'center',
     justifyContent: 'center',
-    shadowOffset: { width: 10, height: 10 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 5,
+    shadowOffset:{width:10,height:10},
+    shadowOpacity:0.5,
+    shadowRadius:10,
+    elevation:5,  
     borderWidth: 1,
     borderColor: '#CACACA',
   },
   buttonText: {
     color: '#012030',
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 19,
     textAlign: 'center',
     fontVariant: ['small-caps'],
   },
   containerTextLink: {
-    marginBottom: 20,
-    justifyContent: 'space-between',
-    flexDirection: 'column',
+    marginTop: 30,
+    marginBottom: 10,
+    width: 130,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F2F2F2',
+    padding: 5,
+    borderRadius: 13,
   },
   textLink: {
     alignSelf: 'center',
-    fontSize: 16,
-    color: '#fff',
+    fontSize: 18,
+    color: '#202022',
     fontWeight: 'bold',
     fontVariant: ['small-caps'],
     padding: 4,

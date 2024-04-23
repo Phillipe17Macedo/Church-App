@@ -15,7 +15,7 @@ import {
   Alert,
 } from 'react-native';
 
-import { salvarUsuario, buscarDadosDoBanco, signOut } from '../utils/firebase';
+import { atualizarDadosNoBanco, buscarDadosDoBanco, signOut } from '../utils/firebase';
 
 interface Usuario {
   id: string;
@@ -97,18 +97,29 @@ export default function Perfil() {
 
   const handleSavePress = () => {
     setEditMode(false);
-    const novoUsuario = {
-      id: usuario?.id || '',
-      nome,
-      telefone,
-      endereco,
-      email,
-      dataNascimento,
-      senha,
-      funcao,
+    if (!usuario) {
+      console.error('Usuário não encontrado para atualização.');
+      return;
+    }
+  
+    const novosDados = { 
+      id: usuario.id,
+      nome: nome || usuario.nome,
+      telefone: telefone || usuario.telefone,
+      endereco: endereco || usuario.endereco,
+      email: email || usuario.email,
+      dataNascimento: dataNascimento || usuario.dataNascimento,
+      senha: senha || usuario.senha,
+      funcao: funcao || usuario.funcao,
     };
-
-    salvarUsuario(novoUsuario);
+  
+    atualizarDadosNoBanco(usuario.id, novosDados)
+      .then(() => {
+        console.log('Dados do usuário atualizados com sucesso!');
+      })
+      .catch((error) => {
+        console.error('Erro ao atualizar dados do usuário:', error);
+      });
   };
 
   return (
@@ -116,13 +127,18 @@ export default function Perfil() {
       <ScrollView>
         <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         <View style={[styles.containerInput]}>
+          <View style={[styles.containerTitulo]}>
+            <Text style={[styles.titulo]}>
+              DADOS PESSOAIS
+            </Text>
+          </View>
           <TextInput
             style={[styles.inputDados]}
             keyboardType="default"
             placeholder="Nome"
             editable={editMode}
             value={usuario ? usuario.nome : ''}
-            onChangeText={(text) => setNome(text)}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, nome: text } : null)}
           />
           <TextInput
             style={[styles.inputDados]}
@@ -130,7 +146,7 @@ export default function Perfil() {
             placeholder="Telefone"
             editable={editMode}
             value={usuario ? usuario.telefone : ''}
-            onChangeText={(text) => setTelefone(text)}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, telefone: text } : null)}
           />
           <TextInput
             style={[styles.inputDados]}
@@ -138,15 +154,7 @@ export default function Perfil() {
             placeholder="Endereço"
             editable={editMode}
             value={usuario ? usuario.endereco : ''}
-            onChangeText={(text) => setEndereco(text)}
-          />
-          <TextInput
-            style={[styles.inputDados]}
-            keyboardType="email-address"
-            placeholder="Email"
-            editable={editMode}
-            value={usuario ? usuario.email : ''}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, endereco: text } : null)}
           />
           <TextInput
             style={[styles.inputDados]}
@@ -154,10 +162,10 @@ export default function Perfil() {
             placeholder="Data de Nascimento"
             editable={editMode}
             value={usuario ? usuario.dataNascimento : ''}
-            onChangeText={(text) => setDataNascimento(text)}
+            onChangeText={(text) => setUsuario(usuario ? { ...usuario, dataNascimento: text } : null)}
           />
-        </View>
-        <View style={[styles.containerButton]}>
+
+<View style={[styles.containerButton]}>
           {editMode ? (
             <TouchableOpacity style={styles.button} onPress={handleSavePress}>
               <Text style={styles.buttonText}>SALVAR</Text>
@@ -181,6 +189,7 @@ export default function Perfil() {
         <View style={[styles.containerTextLink]}>
           <Link href="/sign" style={[styles.textLink]} >CADASTRAR-SE</Link>
         </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -198,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent:'space-between',
     flexDirection: 'column',
-    marginTop: 20,
+    marginTop: 100,
     paddingTop: 15,
     paddingBottom: 5,
     borderRadius: 20,
@@ -207,6 +216,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 10,
     elevation: 5,  
+  },
+  containerTitulo: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 15,
+  },
+  titulo: {
+    color: '#fff',
+    fontSize: 23,
+    fontWeight: 'bold',
+    fontVariant: ['small-caps'],
   },
   inputDados: {
     backgroundColor: '#fff',
@@ -227,10 +247,9 @@ const styles = StyleSheet.create({
     elevation:5,  
   },
   containerButton: {
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    top: 25,
-    paddingBottom: 25,
+    width: '85%',
   },
   button: {
     alignSelf: 'center',
@@ -240,8 +259,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginTop: 40,
     marginBottom: 25,
-    width: 150,
-    height: 60,
+    width: 130,
+    height: 55,
     textAlign: 'center',
     justifyContent: 'center',
     shadowOffset:{width:10,height:10},
@@ -259,16 +278,20 @@ const styles = StyleSheet.create({
     fontVariant: ['small-caps'],
   },
   containerTextLink:{
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 10,
     justifyContent: 'space-between',
-    flexDirection:'column',
+    flexDirection: 'column',
+    backgroundColor: '#F2F2F2',
+    padding: 5,
+    borderRadius: 10,
   },
   textLink: {
     alignSelf: 'center',
-    fontSize: 16,
-    color: '#fff',
+    fontSize: 18,
+    color: '#202022',
     fontWeight: 'bold',
-    fontVariant:  ['small-caps'],
+    fontVariant: ['small-caps'],
     padding: 4,
   },
 });

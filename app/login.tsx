@@ -77,22 +77,24 @@ export default function Login() {
             value={senha}
             onChangeText={(text) => setSenha(text)}
           />
+
+          <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
+            <Text style={styles.buttonText}>LOGIN</Text>
+          </TouchableOpacity>
           <View style={[styles.containerRedefinir]}>
             <Link href="https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox" style={[styles.linkRedefinir]}>
               Redefinir Senha
             </Link>
           </View>
+
+          <View style={[styles.containerTextLink]}>
+            <Link href="/sign" style={[styles.textLink]}>
+              CADASTRAR-SE
+            </Link>
+          </View>
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
-          <Text style={styles.buttonText}>LOGIN</Text>
-        </TouchableOpacity>
 
-        <View style={[styles.containerTextLink]}>
-          <Link href="/sign" style={[styles.textLink]}>
-            CADASTRAR-SE
-          </Link>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -107,21 +109,21 @@ const styles = StyleSheet.create({
   containerInput: {
     backgroundColor: '#878787',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent:'space-between',
     flexDirection: 'column',
-    marginTop: 50,
-    paddingTop: 15,
+    marginTop: 100,
+    paddingTop: 20,
     paddingBottom: 5,
-    borderRadius: 20,
+    borderRadius: 30,
     height: 'auto',
-    shadowOffset: { width: 5, height: 5 },
+    shadowOffset:{width:5,height:5},
     shadowOpacity: 0.5,
     shadowRadius: 10,
-    elevation: 5,
+    elevation: 5,  
   },
   inputDados: {
     backgroundColor: '#fff',
-    height: 35,
+    height: 40,
     width: '90%',
     borderRadius: 15,
     paddingLeft: 10,
@@ -129,9 +131,9 @@ const styles = StyleSheet.create({
     borderColor: '#CACACA',
     color: '#202022',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
     fontVariant: ['small-caps'],
-    marginBottom: 10,
+    marginBottom: 15,
     shadowOffset: { width: 10, height: 10 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
@@ -142,8 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'left',
     alignSelf: 'baseline',
-    left: 20,
-    paddingBottom: 8,
+    left: 28,
   },
   linkRedefinir: {
     color: '#DAFDBA',
@@ -156,36 +157,40 @@ const styles = StyleSheet.create({
     backgroundColor: '#DAFDBA',
     paddingVertical: 10,
     paddingHorizontal: 25,
-    borderRadius: 50,
-    marginTop: 40,
-    marginBottom: 25,
-    width: 150,
-    height: 60,
+    borderRadius: 18,
+    marginTop: 15,
+    marginBottom: 10,
+    width: '90%',
+    height: 50,
     textAlign: 'center',
     justifyContent: 'center',
-    shadowOffset: { width: 10, height: 10 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 5,
+    shadowOffset:{width:10,height:10},
+    shadowOpacity:0.5,
+    shadowRadius:10,
+    elevation:5,  
     borderWidth: 1,
     borderColor: '#CACACA',
   },
   buttonText: {
     color: '#012030',
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 19,
     textAlign: 'center',
     fontVariant: ['small-caps'],
   },
   containerTextLink: {
-    marginBottom: 20,
-    justifyContent: 'space-between',
-    flexDirection: 'column',
+    marginTop: 30,
+    marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F2F2F2',
+    padding: 5,
+    borderRadius: 10,
   },
   textLink: {
     alignSelf: 'center',
-    fontSize: 16,
-    color: '#fff',
+    fontSize: 18,
+    color: '#202022',
     fontWeight: 'bold',
     fontVariant: ['small-caps'],
     padding: 4,
