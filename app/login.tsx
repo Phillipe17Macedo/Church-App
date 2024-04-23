@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -56,6 +56,22 @@ export default function Login() {
       navigation.navigate('perfil');
     } catch (error) {
       console.error('Erro ao fazer login:', error);
+      Alert.alert('Email ou Senha Inválidos!');
+    }
+  };
+  const handleResetPasswordPress = async () => {
+    if (!email) {
+      Alert.alert('Por favor, insira seu email.');
+      return;
+    }
+    
+    try {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email);
+      Alert.alert('Um email para redefinição de senha foi enviado para ' + email);
+    } catch (error) {
+      console.error('Erro ao enviar email de redefinição de senha:', error);
+      Alert.alert('Erro ao enviar email de redefinição de senha. Por favor, tente novamente mais tarde.');
     }
   };
   return (
@@ -82,9 +98,11 @@ export default function Login() {
             <Text style={styles.buttonText}>LOGIN</Text>
           </TouchableOpacity>
           <View style={[styles.containerRedefinir]}>
-            <Link href="https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox" style={[styles.linkRedefinir]}>
-              Redefinir Senha
-            </Link>
+            <TouchableOpacity onPress={handleResetPasswordPress}>
+              <Text style={[styles.linkRedefinir]}>
+                Redefinir Senha
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <View style={[styles.containerTextLink]}>
