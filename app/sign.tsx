@@ -123,13 +123,6 @@ export default function Sign() {
             value={senha}
             onChangeText={(text) => setSenha(text)}
           />
-          <TextInput
-            style={[styles.inputDados]}
-            keyboardType="default"
-            placeholder="Função"
-            value={funcao}
-            onChangeText={(text) => setFuncao(text)}
-          />
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleSavePress}>

@@ -12,9 +12,10 @@ import {
   Platform,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
-import { salvarUsuario, buscarDadosDoBanco } from '../utils/firebase';
+import { salvarUsuario, buscarDadosDoBanco, signOut } from '../utils/firebase';
 
 interface Usuario {
   id: string;
@@ -39,11 +40,48 @@ export default function Perfil() {
   const [funcao, setFuncao] = useState('');
   
   const [editMode, setEditMode] = useState(false);
+  const [Logado, setLogado] = useState(false);
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     buscarDadosUsuario(); // Buscar os dados do usuário ao abrir a tela de perfil
   }, []);
-  
+
+  useEffect(() => {
+    verificarUsuarioLogado(); // Verifica se o usuário está logado ao carregar a tela do perfil
+  }, []);
+
+  const verificarUsuarioLogado = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      if (userId) {
+        const usuario = await buscarDadosDoBanco(userId);
+        if (usuario) {
+          setUsuario(usuario);
+          setLogado(true);
+        } else {
+          setLogado(false);
+        }
+      } else {
+        setLogado(false);
+      }
+      setCarregando(false); // Marca o carregamento como completo
+    } catch (error) {
+      console.error('Erro ao verificar se o usuário está logado:', error);
+      setLogado(false);
+      setCarregando(false);
+    }
+  };
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      setLogado(false);
+      Alert.alert('Logout realizado com sucesso.');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      Alert.alert('Erro ao fazer logout.');
+    }
+  };
   const buscarDadosUsuario = async () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
@@ -53,14 +91,18 @@ export default function Perfil() {
         if (usuario) {
           console.log('Dados do usuário encontrados:', usuario); // Adiciona este log
           setUsuario(usuario);
+          setLogado(true);
         } else {
           console.log('Usuário não encontrado no banco de dados.');
+          setLogado(false);
         }
       } else {
         console.log('ID do usuário não encontrado no AsyncStorage.');
+        setLogado(false);
       }
     } catch (error) {
       console.error('Erro ao buscar dados do usuário:', error);
+      setLogado(false);
     }
   };
   const handleEditPress = () => {
@@ -126,36 +168,29 @@ export default function Perfil() {
             value={usuario ? usuario.dataNascimento : ''}
             onChangeText={(text) => setUsuario(usuario ? { ...usuario, dataNascimento: text } : null)}
           />
-          <TextInput
-            style={[styles.inputDados]}
-            keyboardType="visible-password"
-            placeholder="Senha"
-            editable={editMode}
-            value={usuario ? usuario.senha : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, senha: text } : null)}
-          />
-          <TextInput
-            style={[styles.inputDados]}
-            keyboardType="default"
-            placeholder="Função"
-            editable={editMode}
-            value={usuario ? usuario.funcao : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, funcao: text } : null)}
-          />
         </View>
+        <View style={[styles.containerButton]}>
+          {editMode ? (
+            <TouchableOpacity style={styles.button} onPress={handleSavePress}>
+              <Text style={styles.buttonText}>SALVAR</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.button} onPress={handleEditPress}>
+              <Text style={styles.buttonText}>EDITAR</Text>
+            </TouchableOpacity>
+          )}
 
-        {editMode ? (
-          <TouchableOpacity style={styles.button} onPress={handleSavePress}>
-            <Text style={styles.buttonText}>SALVAR</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.button} onPress={handleEditPress}>
-            <Text style={styles.buttonText}>EDITAR</Text>
-          </TouchableOpacity>
-        )}
-
+          {!Logado ? (
+            <TouchableOpacity style={[styles.button]}>
+              <Link href='/login'style={[styles.buttonText]}>LOGIN</Link>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={[styles.button]} onPress={handleLogout}>
+              <Text style={[styles.buttonText]}>SAIR</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <View style={[styles.containerTextLink]}>
-          <Link href="/login" style={[styles.textLink]}>LOGIN</Link>
           <Link href="/sign" style={[styles.textLink]} >CADASTRAR-SE</Link>
         </View>
       </ScrollView>
@@ -201,6 +236,12 @@ const styles = StyleSheet.create({
     shadowOpacity:0.5,
     shadowRadius:10,
     elevation:5,  
+  },
+  containerButton: {
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+    top: 25,
+    paddingBottom: 25,
   },
   button: {
     alignSelf: 'center',

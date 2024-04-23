@@ -63,6 +63,14 @@ export const loginUsuario = async (nomeUsuario: string, senha: string): Promise<
   }
 };
 
+export const signOut = async () => {
+  try {
+    await auth.signOut(); // Função de logout do Firebase Authentication
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const salvarUsuario = (usuario: Usuario) => {
   // Usar o UID do usuário como ID no Realtime Database
   const usuarioRef = ref(database, `usuarios/${usuario.id}`);
