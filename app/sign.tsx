@@ -30,7 +30,7 @@ export default function Sign() {
 
   const handleSavePress = () => {
     // Verificar se todos os campos foram preenchidos
-    if (!nome || !telefone || !endereco || !email || !dataNascimento || !senha || !funcao) {
+    if (!nome || !telefone || !endereco || !email || !dataNascimento || !senha) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
