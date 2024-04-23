@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {
@@ -120,18 +121,9 @@ export default function Celulas() {
             ))}
         </ScrollView>
       </View>
-import { Stack } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
-
-export default function Celulas() {
-  return (
-    <>
-      <Stack.Screen options={{ title: 'Células' }} />
-      <View style={styles.container} />
     </>
   );
-}
-
+} 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -194,8 +186,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   category: {
-    marginTop: 20,
-    marginBottom: 5,
+    marginTop: 5,
+    marginBottom: -7,
     width: '85%',
     height: 'auto',
     alignSelf: 'center',
@@ -203,8 +195,7 @@ const styles = StyleSheet.create({
   textCategory: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 18,
-=======
-    padding: 24,
+    fontSize: 21,
+    padding: 10,
   },
 });
