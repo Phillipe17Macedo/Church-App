@@ -61,14 +61,38 @@ export default function Perfil() {
           setLogado(true);
         } else {
           setLogado(false);
+          // Limpar os campos
+          setNome('');
+          setTelefone('');
+          setEndereco('');
+          setEmail('');
+          setDataNascimento('');
+          setSenha('');
+          setFuncao('');
         }
       } else {
         setLogado(false);
+        // Limpar os campos
+        setNome('');
+        setTelefone('');
+        setEndereco('');
+        setEmail('');
+        setDataNascimento('');
+        setSenha('');
+        setFuncao('');
       }
       setCarregando(false); // Marca o carregamento como completo
     } catch (error) {
       console.error('Erro ao verificar se o usuário está logado:', error);
       setLogado(false);
+      // Limpar os campos
+      setNome('');
+      setTelefone('');
+      setEndereco('');
+      setEmail('');
+      setDataNascimento('');
+      setSenha('');
+      setFuncao('');
       setCarregando(false);
     }
   };
@@ -85,24 +109,23 @@ export default function Perfil() {
   const buscarDadosUsuario = async () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
-      console.log('ID do usuário recuperado:', userId); // Adiciona este log
-      if (userId) {
+      console.log('ID do usuário recuperado:', userId);
+      if (userId && Logado) { // Verifica se o usuário está logado antes de buscar os dados
         const usuario = await buscarDadosDoBanco(userId);
         if (usuario) {
-          console.log('Dados do usuário encontrados:', usuario); // Adiciona este log
+          console.log('Dados do usuário encontrados:', usuario);
           setUsuario(usuario);
-          setLogado(true);
         } else {
           console.log('Usuário não encontrado no banco de dados.');
-          setLogado(false);
+          setUsuario(null); // Define o usuário como nulo para limpar os campos
         }
       } else {
-        console.log('ID do usuário não encontrado no AsyncStorage.');
-        setLogado(false);
+        console.log('Usuário não está logado ou ID do usuário não encontrado no AsyncStorage.');
+        setUsuario(null); // Define o usuário como nulo para limpar os campos
       }
     } catch (error) {
       console.error('Erro ao buscar dados do usuário:', error);
-      setLogado(false);
+      setUsuario(null); // Define o usuário como nulo para limpar os campos
     }
   };
   const handleEditPress = () => {
