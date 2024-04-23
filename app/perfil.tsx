@@ -30,7 +30,6 @@ interface Usuario {
 
 export default function Perfil() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
-
   const [nome, setNome] = useState('');
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
@@ -38,17 +37,11 @@ export default function Perfil() {
   const [dataNascimento, setDataNascimento] = useState('');
   const [senha, setSenha] = useState('');
   const [funcao, setFuncao] = useState('');
-  
   const [editMode, setEditMode] = useState(false);
-  const [Logado, setLogado] = useState(false);
-  const [carregando, setCarregando] = useState(true);
+  const [logado, setLogado] = useState(false);
 
   useEffect(() => {
-    buscarDadosUsuario(); // Buscar os dados do usuário ao abrir a tela de perfil
-  }, []);
-
-  useEffect(() => {
-    verificarUsuarioLogado(); // Verifica se o usuário está logado ao carregar a tela do perfil
+    verificarUsuarioLogado();
   }, []);
 
   const verificarUsuarioLogado = async () => {
@@ -60,77 +53,48 @@ export default function Perfil() {
           setUsuario(usuario);
           setLogado(true);
         } else {
+          setUsuario(null);
           setLogado(false);
-          // Limpar os campos
-          setNome('');
-          setTelefone('');
-          setEndereco('');
-          setEmail('');
-          setDataNascimento('');
-          setSenha('');
-          setFuncao('');
         }
       } else {
+        setUsuario(null);
         setLogado(false);
-        // Limpar os campos
-        setNome('');
-        setTelefone('');
-        setEndereco('');
-        setEmail('');
-        setDataNascimento('');
-        setSenha('');
-        setFuncao('');
       }
-      setCarregando(false); // Marca o carregamento como completo
+      console.log('Usuario está:', logado); // Adicionando mensagem de console para depuração
     } catch (error) {
       console.error('Erro ao verificar se o usuário está logado:', error);
+      setUsuario(null);
       setLogado(false);
-      // Limpar os campos
-      setNome('');
-      setTelefone('');
-      setEndereco('');
-      setEmail('');
-      setDataNascimento('');
-      setSenha('');
-      setFuncao('');
-      setCarregando(false);
     }
   };
+
   const handleLogout = async () => {
     try {
       await signOut();
       setLogado(false);
+      limparCampos();
       Alert.alert('Logout realizado com sucesso.');
+      console.log('Logout realizado com Sucesso.');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
       Alert.alert('Erro ao fazer logout.');
     }
   };
-  const buscarDadosUsuario = async () => {
-    try {
-      const userId = await AsyncStorage.getItem('userId');
-      console.log('ID do usuário recuperado:', userId);
-      if (userId && Logado) { // Verifica se o usuário está logado antes de buscar os dados
-        const usuario = await buscarDadosDoBanco(userId);
-        if (usuario) {
-          console.log('Dados do usuário encontrados:', usuario);
-          setUsuario(usuario);
-        } else {
-          console.log('Usuário não encontrado no banco de dados.');
-          setUsuario(null); // Define o usuário como nulo para limpar os campos
-        }
-      } else {
-        console.log('Usuário não está logado ou ID do usuário não encontrado no AsyncStorage.');
-        setUsuario(null); // Define o usuário como nulo para limpar os campos
-      }
-    } catch (error) {
-      console.error('Erro ao buscar dados do usuário:', error);
-      setUsuario(null); // Define o usuário como nulo para limpar os campos
-    }
+
+  const limparCampos = () => {
+    setNome('');
+    setTelefone('');
+    setEndereco('');
+    setEmail('');
+    setDataNascimento('');
+    setSenha('');
+    setFuncao('');
   };
+
   const handleEditPress = () => {
     setEditMode(true);
   };
+
   const handleSavePress = () => {
     setEditMode(false);
     const novoUsuario = {
@@ -146,6 +110,7 @@ export default function Perfil() {
 
     salvarUsuario(novoUsuario);
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -157,7 +122,7 @@ export default function Perfil() {
             placeholder="Nome"
             editable={editMode}
             value={usuario ? usuario.nome : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, nome: text } : null)}
+            onChangeText={(text) => setNome(text)}
           />
           <TextInput
             style={[styles.inputDados]}
@@ -165,7 +130,7 @@ export default function Perfil() {
             placeholder="Telefone"
             editable={editMode}
             value={usuario ? usuario.telefone : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, telefone: text } : null)}
+            onChangeText={(text) => setTelefone(text)}
           />
           <TextInput
             style={[styles.inputDados]}
@@ -173,7 +138,7 @@ export default function Perfil() {
             placeholder="Endereço"
             editable={editMode}
             value={usuario ? usuario.endereco : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, endereco: text } : null)}
+            onChangeText={(text) => setEndereco(text)}
           />
           <TextInput
             style={[styles.inputDados]}
@@ -181,7 +146,7 @@ export default function Perfil() {
             placeholder="Email"
             editable={editMode}
             value={usuario ? usuario.email : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, email: text } : null)}
+            onChangeText={(text) => setEmail(text)}
           />
           <TextInput
             style={[styles.inputDados]}
@@ -189,7 +154,7 @@ export default function Perfil() {
             placeholder="Data de Nascimento"
             editable={editMode}
             value={usuario ? usuario.dataNascimento : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, dataNascimento: text } : null)}
+            onChangeText={(text) => setDataNascimento(text)}
           />
         </View>
         <View style={[styles.containerButton]}>
@@ -203,12 +168,12 @@ export default function Perfil() {
             </TouchableOpacity>
           )}
 
-          {!Logado ? (
-            <TouchableOpacity style={[styles.button]}>
+          {!logado ? (
+            <TouchableOpacity style={[styles.button]} >
               <Link href='/login'style={[styles.buttonText]}>LOGIN</Link>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={[styles.button]} onPress={handleLogout}>
+            <TouchableOpacity style={[styles.button]} onPress={handleLogout} >
               <Text style={[styles.buttonText]}>SAIR</Text>
             </TouchableOpacity>
           )}
@@ -220,6 +185,7 @@ export default function Perfil() {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

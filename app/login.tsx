@@ -40,7 +40,7 @@ export default function Login() {
   }, []);
 
   const handleLoginPress = async () => {
-    console.log('Dados de input:');
+    console.log('Dados de Logados:');
     console.log('Email:', email);
     console.log('Senha:', senha);
     try {
