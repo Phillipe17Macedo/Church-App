@@ -1,7 +1,9 @@
 /* eslint-disable prettier/prettier */
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   StyleSheet,
@@ -13,6 +15,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
+import { buscarEventosDoBanco, editarEventoNoBanco, isAdmin } from '../../utils/firebase';
+
 interface Evento {
   imageSource: any;
   title: string;
@@ -20,30 +24,46 @@ interface Evento {
   time: string;
   onPress: () => void;
 }
-
 export default function Home() {
   const navigation = useNavigation<any>();
   const windowWidth = useWindowDimensions().width;
+  const [isAdminUser, setIsAdminUser] = useState<boolean>(false);
+  const [eventos, setEventos] = useState<Evento[]>([]);
+
+  useEffect(() => {
+    async function checkAdminStatus() {
+      const isAdmin = await verificarAdmin();
+      setIsAdminUser(isAdmin);
+
+      const eventosFromDB = await buscarEventosDoBanco();
+      setEventos(eventosFromDB);
+    }
+    checkAdminStatus();
+  }, []);
+
   const handlePressEventos = () => {
     navigation.navigate('eventos');
   };
   const handlePressCelulas = () => {
     navigation.navigate('celulas');
   };
-  const eventos: Evento[] = [
-    {
-      imageSource: require('../../assets/img/encontro.png'),
-      title: 'ENCONTRO COM DEUS',
-      date: '27 À 28 DE ABRIL',
-      time: 'INTEGRAL',
-      onPress: handlePressEventos,
-    },
-  ];
+  const handleAddEvent = () => {
+    // Aqui você pode abrir um modal ou navegar para uma nova tela para adicionar um novo evento
+    // Por enquanto, vamos apenas logar uma mensagem
+    console.log('Botão de adicionar evento clicado!');
+  };
+  const handleEditEvent = async (eventoId: string) => {
+    // Aqui você pode implementar a lógica para editar o evento
+    // Por enquanto, vamos apenas mostrar uma mensagem de log
+    console.log('Evento editado:', eventoId);
+  };
+
   const CategoriaItem = ({ title }: { title: string }) => (
     <View style={[styles.category]}>
       <Text style={[styles.textCategory, { fontSize: windowWidth * 0.06 }]}>{title}</Text>
     </View>
   );
+  
   const EventosItem = ({
     imageSource,
     title,
@@ -59,7 +79,8 @@ export default function Home() {
     onPress: () => void;
     ultimoItem?: boolean;
   }) => {
-    const marginBottom = ultimoItem ? 100 : 20;
+  const marginBottom = ultimoItem ? 100 : 20;
+  const isAdminUser = isAdmin();
 
     return (
       <View style={[styles.content, { marginBottom }]}>
@@ -74,6 +95,11 @@ export default function Home() {
               </Text>
             </View>
           </TouchableOpacity>
+          {isAdminUser && (
+            <TouchableOpacity onPress={() => handleEditEvent(id)} style={styles.editButton}>
+              <Text style={styles.editButtonText}>Editar</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );
@@ -91,6 +117,11 @@ export default function Home() {
           time="19h - 22h"
           onPress={handlePressEventos}
         />
+        <TouchableOpacity style={styles.addButtonContainer} onPress={handleAddEvent}>
+          <TouchableOpacity >
+            <Ionicons name="add-circle-outline" size={48} color="#fff" />
+          </TouchableOpacity>
+        </TouchableOpacity>
 
         <CategoriaItem title="Este Final de Semana" />
 
@@ -122,8 +153,26 @@ export default function Home() {
           time="15h - 21h"
           onPress={handlePressEventos}
         />
+        <TouchableOpacity style={styles.addButtonContainer} onPress={handleAddEvent}>
+          <TouchableOpacity >
+            <Ionicons name="add-circle-outline" size={48} color="#fff" />
+          </TouchableOpacity>
+        </TouchableOpacity>
 
         <CategoriaItem title="Próximo Mês" />
+        <EventosItem
+          imageSource={require('../../assets/img/encontro.png')}
+          title='ENCONTRO COM DEUS'
+          date='27 À 28 DE ABRIL'
+          time='INTEGRAL'
+          onPress={handlePressEventos}
+        />
+
+        <TouchableOpacity style={styles.addButtonContainer} onPress={handleAddEvent}>
+          <TouchableOpacity >
+            <Ionicons name="add-circle-outline" size={48} color="#fff" />
+          </TouchableOpacity>
+        </TouchableOpacity>
 
         {eventos.map((evento, index) => (
           <EventosItem
@@ -210,5 +259,27 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 21,
+  },
+    editButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: '#3E4A59',
+    padding: 5,
+    borderRadius: 5,
+  },
+  editButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  addButtonContainer: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+    width: '85%',
+    padding:3,
+    borderRadius: 10,
+    backgroundColor: 'gray',
   },
 });

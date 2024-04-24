@@ -165,30 +165,30 @@ export default function Perfil() {
             onChangeText={(text) => setUsuario(usuario ? { ...usuario, dataNascimento: text } : null)}
           />
 
-<View style={[styles.containerButton]}>
-          {editMode ? (
-            <TouchableOpacity style={styles.button} onPress={handleSavePress}>
-              <Text style={styles.buttonText}>SALVAR</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity style={styles.button} onPress={handleEditPress}>
-              <Text style={styles.buttonText}>EDITAR</Text>
-            </TouchableOpacity>
-          )}
+          <View style={[styles.containerButton]}>
+            {editMode ? (
+              <TouchableOpacity style={styles.button} onPress={handleSavePress}>
+                <Text style={styles.buttonText}>SALVAR</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.button} onPress={handleEditPress}>
+                <Text style={styles.buttonText}>EDITAR</Text>
+              </TouchableOpacity>
+            )}
 
-          {!logado ? (
-            <TouchableOpacity style={[styles.button]} >
-              <Link href='/login'style={[styles.buttonText]}>LOGIN</Link>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity style={[styles.button]} onPress={handleLogout} >
-              <Text style={[styles.buttonText]}>SAIR</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={[styles.containerTextLink]}>
-          <Link href="/sign" style={[styles.textLink]} >CADASTRAR-SE</Link>
-        </View>
+            {!logado ? (
+              <TouchableOpacity style={[styles.button]} >
+                <Link href='/login'style={[styles.buttonText]}>LOGIN</Link>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={[styles.button]} onPress={handleLogout} >
+                <Text style={[styles.buttonText]}>SAIR</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View style={[styles.containerTextLink]}>
+            <Link href="/sign" style={[styles.textLink]} >CADASTRAR-SE</Link>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -31,6 +31,13 @@ interface Usuario {
   senha: string;
   funcao: string;
 }
+interface Evento {
+  id: string;
+  titulo: string;
+  data: string;
+  horario: string;
+  imagem: string;
+}
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 const auth = getAuth(firebaseApp);
@@ -133,5 +140,83 @@ export const buscarDadosDoBanco = async (userId: string): Promise<Usuario | null
     throw error;
   }
 };
+export const buscarEventosDoBanco = async (): Promise<Evento[]> => {
+  try {
+    const eventosRef = ref(database, 'eventos');
+    const snapshot: DataSnapshot = await get(eventosRef);
+    const eventos: Evento[] = [];
 
+    snapshot.forEach((childSnapshot) => {
+      const eventoData = childSnapshot.val();
+      const evento: Evento = {
+        id: childSnapshot.key !== null ? childSnapshot.key : '',
+        titulo: eventoData.titulo,
+        data: eventoData.data,
+        horario: eventoData.horario,
+        imagem: eventoData.imagem,
+      };
+      eventos.push(evento);
+    });
+
+    return eventos;
+  } catch (error) {
+    console.error('Erro ao buscar eventos no banco:', error);
+    throw error;
+  }
+};
+export const isAdmin = async (): Promise<boolean> => {
+  try {
+    const userId = await AsyncStorage.getItem('userId'); // Obtém o ID do usuário logado
+    if (userId) {
+      const usuario = await buscarDadosDoBanco(userId); // Busca os dados do usuário no banco de dados
+      if (usuario && usuario.funcao === 'admin') {
+        return true; // Retorna verdadeiro se o usuário for admin
+      } else {
+        return false; // Retorna falso se o usuário não for admin
+      }
+    } else {
+      return false; // Retorna falso se não houver nenhum usuário logado
+    }
+  } catch (error) {
+    console.error('Erro ao verificar status de administrador:', error);
+    return false; // Retorna falso em caso de erro
+  }
+};
+export const salvarEventoNoBanco = async (
+  titulo: string,
+  data: string,
+  horario: string,
+  imagem: string
+) => {
+  try {
+    // Referência para o nó 'eventos' no banco de dados
+    const eventosRef = ref(database, 'eventos');
+
+    // Cria um novo nó para o evento com um ID único gerado automaticamente
+    const novoEventoRef = push(eventosRef);
+
+    // Define os dados do evento
+    await set(novoEventoRef, {
+      titulo,
+      data,
+      horario,
+      imagem,
+    });
+
+    console.log('Evento salvo com sucesso!');
+  } catch (error) {
+    console.error('Erro ao salvar evento:', error);
+    throw error;
+  }
+};
+export const editarEventoNoBanco = async (eventoId: string, novosDados: Evento) => {
+  try {
+    const eventoRef = ref(database, `eventos/${eventoId}`);
+    await update(eventoRef, novosDados);
+    console.log('Dados do evento atualizados com sucesso!');
+  } catch (error) {
+    console.error('Erro ao editar dados do evento:', error);
+    throw error;
+  }
+};
 export default database;
