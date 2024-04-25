@@ -1,191 +1,49 @@
 /* eslint-disable prettier/prettier */
-import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  Image,
   StyleSheet,
-  Text,
-  View,
   ScrollView,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
   TouchableOpacity,
-  useWindowDimensions,
+  View,
+  Text,
 } from 'react-native';
 
-import { buscarEventosDoBanco, editarEventoNoBanco, isAdmin } from '../../utils/firebase';
+import Evento from '../../components/Event';
 
-interface Evento {
-  imageSource: any;
-  title: string;
-  date: string;
-  time: string;
-  onPress: () => void;
-}
 export default function Home() {
-  const navigation = useNavigation<any>();
-  const windowWidth = useWindowDimensions().width;
-  const [isAdminUser, setIsAdminUser] = useState<boolean>(false);
-  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [evento, setEvento] = useState();
 
-  useEffect(() => {
-    async function checkAdminStatus() {
-      const isAdmin = await verificarAdmin();
-      setIsAdminUser(isAdmin);
+  const handleAddEvento = () => {
+    console.log(evento);
+  }
 
-      const eventosFromDB = await buscarEventosDoBanco();
-      setEventos(eventosFromDB);
-    }
-    checkAdminStatus();
-  }, []);
-
-  const handlePressEventos = () => {
-    navigation.navigate('eventos');
-  };
-  const handlePressCelulas = () => {
-    navigation.navigate('celulas');
-  };
-  const handleAddEvent = () => {
-    // Aqui você pode abrir um modal ou navegar para uma nova tela para adicionar um novo evento
-    // Por enquanto, vamos apenas logar uma mensagem
-    console.log('Botão de adicionar evento clicado!');
-  };
-  const handleEditEvent = async (eventoId: string) => {
-    // Aqui você pode implementar a lógica para editar o evento
-    // Por enquanto, vamos apenas mostrar uma mensagem de log
-    console.log('Evento editado:', eventoId);
-  };
-
-  const CategoriaItem = ({ title }: { title: string }) => (
-    <View style={[styles.category]}>
-      <Text style={[styles.textCategory, { fontSize: windowWidth * 0.06 }]}>{title}</Text>
-    </View>
-  );
-  
-  const EventosItem = ({
-    imageSource,
-    title,
-    date,
-    time,
-    onPress,
-    ultimoItem = false,
-  }: {
-    imageSource: any;
-    title: string;
-    date: string;
-    time: string;
-    onPress: () => void;
-    ultimoItem?: boolean;
-  }) => {
-  const marginBottom = ultimoItem ? 100 : 20;
-  const isAdminUser = isAdmin();
-
-    return (
-      <View style={[styles.content, { marginBottom }]}>
-        <View style={styles.containerEventos}>
-          <TouchableOpacity onPress={onPress}>
-            <Image source={imageSource} style={styles.images} />
-            <View style={styles.textContainer}>
-              <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>{title}</Text>
-              <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>Data: {date}</Text>
-              <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-                Horário: {time}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          {isAdminUser && (
-            <TouchableOpacity onPress={() => handleEditEvent(id)} style={styles.editButton}>
-              <Text style={styles.editButtonText}>Editar</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-    );
-  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-      <ScrollView>
-        <CategoriaItem title="Esta Semana" />
+      <View style={[styles.containerEvento]}>
+      <View style={[styles.items]}>
+          <Evento text="Evento número 1"/>
+          <Evento text="Evento número 2"/>
+        </View>
+      </View>        
 
-        <EventosItem
-          imageSource={require('../../assets/img/imersao.png')}
-          title="IMERSÃO MARCADOS PELO ESPIRÍTO"
-          date="27/04/2024"
-          time="19h - 22h"
-          onPress={handlePressEventos}
-        />
-        <TouchableOpacity style={styles.addButtonContainer} onPress={handleAddEvent}>
-          <TouchableOpacity >
-            <Ionicons name="add-circle-outline" size={48} color="#fff" />
-          </TouchableOpacity>
-        </TouchableOpacity>
 
-        <CategoriaItem title="Este Final de Semana" />
-
-        <EventosItem
-          imageSource={require('../../assets/img/cultoIgreja.png')}
-          title="CULTO DA FAMÍLIA"
-          date="21/04/2024"
-          time="18h - 20h"
-          onPress={handlePressEventos}
-        />
-        <EventosItem
-          imageSource={require('../../assets/img/RK/encontro-kids.png')}
-          title="CULTO RADICAIS KIDS"
-          date="21/04/2024"
-          time="18h - 20h"
-          onPress={handlePressEventos}
-        />
-        <EventosItem
-          imageSource={require('../../assets/img/RL/Jesus.jpeg')}
-          title="NOSSAS CÉLULAS"
-          date="TODA SEMANA"
-          time="18h - 20h"
-          onPress={handlePressCelulas}
-        />
-        <EventosItem
-          imageSource={require('../../assets/img/RL/rl-united.jpg')}
-          title="CULTOS E REUNIÕES RADICAIS LUVRES"
-          date="TODO SÁBADO"
-          time="15h - 21h"
-          onPress={handlePressEventos}
-        />
-        <TouchableOpacity style={styles.addButtonContainer} onPress={handleAddEvent}>
-          <TouchableOpacity >
-            <Ionicons name="add-circle-outline" size={48} color="#fff" />
-          </TouchableOpacity>
-        </TouchableOpacity>
-
-        <CategoriaItem title="Próximo Mês" />
-        <EventosItem
-          imageSource={require('../../assets/img/encontro.png')}
-          title='ENCONTRO COM DEUS'
-          date='27 À 28 DE ABRIL'
-          time='INTEGRAL'
-          onPress={handlePressEventos}
-        />
-
-        <TouchableOpacity style={styles.addButtonContainer} onPress={handleAddEvent}>
-          <TouchableOpacity >
-            <Ionicons name="add-circle-outline" size={48} color="#fff" />
-          </TouchableOpacity>
-        </TouchableOpacity>
-
-        {eventos.map((evento, index) => (
-          <EventosItem
-            key={index}
-            imageSource={evento.imageSource}
-            title={evento.title}
-            date={evento.date}
-            time={evento.time}
-            onPress={evento.onPress}
-            ultimoItem={index === eventos.length - 1}
-          />
-        ))}
-      </ScrollView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={[styles.inputAddEvento]}>
+            <TextInput style={[styles.input]} placeholder='Escreva o Evento' />
+            <TouchableOpacity>
+              <View style={[styles.addEvento]}>
+                <Text style={[styles.addTexto]}>+</Text>
+              </View>
+            </TouchableOpacity>
+        </KeyboardAvoidingView>
+      <ScrollView />
     </SafeAreaView>
   );
 }
@@ -194,6 +52,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#040316',
+  },
+  containerEvento:{
+    paddingHorizontal: 20,
+  },
+  items: {
+    marginTop: 30,
+  },
+  inputAddEvento:{
+    position: 'absolute',
+    bottom: 110,
+    width: '75%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 60,
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
+  },
+  input: {
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    width: 250,
+  },
+  addEvento: {
+    width: 60,
+    height: 60,
+    backgroundColor: 'red',
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
+  },
+  addTexto: {
+    
   },
   content: {
     alignItems: 'center',
