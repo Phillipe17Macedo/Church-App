@@ -1,39 +1,68 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-const Task = (props: any) => {
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+const Event = (props: any) => {
+  const { text, imageUri, onPress } = props;
   return (
     <View style={[styles.item]}>
-      <View style={[styles.itemLeft]}>
-        <TouchableOpacity style={[styles.containerEvento]} />
-        <Text style={[styles.itemText]}>{props.text}</Text>
+      <View style={[styles.containerEvento]}>
+      <TouchableOpacity onPress={onPress}>
+          {imageUri ? (
+            <Image source={{ uri: imageUri }} style={[styles.images]} />
+          ) : (
+            <Image source={require('../assets/img/RL/Jesus.jpeg')} style={[styles.images]} />
+          )}
+          <View style={[styles.textContainer]}>
+            <Text style={[styles.itemText]}>{text}</Text>
+          </View>
+        </TouchableOpacity>
       </View>
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#fff',
-    padding: 15,
+    backgroundColor: '#3E4A59',
     borderRadius: 10,
-    marginBottom: 25,
-  },
-  itemLeft: {
-    flexDirection: 'row',
+    height: 250,
+    marginTop: 15,
+    marginBottom: 10,
     alignItems: 'center',
   },
+  itemLeft: {
+  },
   containerEvento: {
-    width: 30,
-    height: 30,
-    backgroundColor: 'lightblue',
-    borderRadius: 5,
-    opacity: 0.4,
-    marginRight: 15,
+    width: '100%',
+    height: '68%',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+  },
+  textContainer: {
+    position: 'absolute',
+    top: 170,
+    width: '100%',
+    height: 80,
+    backgroundColor: '#3E4A59',
+    paddingTop: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   itemText: {
+    textAlign: 'justify',
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#fff',
+    padding: 10,
+  },
+  images: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 });
-export default Task;
+export default Event;

@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { launchImageLibraryAsync } from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
@@ -11,39 +12,79 @@ import {
   TouchableOpacity,
   View,
   Text,
+  Keyboard,
 } from 'react-native';
 
 import Evento from '../../components/Event';
 
 export default function Home() {
-  const [evento, setEvento] = useState();
+  const [evento, setEvento] = useState('');
+  const [eventoItem, setEventoItems] = useState([]);
+  const [imageUri, setImageUri] = useState(null);
 
-  const handleAddEvento = () => {
+  const handleAddEvento = async () => {
+    let result = await launchImageLibraryAsync({
+      mediaTypes: 'Images',
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      console.log(result.uri);
+    }
     console.log(evento);
+    Keyboard.dismiss();
+    setEventoItems([...eventoItem, evento]);
+    setEvento(null);
+  }
+
+  const completeEvento = (index) => {
+    const itemsCopy = [...eventoItem];
+    itemsCopy.splice(index, 1);
+    setEventoItems(itemsCopy);
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={[styles.containerEvento]}>
-      <View style={[styles.items]}>
-          <Evento text="Evento número 1"/>
-          <Evento text="Evento número 2"/>
-        </View>
-      </View>        
+      <ScrollView>
+        <StatusBar style="auto" />
+          <View style={[styles.eventWrapper]}>
+
+            <View style={[styles.items]}>
+              {
+                eventoItem.map((item, index) => {
+                  return (
+                    <TouchableOpacity key={index} onPress={() => completeEvento(index)}>
+                    <Evento text={item.text} imageUri={item.imageUri} onPress={() => completeEvento(index)} />
+                  </TouchableOpacity>
+                  )
+                })
+              }
+            </View>
+
+          </View>        
 
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={[styles.inputAddEvento]}>
-            <TextInput style={[styles.input]} placeholder='Escreva o Evento' />
-            <TouchableOpacity>
-              <View style={[styles.addEvento]}>
-                <Text style={[styles.addTexto]}>+</Text>
-              </View>
-            </TouchableOpacity>
-        </KeyboardAvoidingView>
-      <ScrollView />
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={[styles.writeEventWrapper]}
+            >  
+              <TextInput 
+                style={[styles.input]} 
+                keyboardType='default' 
+                placeholder='Escreva o Evento' 
+                value={evento} 
+                onChangeText={(text) => setEvento(text)} 
+              />
+              
+              <TouchableOpacity onPress={() => handleAddEvento()}>
+                <View style={[styles.addWrapper]}>
+                  <Text style={[styles.addEvento]}>+</Text>
+                </View>
+              </TouchableOpacity>
+
+            </KeyboardAvoidingView>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -53,126 +94,45 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#040316',
   },
-  containerEvento:{
+  eventWrapper:{
     paddingHorizontal: 20,
   },
   items: {
-    marginTop: 30,
+    marginTop: 80,
   },
-  inputAddEvento:{
+  writeEventWrapper:{
+    flex: 1,
     position: 'absolute',
-    bottom: 110,
-    width: '75%',
+    marginTop: 10,
+    width: '90%',
+    alignSelf: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 60,
-    borderColor: '#C0C0C0',
-    borderWidth: 1,
   },
   input: {
     paddingVertical: 15,
     paddingHorizontal: 15,
+    backgroundColor: '#fff',
+    borderRadius: 60,
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
     width: 250,
   },
-  addEvento: {
+  addWrapper: {
     width: 60,
     height: 60,
-    backgroundColor: 'red',
+    backgroundColor: '#fff',
     borderRadius: 60,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#C0C0C0',
     borderWidth: 1,
   },
-  addTexto: {
-    
-  },
-  content: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    width: '85%',
-    height: 200,
-    marginBottom: 20,
-    backgroundColor: '#f1f1f1',
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  containerEventos: {
-    position: 'relative',
-    width: '100%',
-    height: '65.08%',
-    textAlign: 'center',
-    bottom: 35,
-  },
-  images: {
-    width: '100%',
-    height: '100%',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  textContainer: {
-    position: 'absolute',
-    top: 130,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 70,
-    backgroundColor: '#3E4A59',
-    paddingTop: 10,
-    paddingLeft: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  textOne: {
-    color: '#fff',
-    textAlign: 'left',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  textTwo: {
-    color: '#fff',
-    textAlign: 'left',
-    fontSize: 14,
-  },
-  textThree: {
-    color: '#fff',
-    textAlign: 'left',
-    fontSize: 14,
-  },
-  category: {
-    marginBottom: 20,
-    width: '85%',
-    height: 'auto',
-    alignSelf: 'center',
-  },
-  textCategory: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 21,
-  },
-    editButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    backgroundColor: '#3E4A59',
-    padding: 5,
-    borderRadius: 5,
-  },
-  editButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  addButtonContainer: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    width: '85%',
-    padding:3,
-    borderRadius: 10,
-    backgroundColor: 'gray',
+  addEvento: {
+    fontSize: 40,
+    fontWeight: 'normal',
+    paddingBottom: 3,
+    color: 'gray',
   },
 });
