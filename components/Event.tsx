@@ -1,12 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-const Event = (props: any) => {
-  const { text, imageUri, onPress } = props;
+
+const Event = ({ text, imageUri, onPress }) => {
   return (
     <View style={[styles.item]}>
       <View style={[styles.containerEvento]}>
-      <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={[styles.images]} />
           ) : (
@@ -17,7 +17,6 @@ const Event = (props: any) => {
           </View>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 };
@@ -38,6 +37,7 @@ const styles = StyleSheet.create({
     height: '68%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
+    overflow: 'hidden',
   },
   textContainer: {
     position: 'absolute',

@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { launchImageLibraryAsync } from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
@@ -13,14 +14,16 @@ import {
   View,
   Text,
   Keyboard,
+  Image,
+  Button,
 } from 'react-native';
 
-import Evento from '../../components/Event';
+import ImageEvento from '../../components/Event';
 
 export default function Home() {
   const [evento, setEvento] = useState('');
   const [eventoItem, setEventoItems] = useState([]);
-  const [imageUri, setImageUri] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleAddEvento = async () => {
     let result = await launchImageLibraryAsync({
@@ -29,13 +32,14 @@ export default function Home() {
       aspect: [4, 3],
       quality: 1,
     });
+
+    console.log(result);
+
     if (!result.canceled) {
-      console.log(result.uri);
+      setEventoItems([...eventoItem, { text: evento, imageUri: result.uri }]);
+      setEvento('');
     }
-    console.log(evento);
     Keyboard.dismiss();
-    setEventoItems([...eventoItem, evento]);
-    setEvento(null);
   }
 
   const completeEvento = (index) => {
@@ -55,8 +59,8 @@ export default function Home() {
                 eventoItem.map((item, index) => {
                   return (
                     <TouchableOpacity key={index} onPress={() => completeEvento(index)}>
-                    <Evento text={item.text} imageUri={item.imageUri} onPress={() => completeEvento(index)} />
-                  </TouchableOpacity>
+                      <ImageEvento text={item.text} imageUri={item.imageUri} onPress={() => completeEvento(index)} />
+                    </TouchableOpacity>
                   )
                 })
               }
@@ -134,5 +138,9 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     paddingBottom: 3,
     color: 'gray',
+  },
+  imagensEventos: {
+    width: 200,
+    height: 200,
   },
 });
