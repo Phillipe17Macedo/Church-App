@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { launchImageLibraryAsync } from 'expo-image-picker';
-import * as ImagePicker from 'expo-image-picker';
+import { launchImageLibraryAsync, ImagePickerResult } from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
@@ -18,11 +17,11 @@ import {
   Button,
 } from 'react-native';
 
-import ImageEvento from '../../components/Event';
+import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
 
 export default function Home() {
   const [evento, setEvento] = useState('');
-  const [eventoItem, setEventoItems] = useState([]);
+  const [eventoItem, setEventoItems] = useState<{ text: string; imageUri: string }[]>([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleAddEvento = async () => {
@@ -42,7 +41,7 @@ export default function Home() {
     Keyboard.dismiss();
   }
 
-  const completeEvento = (index) => {
+  const completeEvento = (index: number) => {
     const itemsCopy = [...eventoItem];
     itemsCopy.splice(index, 1);
     setEventoItems(itemsCopy);

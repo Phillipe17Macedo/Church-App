@@ -2,21 +2,23 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 
-const Event = ({ text, imageUri, onPress }) => {
+const ImagemEvento = (props: any) => {
+  const { text, imageUri, onPress } = props;
   return (
     <View style={[styles.item]}>
       <View style={[styles.containerEvento]}>
-        <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={onPress}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={[styles.images]} />
           ) : (
-            <Image source={require('../assets/img/RL/Jesus.jpeg')} style={[styles.images]} />
+            <Image source={require('../../assets/img/RL/Jesus.jpeg')} style={[styles.images]} />
           )}
           <View style={[styles.textContainer]}>
             <Text style={[styles.itemText]}>{text}</Text>
           </View>
         </TouchableOpacity>
       </View>
+
     </View>
   );
 };
@@ -37,7 +39,6 @@ const styles = StyleSheet.create({
     height: '68%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
-    overflow: 'hidden',
   },
   textContainer: {
     position: 'absolute',
@@ -65,4 +66,4 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
   },
 });
-export default Event;
+export default ImagemEvento;
