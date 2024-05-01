@@ -20,6 +20,7 @@ import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
 
 export default function Home() {
   const [isAdminUser, setIsAdminUser] = useState(false);
+  const [eventoItems, setEventoItems] = useState<Evento[]>([]);
 
   useEffect(() => {
     // Verifica se o usuário é administrador ao carregar a tela
@@ -28,13 +29,22 @@ export default function Home() {
       setIsAdminUser(isAdminResult);
     };
     checkAdminStatus();
-    
+
+    // Busca os eventos do banco de dados ao carregar a tela
+    const fetchEventos = async () => {
+      try {
+        const eventosDoBanco = await buscarEventosDoBanco();
+        setEventoItems(eventosDoBanco);
+      } catch (error) {
+        console.error('Erro ao buscar eventos:', error);
+      }
+    };
+    fetchEventos();
   }, []);
 
   const [tituloEvento, setTituloEvento] = useState('');
   const [dataDoEvento, setDataDoEvento] = useState('');
   const [horarioDoEvento, setHorarioDoEvento] = useState('');
-  const [eventoItem, setEventoItems] = useState<{ nomeEvento: string; dataEvento: string; horarioEvento: string; imageUri: string }[]>([]);
 
   const handleAddEvento = async () => {
     try{
@@ -43,15 +53,8 @@ export default function Home() {
         aspect: [3, 2],
         quality: 1,
       });
-
-      console.log('Informações sobre a Imagem: ',result);
-      console.log('Titulo do Evento: ', tituloEvento);
-      console.log('Data do Evento: ', dataDoEvento);
-      console.log('Horario do Evento: ', horarioDoEvento);
       if (!result.canceled) {
-
         const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, result.assets[0].uri);
-
         const novoEvento = {
           id: eventoId,
           nomeEvento: tituloEvento,
@@ -60,7 +63,7 @@ export default function Home() {
           imageUri: result.assets[0].uri,
         };
         setEventoItems([
-          ...eventoItem, 
+          ...eventoItems, 
           novoEvento
         ]);
         setTituloEvento('');
@@ -75,16 +78,13 @@ export default function Home() {
 
   const completeEvento = async (index: number) => {
     try {
-      const itemToRemove = eventoItem[index];
+      const itemToRemove = eventoItems[index];
       if (!itemToRemove) {
         console.error('O evento não foi encontrado.');
         return;
       }
-  
       const { nomeEvento, dataEvento, horarioEvento, imageUri } = itemToRemove;
-  
       const eventos = await buscarEventosDoBanco(); // Função para buscar os eventos do banco de dados
-  
       const eventoEncontrado = eventos.find(
         evento =>
           evento.titulo === nomeEvento &&
@@ -92,24 +92,19 @@ export default function Home() {
           evento.horario === horarioEvento &&
           evento.imagem === imageUri
       );
-  
       if (!eventoEncontrado) {
         console.error('Evento não encontrado no banco de dados.');
         return;
       }
-  
       const eventoId = eventoEncontrado.id;
-  
-      const itemsCopy = [...eventoItem];
+      const itemsCopy = [...eventoItems];
       itemsCopy.splice(index, 1);
       setEventoItems(itemsCopy);
-  
       await removerEventoDoBanco(eventoId);
     } catch (error) {
       console.error('Erro ao remover evento:', error);
     }
   }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -118,14 +113,14 @@ export default function Home() {
 
             <View style={[styles.areaContainerEvento]}>
               {
-                eventoItem.map((item, index) => {
+                eventoItems.map((item, index) => {
                   return (
                     <TouchableOpacity key={index} onPress={() => completeEvento(index)}>
                       <ImageEvento 
-                        nomeEvento={item.nomeEvento} 
-                        dataEvento={item.dataEvento}
-                        horarioEvento={item.horarioEvento}
-                        imageUri={item.imageUri} 
+                        nomeEvento={item.titulo} 
+                        dataEvento={item.data}
+                        horarioEvento={item.horario}
+                        imageUri={item.imagem} 
                         onPress={() => completeEvento(index)} 
                       />
                     </TouchableOpacity>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, push, set, get, update, DataSnapshot, remove } from 'firebase/database';
 // Optionally import the services that you want to use
 // import {...} from "firebase/auth";
@@ -133,7 +133,6 @@ export const buscarDadosDoBanco = async (userId: string): Promise<Usuario | null
         return usuario;
       }
     }
-
     return null; // Retorna null se o usuário não foi encontrado ou os dados estão incompletos
   } catch (error) {
     console.error('Erro ao buscar dados no banco:', error);
@@ -157,7 +156,6 @@ export const buscarEventosDoBanco = async (): Promise<Evento[]> => {
       };
       eventos.push(evento);
     });
-
     return eventos;
   } catch (error) {
     console.error('Erro ao buscar eventos no banco:', error);
@@ -191,10 +189,8 @@ export const salvarEventoNoBanco = async (
   try {
     // Referência para o nó 'eventos' no banco de dados
     const eventosRef = ref(database, 'eventos');
-
     // Cria um novo nó para o evento com um ID único gerado automaticamente
     const novoEventoRef = push(eventosRef);
-
     // Define os dados do evento
     await set(novoEventoRef, {
       titulo,

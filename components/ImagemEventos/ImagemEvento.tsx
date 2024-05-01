@@ -3,7 +3,11 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 
 const ImagemEvento = (props: any) => {
-  const { nomeEvento, dataEvento, horarioEvento, text, imageUri, onPress } = props;
+  const { nomeEvento, dataEvento, horarioEvento, imageUri, onPress } = props;
+  console.log("Nome do Evento: ",nomeEvento);
+  console.log("Data do Evento: ",dataEvento);
+  console.log("Hora do Evento: ",horarioEvento);
+  console.log("Endereço da Imagem: ",imageUri);
   return (
     <View style={[styles.containerEvento]}>
       <View style={[styles.containerImagemEvento]}>
