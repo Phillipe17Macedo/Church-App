@@ -13,16 +13,15 @@ import {
   View,
   Text,
   Keyboard,
-  Image,
-  Button,
 } from 'react-native';
 
 import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
 
 export default function Home() {
-  const [evento, setEvento] = useState('');
-  const [eventoItem, setEventoItems] = useState<{ text: string; imageUri: string }[]>([]);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [tituloEvento, setTituloEvento] = useState('');
+  const [dataDoEvento, setDataDoEvento] = useState('');
+  const [horarioDoEvento, setHorarioDoEvento] = useState('');
+  const [eventoItem, setEventoItems] = useState<{ nomeEvento: string; dataEvento: string; horarioEvento: string; imageUri: string }[]>([]);
 
   const handleAddEvento = async () => {
     let result = await launchImageLibraryAsync({
@@ -32,10 +31,16 @@ export default function Home() {
     });
 
     console.log('Informações sobre a Imagem: ',result);
-    console.log('Texto do Evento: ', evento);
+    console.log('Titulo do Evento: ', tituloEvento);
+    console.log('Data do Evento: ', dataDoEvento);
+    console.log('Horario do Evento: ', horarioDoEvento);
     if (!result.canceled) {
-      setEventoItems([...eventoItem, { text: evento, imageUri: result.assets[0].uri }]);
-      setEvento('');
+      setEventoItems([
+        ...eventoItem, { nomeEvento: tituloEvento, dataEvento: dataDoEvento, horarioEvento: horarioDoEvento, imageUri: result.assets[0].uri }
+      ]);
+      setTituloEvento('');
+      setDataDoEvento('');
+      setHorarioDoEvento('');
     }
     Keyboard.dismiss();
   }
@@ -57,7 +62,13 @@ export default function Home() {
                 eventoItem.map((item, index) => {
                   return (
                     <TouchableOpacity key={index} onPress={() => completeEvento(index)}>
-                      <ImageEvento text={item.text} imageUri={item.imageUri} onPress={() => completeEvento(index)} />
+                      <ImageEvento 
+                        nomeEvento={item.nomeEvento} 
+                        dataEvento={item.dataEvento}
+                        horarioEvento={item.horarioEvento}
+                        imageUri={item.imageUri} 
+                        onPress={() => completeEvento(index)} 
+                      />
                     </TouchableOpacity>
                   )
                 })
@@ -74,11 +85,24 @@ export default function Home() {
               <TextInput 
                 style={[styles.inputTextoEvento]} 
                 keyboardType='default' 
-                placeholder='Escreva o Evento' 
-                value={evento} 
-                onChangeText={(text) => setEvento(text)} 
+                placeholder='Nome do Evento' 
+                value={tituloEvento} 
+                onChangeText={(nomeEvento) => setTituloEvento(nomeEvento)} 
               />
-              
+              <TextInput 
+                style={[styles.inputTextoEvento]} 
+                keyboardType='phone-pad' 
+                placeholder='Data do Evento' 
+                value={dataDoEvento} 
+                onChangeText={(dataEvento) => setDataDoEvento(dataEvento)} 
+              />
+              <TextInput 
+                style={[styles.inputTextoEvento]} 
+                keyboardType='phone-pad' 
+                placeholder='Horário do Evento' 
+                value={horarioDoEvento} 
+                onChangeText={(horarioEvento) => setHorarioDoEvento(horarioEvento)} 
+              />
               <TouchableOpacity onPress={() => handleAddEvento()}>
                 <View style={[styles.containerIconeAddEvento]}>
                   <Text style={[styles.iconeAddEvento]}>+</Text>
@@ -95,44 +119,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#040316',
+    paddingBottom: 100,
   },
   areaEventos:{
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
   },
   areaContainerEvento: {
-    marginTop: 80,
+    marginTop: 10,
   },
   containerInputNewEvento:{
     flex: 1,
-    position: 'absolute',
+    position: 'relative',
     marginTop: 10,
     width: '90%',
+    height: 'auto',
     alignSelf: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   inputTextoEvento: {
-    paddingVertical: 15,
+    paddingVertical: 5,
     paddingHorizontal: 15,
     backgroundColor: '#fff',
     borderRadius: 60,
     borderColor: '#C0C0C0',
     borderWidth: 1,
-    width: 250,
+    width: '100%',
+    height: 40,
+    marginBottom: 5,
   },
   containerIconeAddEvento: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     backgroundColor: '#fff',
     borderRadius: 60,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#C0C0C0',
     borderWidth: 1,
+    marginBottom: 5,
   },
   iconeAddEvento: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: 'normal',
     paddingBottom: 3,
     color: 'gray',

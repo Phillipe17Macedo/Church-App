@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 
 const ImagemEvento = (props: any) => {
-  const { text, imageUri, onPress } = props;
+  const { nomeEvento, dataEvento, horarioEvento, text, imageUri, onPress } = props;
   return (
     <View style={[styles.containerEvento]}>
       <View style={[styles.containerImagemEvento]}>
@@ -14,7 +14,9 @@ const ImagemEvento = (props: any) => {
             <Image source={require('../../assets/img/RL/Jesus.jpeg')} style={[styles.imagemEvento]} />
           )}
           <View style={[styles.containerTextoEvento]}>
-            <Text style={[styles.textoEvento]}>{text}</Text>
+            <Text style={[styles.textoTituloEvento]}>{nomeEvento}</Text>
+            <Text style={[styles.textoDataEvento]}>{dataEvento}</Text>
+            <Text style={[styles.textoHorarioEvento]}>{horarioEvento}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -25,6 +27,7 @@ const ImagemEvento = (props: any) => {
 
 const styles = StyleSheet.create({
   containerEvento: {
+    position: 'relative',
     backgroundColor: '#fff',
     borderRadius: 10,
     height: 245,
@@ -56,12 +59,29 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
   },
-  textoEvento: {
+  textoTituloEvento: {
     textAlign: 'justify',
-    fontSize: 25,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
-    padding: 10,
+    paddingLeft: 10,
+    borderWidth: 1,
   },
+  textoDataEvento: {
+    textAlign: 'justify',
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
+    paddingLeft: 10,
+    borderWidth: 1,
+  },
+  textoHorarioEvento: {
+    textAlign: 'justify',
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
+    paddingLeft: 10,
+    borderWidth: 1,
+  }
 });
 export default ImagemEvento;
