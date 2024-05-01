@@ -26,16 +26,15 @@ export default function Home() {
 
   const handleAddEvento = async () => {
     let result = await launchImageLibraryAsync({
-      mediaTypes: 'Images',
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
 
-    console.log(result);
-
+    console.log('Informações sobre a Imagem: ',result);
+    console.log('Texto do Evento: ', evento);
     if (!result.canceled) {
-      setEventoItems([...eventoItem, { text: evento, imageUri: result.uri }]);
+      setEventoItems([...eventoItem, { text: evento, imageUri: result.assets[0].uri }]);
       setEvento('');
     }
     Keyboard.dismiss();
@@ -51,9 +50,9 @@ export default function Home() {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <StatusBar style="auto" />
-          <View style={[styles.eventWrapper]}>
+          <View style={[styles.areaEventos]}>
 
-            <View style={[styles.items]}>
+            <View style={[styles.areaContainerEvento]}>
               {
                 eventoItem.map((item, index) => {
                   return (
@@ -70,10 +69,10 @@ export default function Home() {
 
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : "height"}
-              style={[styles.writeEventWrapper]}
+              style={[styles.containerInputNewEvento]}
             >  
               <TextInput 
-                style={[styles.input]} 
+                style={[styles.inputTextoEvento]} 
                 keyboardType='default' 
                 placeholder='Escreva o Evento' 
                 value={evento} 
@@ -81,8 +80,8 @@ export default function Home() {
               />
               
               <TouchableOpacity onPress={() => handleAddEvento()}>
-                <View style={[styles.addWrapper]}>
-                  <Text style={[styles.addEvento]}>+</Text>
+                <View style={[styles.containerIconeAddEvento]}>
+                  <Text style={[styles.iconeAddEvento]}>+</Text>
                 </View>
               </TouchableOpacity>
 
@@ -97,13 +96,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#040316',
   },
-  eventWrapper:{
+  areaEventos:{
     paddingHorizontal: 20,
   },
-  items: {
+  areaContainerEvento: {
     marginTop: 80,
   },
-  writeEventWrapper:{
+  containerInputNewEvento:{
     flex: 1,
     position: 'absolute',
     marginTop: 10,
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
   },
-  input: {
+  inputTextoEvento: {
     paddingVertical: 15,
     paddingHorizontal: 15,
     backgroundColor: '#fff',
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: 250,
   },
-  addWrapper: {
+  containerIconeAddEvento: {
     width: 60,
     height: 60,
     backgroundColor: '#fff',
@@ -132,14 +131,10 @@ const styles = StyleSheet.create({
     borderColor: '#C0C0C0',
     borderWidth: 1,
   },
-  addEvento: {
+  iconeAddEvento: {
     fontSize: 40,
     fontWeight: 'normal',
     paddingBottom: 3,
     color: 'gray',
-  },
-  imagensEventos: {
-    width: 200,
-    height: 200,
   },
 });

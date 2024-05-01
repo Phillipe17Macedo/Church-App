@@ -5,16 +5,16 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 const ImagemEvento = (props: any) => {
   const { text, imageUri, onPress } = props;
   return (
-    <View style={[styles.item]}>
-      <View style={[styles.containerEvento]}>
+    <View style={[styles.containerEvento]}>
+      <View style={[styles.containerImagemEvento]}>
       <TouchableOpacity onPress={onPress}>
           {imageUri ? (
-            <Image source={{ uri: imageUri }} style={[styles.images]} />
+            <Image source={{ uri: imageUri }} style={[styles.imagemEvento]} />
           ) : (
-            <Image source={require('../../assets/img/RL/Jesus.jpeg')} style={[styles.images]} />
+            <Image source={require('../../assets/img/RL/Jesus.jpeg')} style={[styles.imagemEvento]} />
           )}
-          <View style={[styles.textContainer]}>
-            <Text style={[styles.itemText]}>{text}</Text>
+          <View style={[styles.containerTextoEvento]}>
+            <Text style={[styles.textoEvento]}>{text}</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -24,46 +24,44 @@ const ImagemEvento = (props: any) => {
 };
 
 const styles = StyleSheet.create({
-  item: {
-    backgroundColor: '#3E4A59',
+  containerEvento: {
+    backgroundColor: '#fff',
     borderRadius: 10,
-    height: 250,
+    height: 245,
     marginTop: 15,
     marginBottom: 10,
     alignItems: 'center',
   },
-  itemLeft: {
-  },
-  containerEvento: {
+  containerImagemEvento: {
     width: '100%',
-    height: '68%',
+    height: '69.5%',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
   },
-  textContainer: {
-    position: 'absolute',
-    top: 170,
-    width: '100%',
-    height: 80,
-    backgroundColor: '#3E4A59',
-    paddingTop: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  itemText: {
-    textAlign: 'justify',
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    padding: 10,
-  },
-  images: {
+  imagemEvento: {
     alignSelf: 'center',
     justifyContent: 'center',
     width: '100%',
     height: '100%',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  containerTextoEvento: {
+    position: 'absolute',
+    top: 170,
+    width: '100%',
+    height: 75,
+    backgroundColor: '#3E4A59',
+    justifyContent: 'center',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  textoEvento: {
+    textAlign: 'justify',
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#fff',
+    padding: 10,
   },
 });
 export default ImagemEvento;
