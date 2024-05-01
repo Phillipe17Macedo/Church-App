@@ -15,6 +15,7 @@ import {
   Keyboard,
 } from 'react-native';
 
+import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco } from '~/utils/firebase';
 import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
 
 export default function Home() {
@@ -24,31 +25,77 @@ export default function Home() {
   const [eventoItem, setEventoItems] = useState<{ nomeEvento: string; dataEvento: string; horarioEvento: string; imageUri: string }[]>([]);
 
   const handleAddEvento = async () => {
-    let result = await launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [3, 2],
-      quality: 1,
-    });
+    try{
+      let result = await launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [3, 2],
+        quality: 1,
+      });
 
-    console.log('Informações sobre a Imagem: ',result);
-    console.log('Titulo do Evento: ', tituloEvento);
-    console.log('Data do Evento: ', dataDoEvento);
-    console.log('Horario do Evento: ', horarioDoEvento);
-    if (!result.canceled) {
-      setEventoItems([
-        ...eventoItem, { nomeEvento: tituloEvento, dataEvento: dataDoEvento, horarioEvento: horarioDoEvento, imageUri: result.assets[0].uri }
-      ]);
-      setTituloEvento('');
-      setDataDoEvento('');
-      setHorarioDoEvento('');
+      console.log('Informações sobre a Imagem: ',result);
+      console.log('Titulo do Evento: ', tituloEvento);
+      console.log('Data do Evento: ', dataDoEvento);
+      console.log('Horario do Evento: ', horarioDoEvento);
+      if (!result.canceled) {
+
+        const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, result.assets[0].uri);
+
+        const novoEvento = {
+          id: eventoId,
+          nomeEvento: tituloEvento,
+          dataEvento: dataDoEvento,
+          horarioEvento: horarioDoEvento,
+          imageUri: result.assets[0].uri,
+        };
+        setEventoItems([
+          ...eventoItem, 
+          novoEvento
+        ]);
+        setTituloEvento('');
+        setDataDoEvento('');
+        setHorarioDoEvento('');
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar evento:', error);
     }
     Keyboard.dismiss();
   }
 
-  const completeEvento = (index: number) => {
-    const itemsCopy = [...eventoItem];
-    itemsCopy.splice(index, 1);
-    setEventoItems(itemsCopy);
+  const completeEvento = async (index: number) => {
+    try {
+      const itemToRemove = eventoItem[index];
+      if (!itemToRemove) {
+        console.error('O evento não foi encontrado.');
+        return;
+      }
+  
+      const { nomeEvento, dataEvento, horarioEvento, imageUri } = itemToRemove;
+  
+      const eventos = await buscarEventosDoBanco(); // Função para buscar os eventos do banco de dados
+  
+      const eventoEncontrado = eventos.find(
+        evento =>
+          evento.titulo === nomeEvento &&
+          evento.data === dataEvento &&
+          evento.horario === horarioEvento &&
+          evento.imagem === imageUri
+      );
+  
+      if (!eventoEncontrado) {
+        console.error('Evento não encontrado no banco de dados.');
+        return;
+      }
+  
+      const eventoId = eventoEncontrado.id;
+  
+      const itemsCopy = [...eventoItem];
+      itemsCopy.splice(index, 1);
+      setEventoItems(itemsCopy);
+  
+      await removerEventoDoBanco(eventoId);
+    } catch (error) {
+      console.error('Erro ao remover evento:', error);
+    }
   }
 
   return (

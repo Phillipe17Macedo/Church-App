@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getDatabase, ref, push, set, get, update, DataSnapshot } from 'firebase/database';
+import { getDatabase, ref, push, set, get, update, DataSnapshot, remove } from 'firebase/database';
 // Optionally import the services that you want to use
 // import {...} from "firebase/auth";
 // import {...} from "firebase/database";
@@ -209,6 +209,18 @@ export const salvarEventoNoBanco = async (
     throw error;
   }
 };
+
+export const removerEventoDoBanco = async (eventoId: string) => {
+  try {
+    const eventoRef = ref(database, `eventos/${eventoId}`);
+    await remove(eventoRef);
+    console.log('Evento removido com sucesso!');
+  } catch (error) {
+    console.error('Erro ao remover evento:', error);
+    throw error;
+  }
+};
+
 export const editarEventoNoBanco = async (eventoId: string, novosDados: Evento) => {
   try {
     const eventoRef = ref(database, `eventos/${eventoId}`);

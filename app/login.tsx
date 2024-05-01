@@ -23,22 +23,6 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
 
-  // Inicializar o Firebase App
-  useEffect(() => {
-    const firebaseConfig = {
-      apiKey: 'AIzaSyCyhMAnKhc2y_2EzP2LyO7-AbVEBjgj2ek',
-      authDomain: 'videiraapp.firebaseapp.com',
-      databaseURL: 'https://videiraapp-default-rtdb.firebaseio.com',
-      projectId: 'videiraapp',
-      storageBucket: 'videiraapp.appspot.com',
-      messagingSenderId: '348499807286',
-      appId: '1:348499807286:web:c9bcbc26c1c9acad9adc97',
-      measurementId: 'G-KHDPWMVYNN',
-    };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const firebaseApp = initializeApp(firebaseConfig);
-  }, []);
-
   const handleLoginPress = async () => {
     console.log('Dados de Logados:');
     console.log('Email:', email);
