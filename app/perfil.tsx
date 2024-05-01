@@ -15,7 +15,7 @@ import {
   Alert,
 } from 'react-native';
 
-import { salvarUsuario, buscarDadosDoBanco, signOut } from '../utils/firebase';
+import { atualizarDadosNoBanco, buscarDadosDoBanco, signOut } from '../utils/firebase';
 
 interface Usuario {
   id: string;
@@ -30,7 +30,6 @@ interface Usuario {
 
 export default function Perfil() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
-
   const [nome, setNome] = useState('');
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
@@ -38,17 +37,11 @@ export default function Perfil() {
   const [dataNascimento, setDataNascimento] = useState('');
   const [senha, setSenha] = useState('');
   const [funcao, setFuncao] = useState('');
-  
   const [editMode, setEditMode] = useState(false);
-  const [Logado, setLogado] = useState(false);
-  const [carregando, setCarregando] = useState(true);
+  const [logado, setLogado] = useState(false);
 
   useEffect(() => {
-    buscarDadosUsuario(); // Buscar os dados do usuário ao abrir a tela de perfil
-  }, []);
-
-  useEffect(() => {
-    verificarUsuarioLogado(); // Verifica se o usuário está logado ao carregar a tela do perfil
+    verificarUsuarioLogado();
   }, []);
 
   const verificarUsuarioLogado = async () => {
@@ -60,97 +53,85 @@ export default function Perfil() {
           setUsuario(usuario);
           setLogado(true);
         } else {
+          setUsuario(null);
           setLogado(false);
-          // Limpar os campos
-          setNome('');
-          setTelefone('');
-          setEndereco('');
-          setEmail('');
-          setDataNascimento('');
-          setSenha('');
-          setFuncao('');
         }
       } else {
+        setUsuario(null);
         setLogado(false);
-        // Limpar os campos
-        setNome('');
-        setTelefone('');
-        setEndereco('');
-        setEmail('');
-        setDataNascimento('');
-        setSenha('');
-        setFuncao('');
       }
-      setCarregando(false); // Marca o carregamento como completo
+      console.log('Usuario está:', logado); // Adicionando mensagem de console para depuração
     } catch (error) {
       console.error('Erro ao verificar se o usuário está logado:', error);
+      setUsuario(null);
       setLogado(false);
-      // Limpar os campos
-      setNome('');
-      setTelefone('');
-      setEndereco('');
-      setEmail('');
-      setDataNascimento('');
-      setSenha('');
-      setFuncao('');
-      setCarregando(false);
     }
   };
+
   const handleLogout = async () => {
     try {
       await signOut();
       setLogado(false);
+      limparCampos();
       Alert.alert('Logout realizado com sucesso.');
+      console.log('Logout realizado com Sucesso.');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
       Alert.alert('Erro ao fazer logout.');
     }
   };
-  const buscarDadosUsuario = async () => {
-    try {
-      const userId = await AsyncStorage.getItem('userId');
-      console.log('ID do usuário recuperado:', userId);
-      if (userId && Logado) { // Verifica se o usuário está logado antes de buscar os dados
-        const usuario = await buscarDadosDoBanco(userId);
-        if (usuario) {
-          console.log('Dados do usuário encontrados:', usuario);
-          setUsuario(usuario);
-        } else {
-          console.log('Usuário não encontrado no banco de dados.');
-          setUsuario(null); // Define o usuário como nulo para limpar os campos
-        }
-      } else {
-        console.log('Usuário não está logado ou ID do usuário não encontrado no AsyncStorage.');
-        setUsuario(null); // Define o usuário como nulo para limpar os campos
-      }
-    } catch (error) {
-      console.error('Erro ao buscar dados do usuário:', error);
-      setUsuario(null); // Define o usuário como nulo para limpar os campos
-    }
+
+  const limparCampos = () => {
+    setNome('');
+    setTelefone('');
+    setEndereco('');
+    setEmail('');
+    setDataNascimento('');
+    setSenha('');
+    setFuncao('');
   };
+
   const handleEditPress = () => {
     setEditMode(true);
   };
+
   const handleSavePress = () => {
     setEditMode(false);
-    const novoUsuario = {
-      id: usuario?.id || '',
-      nome,
-      telefone,
-      endereco,
-      email,
-      dataNascimento,
-      senha,
-      funcao,
+    if (!usuario) {
+      console.error('Usuário não encontrado para atualização.');
+      return;
+    }
+  
+    const novosDados = { 
+      id: usuario.id,
+      nome: nome || usuario.nome,
+      telefone: telefone || usuario.telefone,
+      endereco: endereco || usuario.endereco,
+      email: email || usuario.email,
+      dataNascimento: dataNascimento || usuario.dataNascimento,
+      senha: senha || usuario.senha,
+      funcao: funcao || usuario.funcao,
     };
-
-    salvarUsuario(novoUsuario);
+  
+    atualizarDadosNoBanco(usuario.id, novosDados)
+      .then(() => {
+        console.log('Dados do usuário atualizados com sucesso!');
+      })
+      .catch((error) => {
+        console.error('Erro ao atualizar dados do usuário:', error);
+      });
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         <View style={[styles.containerInput]}>
+          <View style={[styles.containerTitulo]}>
+            <Text style={[styles.titulo]}>
+              DADOS PESSOAIS
+            </Text>
+          </View>
           <TextInput
             style={[styles.inputDados]}
             keyboardType="default"
@@ -177,49 +158,43 @@ export default function Perfil() {
           />
           <TextInput
             style={[styles.inputDados]}
-            keyboardType="email-address"
-            placeholder="Email"
-            editable={editMode}
-            value={usuario ? usuario.email : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, email: text } : null)}
-          />
-          <TextInput
-            style={[styles.inputDados]}
             keyboardType="decimal-pad"
             placeholder="Data de Nascimento"
             editable={editMode}
             value={usuario ? usuario.dataNascimento : ''}
             onChangeText={(text) => setUsuario(usuario ? { ...usuario, dataNascimento: text } : null)}
           />
-        </View>
-        <View style={[styles.containerButton]}>
-          {editMode ? (
-            <TouchableOpacity style={styles.button} onPress={handleSavePress}>
-              <Text style={styles.buttonText}>SALVAR</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity style={styles.button} onPress={handleEditPress}>
-              <Text style={styles.buttonText}>EDITAR</Text>
-            </TouchableOpacity>
-          )}
 
-          {!Logado ? (
-            <TouchableOpacity style={[styles.button]}>
-              <Link href='/login'style={[styles.buttonText]}>LOGIN</Link>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity style={[styles.button]} onPress={handleLogout}>
-              <Text style={[styles.buttonText]}>SAIR</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={[styles.containerTextLink]}>
-          <Link href="/sign" style={[styles.textLink]} >CADASTRAR-SE</Link>
+          <View style={[styles.containerButton]}>
+            {editMode ? (
+              <TouchableOpacity style={styles.button} onPress={handleSavePress}>
+                <Text style={styles.buttonText}>SALVAR</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.button} onPress={handleEditPress}>
+                <Text style={styles.buttonText}>EDITAR</Text>
+              </TouchableOpacity>
+            )}
+
+            {!logado ? (
+              <TouchableOpacity style={[styles.button]} >
+                <Link href='/login'style={[styles.buttonText]}>LOGIN</Link>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={[styles.button]} onPress={handleLogout} >
+                <Text style={[styles.buttonText]}>SAIR</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View style={[styles.containerTextLink]}>
+            <Link href="/sign" style={[styles.textLink]} >CADASTRAR-SE</Link>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -232,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent:'space-between',
     flexDirection: 'column',
-    marginTop: 20,
+    marginTop: 100,
     paddingTop: 15,
     paddingBottom: 5,
     borderRadius: 20,
@@ -241,6 +216,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 10,
     elevation: 5,  
+  },
+  containerTitulo: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 15,
+  },
+  titulo: {
+    color: '#fff',
+    fontSize: 23,
+    fontWeight: 'bold',
+    fontVariant: ['small-caps'],
   },
   inputDados: {
     backgroundColor: '#fff',
@@ -261,10 +247,9 @@ const styles = StyleSheet.create({
     elevation:5,  
   },
   containerButton: {
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    top: 25,
-    paddingBottom: 25,
+    width: '85%',
   },
   button: {
     alignSelf: 'center',
@@ -274,8 +259,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginTop: 40,
     marginBottom: 25,
-    width: 150,
-    height: 60,
+    width: 130,
+    height: 55,
     textAlign: 'center',
     justifyContent: 'center',
     shadowOffset:{width:10,height:10},
@@ -293,16 +278,20 @@ const styles = StyleSheet.create({
     fontVariant: ['small-caps'],
   },
   containerTextLink:{
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 10,
     justifyContent: 'space-between',
-    flexDirection:'column',
+    flexDirection: 'column',
+    backgroundColor: '#F2F2F2',
+    padding: 5,
+    borderRadius: 10,
   },
   textLink: {
     alignSelf: 'center',
-    fontSize: 16,
-    color: '#fff',
+    fontSize: 18,
+    color: '#202022',
     fontWeight: 'bold',
-    fontVariant:  ['small-caps'],
+    fontVariant: ['small-caps'],
     padding: 4,
   },
 });

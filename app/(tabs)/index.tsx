@@ -1,141 +1,168 @@
 /* eslint-disable prettier/prettier */
-import { useNavigation } from '@react-navigation/native';
+import { launchImageLibraryAsync, ImagePickerResult } from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Image,
   StyleSheet,
-  Text,
-  View,
   ScrollView,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
   TouchableOpacity,
-  useWindowDimensions,
+  View,
+  Text,
+  Keyboard,
 } from 'react-native';
 
-interface Evento {
-  imageSource: any;
-  title: string;
-  date: string;
-  time: string;
-  onPress: () => void;
-}
+import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, isAdmin } from '~/utils/firebase';
+import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
 
 export default function Home() {
-  const navigation = useNavigation<any>();
-  const windowWidth = useWindowDimensions().width;
-  const handlePressEventos = () => {
-    navigation.navigate('eventos');
-  };
-  const handlePressCelulas = () => {
-    navigation.navigate('celulas');
-  };
-  const eventos: Evento[] = [
-    {
-      imageSource: require('../../assets/img/encontro.png'),
-      title: 'ENCONTRO COM DEUS',
-      date: '27 À 28 DE ABRIL',
-      time: 'INTEGRAL',
-      onPress: handlePressEventos,
-    },
-  ];
-  const CategoriaItem = ({ title }: { title: string }) => (
-    <View style={[styles.category]}>
-      <Text style={[styles.textCategory, { fontSize: windowWidth * 0.06 }]}>{title}</Text>
-    </View>
-  );
-  const EventosItem = ({
-    imageSource,
-    title,
-    date,
-    time,
-    onPress,
-    ultimoItem = false,
-  }: {
-    imageSource: any;
-    title: string;
-    date: string;
-    time: string;
-    onPress: () => void;
-    ultimoItem?: boolean;
-  }) => {
-    const marginBottom = ultimoItem ? 100 : 20;
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const [eventoItems, setEventoItems] = useState<Evento[]>([]);
 
-    return (
-      <View style={[styles.content, { marginBottom }]}>
-        <View style={styles.containerEventos}>
-          <TouchableOpacity onPress={onPress}>
-            <Image source={imageSource} style={styles.images} />
-            <View style={styles.textContainer}>
-              <Text style={[styles.textOne, { fontSize: windowWidth * 0.04 }]}>{title}</Text>
-              <Text style={[styles.textTwo, { fontSize: windowWidth * 0.035 }]}>Data: {date}</Text>
-              <Text style={[styles.textThree, { fontSize: windowWidth * 0.035 }]}>
-                Horário: {time}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
+  useEffect(() => {
+    // Verifica se o usuário é administrador ao carregar a tela
+    const checkAdminStatus = async () => {
+      const isAdminResult = await isAdmin();
+      setIsAdminUser(isAdminResult);
+    };
+    checkAdminStatus();
+
+    // Busca os eventos do banco de dados ao carregar a tela
+    const fetchEventos = async () => {
+      try {
+        const eventosDoBanco = await buscarEventosDoBanco();
+        setEventoItems(eventosDoBanco);
+      } catch (error) {
+        console.error('Erro ao buscar eventos:', error);
+      }
+    };
+    fetchEventos();
+  }, []);
+
+  const [tituloEvento, setTituloEvento] = useState('');
+  const [dataDoEvento, setDataDoEvento] = useState('');
+  const [horarioDoEvento, setHorarioDoEvento] = useState('');
+
+  const handleAddEvento = async () => {
+    try{
+      let result = await launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [3, 2],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, result.assets[0].uri);
+        const novoEvento = {
+          id: eventoId,
+          nomeEvento: tituloEvento,
+          dataEvento: dataDoEvento,
+          horarioEvento: horarioDoEvento,
+          imageUri: result.assets[0].uri,
+        };
+        setEventoItems([
+          ...eventoItems, 
+          novoEvento
+        ]);
+        setTituloEvento('');
+        setDataDoEvento('');
+        setHorarioDoEvento('');
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar evento:', error);
+    }
+    Keyboard.dismiss();
+  }
+
+  const completeEvento = async (index: number) => {
+    try {
+      const itemToRemove = eventoItems[index];
+      if (!itemToRemove) {
+        console.error('O evento não foi encontrado.');
+        return;
+      }
+      const { nomeEvento, dataEvento, horarioEvento, imageUri } = itemToRemove;
+      const eventos = await buscarEventosDoBanco(); // Função para buscar os eventos do banco de dados
+      const eventoEncontrado = eventos.find(
+        evento =>
+          evento.titulo === nomeEvento &&
+          evento.data === dataEvento &&
+          evento.horario === horarioEvento &&
+          evento.imagem === imageUri
+      );
+      if (!eventoEncontrado) {
+        console.error('Evento não encontrado no banco de dados.');
+        return;
+      }
+      const eventoId = eventoEncontrado.id;
+      const itemsCopy = [...eventoItems];
+      itemsCopy.splice(index, 1);
+      setEventoItems(itemsCopy);
+      await removerEventoDoBanco(eventoId);
+    } catch (error) {
+      console.error('Erro ao remover evento:', error);
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
       <ScrollView>
-        <CategoriaItem title="Esta Semana" />
+        <StatusBar style="auto" />
+          <View style={[styles.areaEventos]}>
 
-        <EventosItem
-          imageSource={require('../../assets/img/imersao.png')}
-          title="IMERSÃO MARCADOS PELO ESPIRÍTO"
-          date="27/04/2024"
-          time="19h - 22h"
-          onPress={handlePressEventos}
-        />
+            <View style={[styles.areaContainerEvento]}>
+              {
+                eventoItems.map((item, index) => {
+                  return (
+                    <TouchableOpacity key={index} onPress={() => completeEvento(index)}>
+                      <ImageEvento 
+                        nomeEvento={item.titulo} 
+                        dataEvento={item.data}
+                        horarioEvento={item.horario}
+                        imageUri={item.imagem} 
+                        onPress={() => completeEvento(index)} 
+                      />
+                    </TouchableOpacity>
+                  )
+                })
+              }
+            </View>
+          </View>        
 
-        <CategoriaItem title="Este Final de Semana" />
-
-        <EventosItem
-          imageSource={require('../../assets/img/cultoIgreja.png')}
-          title="CULTO DA FAMÍLIA"
-          date="21/04/2024"
-          time="18h - 20h"
-          onPress={handlePressEventos}
-        />
-        <EventosItem
-          imageSource={require('../../assets/img/RK/encontro-kids.png')}
-          title="CULTO RADICAIS KIDS"
-          date="21/04/2024"
-          time="18h - 20h"
-          onPress={handlePressEventos}
-        />
-        <EventosItem
-          imageSource={require('../../assets/img/RL/Jesus.jpeg')}
-          title="NOSSAS CÉLULAS"
-          date="TODA SEMANA"
-          time="18h - 20h"
-          onPress={handlePressCelulas}
-        />
-        <EventosItem
-          imageSource={require('../../assets/img/RL/rl-united.jpg')}
-          title="CULTOS E REUNIÕES RADICAIS LUVRES"
-          date="TODO SÁBADO"
-          time="15h - 21h"
-          onPress={handlePressEventos}
-        />
-
-        <CategoriaItem title="Próximo Mês" />
-
-        {eventos.map((evento, index) => (
-          <EventosItem
-            key={index}
-            imageSource={evento.imageSource}
-            title={evento.title}
-            date={evento.date}
-            time={evento.time}
-            onPress={evento.onPress}
-            ultimoItem={index === eventos.length - 1}
-          />
-        ))}
+          {isAdminUser &&(
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={[styles.containerInputNewEvento]}
+            >  
+              <TextInput 
+                style={[styles.inputTextoEvento]} 
+                keyboardType='default' 
+                placeholder='Nome do Evento' 
+                value={tituloEvento} 
+                onChangeText={(nomeEvento) => setTituloEvento(nomeEvento)} 
+              />
+              <TextInput 
+                style={[styles.inputTextoEvento]} 
+                keyboardType='phone-pad' 
+                placeholder='Data do Evento' 
+                value={dataDoEvento} 
+                onChangeText={(dataEvento) => setDataDoEvento(dataEvento)} 
+              />
+              <TextInput 
+                style={[styles.inputTextoEvento]} 
+                keyboardType='default' 
+                placeholder='Horário do Evento' 
+                value={horarioDoEvento} 
+                onChangeText={(horarioEvento) => setHorarioDoEvento(horarioEvento)} 
+              />
+              <TouchableOpacity onPress={() => handleAddEvento()}>
+                <View style={[styles.containerIconeAddEvento]}>
+                  <Text style={[styles.iconeAddEvento]}>+</Text>
+                </View>
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
+          )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -145,70 +172,50 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#040316',
+    paddingBottom: 100,
   },
-  content: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
+  areaEventos:{
+    paddingHorizontal: 25,
+  },
+  areaContainerEvento: {
+    marginTop: 10,
+  },
+  containerInputNewEvento:{
     flex: 1,
-    width: '85%',
-    height: 200,
-    marginBottom: 20,
-    backgroundColor: '#f1f1f1',
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  containerEventos: {
     position: 'relative',
-    width: '100%',
-    height: '65.08%',
-    textAlign: 'center',
-    bottom: 35,
-  },
-  images: {
-    width: '100%',
-    height: '100%',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  textContainer: {
-    position: 'absolute',
-    top: 130,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 70,
-    backgroundColor: '#3E4A59',
-    paddingTop: 10,
-    paddingLeft: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  textOne: {
-    color: '#fff',
-    textAlign: 'left',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  textTwo: {
-    color: '#fff',
-    textAlign: 'left',
-    fontSize: 14,
-  },
-  textThree: {
-    color: '#fff',
-    textAlign: 'left',
-    fontSize: 14,
-  },
-  category: {
-    marginBottom: 20,
+    marginTop: 10,
     width: '85%',
     height: 'auto',
     alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  textCategory: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 21,
+  inputTextoEvento: {
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
+    width: '100%',
+    height: 40,
+    marginBottom: 5,
+  },
+  containerIconeAddEvento: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#fff',
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#C0C0C0',
+    borderWidth: 1,
+    marginBottom: 5,
+  },
+  iconeAddEvento: {
+    fontSize: 30,
+    fontWeight: 'normal',
+    paddingBottom: 3,
+    color: 'gray',
   },
 });
