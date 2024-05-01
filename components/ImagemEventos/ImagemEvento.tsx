@@ -61,27 +61,24 @@ const styles = StyleSheet.create({
   },
   textoTituloEvento: {
     textAlign: 'justify',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
-    paddingLeft: 10,
-    borderWidth: 1,
+    paddingLeft: 15,
   },
   textoDataEvento: {
     textAlign: 'justify',
     fontSize: 14,
     fontWeight: 'bold',
     color: '#fff',
-    paddingLeft: 10,
-    borderWidth: 1,
+    paddingLeft: 15,
   },
   textoHorarioEvento: {
     textAlign: 'justify',
     fontSize: 14,
     fontWeight: 'bold',
     color: '#fff',
-    paddingLeft: 10,
-    borderWidth: 1,
+    paddingLeft: 15,
   }
 });
 export default ImagemEvento;

@@ -26,7 +26,7 @@ export default function Home() {
   const handleAddEvento = async () => {
     let result = await launchImageLibraryAsync({
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [3, 2],
       quality: 1,
     });
 
@@ -98,7 +98,7 @@ export default function Home() {
               />
               <TextInput 
                 style={[styles.inputTextoEvento]} 
-                keyboardType='phone-pad' 
+                keyboardType='default' 
                 placeholder='Horário do Evento' 
                 value={horarioDoEvento} 
                 onChangeText={(horarioEvento) => setHorarioDoEvento(horarioEvento)} 
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     marginTop: 10,
-    width: '90%',
+    width: '85%',
     height: 'auto',
     alignSelf: 'center',
     justifyContent: 'center',
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
     backgroundColor: '#fff',
-    borderRadius: 60,
+    borderRadius: 8,
     borderColor: '#C0C0C0',
     borderWidth: 1,
     width: '100%',
