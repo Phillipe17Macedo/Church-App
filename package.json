@@ -1,6 +1,6 @@
 {
   "name": "Church App",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "expo-router/entry",
   "scripts": {
     "android": "expo start --android",
@@ -17,7 +17,7 @@
     "expo": "~50.0.17",
     "expo-constants": "~15.4.6",
     "expo-linking": "~6.2.2",
-    "expo-router": "^3.4.7",
+    "expo-router": "~3.4.10",
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.4",
     "expo-web-browser": "~12.8.2",

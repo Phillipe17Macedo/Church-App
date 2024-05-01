@@ -2,7 +2,7 @@
   "expo": {
     "name": "Church App",
     "slug": "church-App",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "scheme": "church-app",
     "web": {
       "bundler": "metro",
@@ -28,12 +28,14 @@
       "**/*"
     ],
     "ios": {
+      "buildNumber": "2",
       "supportsTablet": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Permissão para acessar a biblioteca de fotos"
       }
     },
     "android": {
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
