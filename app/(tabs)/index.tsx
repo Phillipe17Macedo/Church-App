@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { launchImageLibraryAsync, ImagePickerResult } from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -15,10 +15,22 @@ import {
   Keyboard,
 } from 'react-native';
 
-import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco } from '~/utils/firebase';
+import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, isAdmin } from '~/utils/firebase';
 import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
 
 export default function Home() {
+  const [isAdminUser, setIsAdminUser] = useState(false);
+
+  useEffect(() => {
+    // Verifica se o usuário é administrador ao carregar a tela
+    const checkAdminStatus = async () => {
+      const isAdminResult = await isAdmin();
+      setIsAdminUser(isAdminResult);
+    };
+    checkAdminStatus();
+    
+  }, []);
+
   const [tituloEvento, setTituloEvento] = useState('');
   const [dataDoEvento, setDataDoEvento] = useState('');
   const [horarioDoEvento, setHorarioDoEvento] = useState('');
@@ -121,10 +133,9 @@ export default function Home() {
                 })
               }
             </View>
-
           </View>        
 
-
+          {isAdminUser &&(
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : "height"}
               style={[styles.containerInputNewEvento]}
@@ -155,8 +166,8 @@ export default function Home() {
                   <Text style={[styles.iconeAddEvento]}>+</Text>
                 </View>
               </TouchableOpacity>
-
             </KeyboardAvoidingView>
+          )}
       </ScrollView>
     </SafeAreaView>
   );

@@ -169,7 +169,7 @@ export const isAdmin = async (): Promise<boolean> => {
     const userId = await AsyncStorage.getItem('userId'); // Obtém o ID do usuário logado
     if (userId) {
       const usuario = await buscarDadosDoBanco(userId); // Busca os dados do usuário no banco de dados
-      if (usuario && usuario.funcao === 'admin') {
+      if (usuario && usuario.funcao.toLowerCase() === 'admin') {
         return true; // Retorna verdadeiro se o usuário for admin
       } else {
         return false; // Retorna falso se o usuário não for admin
