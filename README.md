@@ -6,7 +6,8 @@ Funcionalidades Principais
 - Upload de imagens para os eventos.
 - Remoção de eventos.
 - Interface de usuário intuitiva e amigável.
-Instalação
+
+Instalação:
 Para rodar o aplicativo localmente, siga as etapas abaixo:
 1- Certifique-se de ter o Node.js instalado na sua máquina. Você pode baixá-lo em nodejs.org.
 2-Clone este repositório para o seu ambiente local:
