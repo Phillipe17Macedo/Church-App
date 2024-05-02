@@ -29,7 +29,7 @@ Contribuição
 Contribuições são bem-vindas! Sinta-se à vontade para enviar um pull request ou abrir uma issue para relatar problemas ou sugerir melhorias.
 
 Autores
-Phillipe Macedo - Desenvolvedor de Software - [seu-site.com](https://www.linkedin.com/in/phillipe-macedo-234524239/)
+Phillipe Macedo - Desenvolvedor de Software - [Meu Linkedin](https://www.linkedin.com/in/phillipe-macedo-234524239/)
 
 Licença
 Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.
