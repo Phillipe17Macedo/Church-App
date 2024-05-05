@@ -86,29 +86,25 @@ export default function Home() {
 
   const completeEvento = async (index: number) => {
     try {
-      const itemToRemove = eventoItems[index];
-      if (!itemToRemove) {
+      const eventoToRemove = eventoItems[index];
+      if (!eventoToRemove) {
         console.error('O evento não foi encontrado.');
         return;
       }
-      const { nomeEvento, dataEvento, horarioEvento, imageUri } = itemToRemove;
-      const eventos = await buscarEventosDoBanco(); // Função para buscar os eventos do banco de dados
-      const eventoEncontrado = eventos.find(
-        evento =>
-          evento.titulo === nomeEvento &&
-          evento.data === dataEvento &&
-          evento.horario === horarioEvento &&
-          evento.imagem === imageUri
-      );
-      if (!eventoEncontrado) {
-        console.error('Evento não encontrado no banco de dados.');
+  
+      // Verificar se o usuário é admin
+      const isAdminUser = await isAdmin();
+      if (!isAdminUser) {
+        console.error('Apenas usuários administradores podem remover eventos.');
         return;
       }
-      const eventoId = eventoEncontrado.id;
-      const itemsCopy = [...eventoItems];
-      itemsCopy.splice(index, 1);
-      setEventoItems(itemsCopy);
-      await removerEventoDoBanco(eventoId);
+  
+      // Remover o evento do array local
+      const updatedEventoItems = eventoItems.filter((_, i) => i !== index);
+      setEventoItems(updatedEventoItems);
+  
+      // Remover o evento do banco de dados
+      await removerEventoDoBanco(eventoToRemove.id);
     } catch (error) {
       console.error('Erro ao remover evento:', error);
     }
