@@ -111,7 +111,7 @@ export default function Sign() {
           />
           <TextInput
             style={[styles.inputDados]}
-            keyboardType="decimal-pad"
+            keyboardType="default"
             placeholder="Data de Nascimento"
             value={dataNascimento}
             onChangeText={(text) => setDataNascimento(text)}
@@ -120,6 +120,7 @@ export default function Sign() {
             style={[styles.inputDados]}
             keyboardType="visible-password"
             placeholder="Senha"
+            secureTextEntry
             value={senha}
             onChangeText={(text) => setSenha(text)}
           />

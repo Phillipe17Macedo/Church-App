@@ -14,7 +14,7 @@ import {
   Text,
   Keyboard,
 } from 'react-native';
-
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, isAdmin } from '~/utils/firebase';
 import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
 
@@ -47,20 +47,28 @@ export default function Home() {
   const [horarioDoEvento, setHorarioDoEvento] = useState('');
 
   const handleAddEvento = async () => {
-    try{
+    try {
       let result = await launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [3, 2],
         quality: 1,
       });
       if (!result.canceled) {
-        const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, result.assets[0].uri);
+        const imageUri = result.assets[0].uri;
+        const imageName = imageUri.substring(imageUri.lastIndexOf('/') + 1);
+        const storage = getStorage(); // Renomeando a variável
+        const storageReference = storageRef(storage, `eventos/${imageName}`); // Renomeando a variável
+        const imageBlob = await fetch(imageUri).then((response) => response.blob());
+        await uploadBytes(storageReference, imageBlob); // Usando a referência renomeada
+        
+        const downloadURL = await getDownloadURL(storageReference); // Usando a referência renomeada
+        const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, downloadURL);
         const novoEvento = {
           id: eventoId,
           nomeEvento: tituloEvento,
           dataEvento: dataDoEvento,
           horarioEvento: horarioDoEvento,
-          imageUri: result.assets[0].uri,
+          imageUri: downloadURL,
         };
         setEventoItems([
           ...eventoItems, 
@@ -78,29 +86,25 @@ export default function Home() {
 
   const completeEvento = async (index: number) => {
     try {
-      const itemToRemove = eventoItems[index];
-      if (!itemToRemove) {
+      const eventoToRemove = eventoItems[index];
+      if (!eventoToRemove) {
         console.error('O evento não foi encontrado.');
         return;
       }
-      const { nomeEvento, dataEvento, horarioEvento, imageUri } = itemToRemove;
-      const eventos = await buscarEventosDoBanco(); // Função para buscar os eventos do banco de dados
-      const eventoEncontrado = eventos.find(
-        evento =>
-          evento.titulo === nomeEvento &&
-          evento.data === dataEvento &&
-          evento.horario === horarioEvento &&
-          evento.imagem === imageUri
-      );
-      if (!eventoEncontrado) {
-        console.error('Evento não encontrado no banco de dados.');
+  
+      // Verificar se o usuário é admin
+      const isAdminUser = await isAdmin();
+      if (!isAdminUser) {
+        console.error('Apenas usuários administradores podem remover eventos.');
         return;
       }
-      const eventoId = eventoEncontrado.id;
-      const itemsCopy = [...eventoItems];
-      itemsCopy.splice(index, 1);
-      setEventoItems(itemsCopy);
-      await removerEventoDoBanco(eventoId);
+  
+      // Remover o evento do array local
+      const updatedEventoItems = eventoItems.filter((_, i) => i !== index);
+      setEventoItems(updatedEventoItems);
+  
+      // Remover o evento do banco de dados
+      await removerEventoDoBanco(eventoToRemove.id);
     } catch (error) {
       console.error('Erro ao remover evento:', error);
     }
@@ -144,7 +148,7 @@ export default function Home() {
               />
               <TextInput 
                 style={[styles.inputTextoEvento]} 
-                keyboardType='phone-pad' 
+                keyboardType='default' 
                 placeholder='Data do Evento' 
                 value={dataDoEvento} 
                 onChangeText={(dataEvento) => setDataDoEvento(dataEvento)} 
