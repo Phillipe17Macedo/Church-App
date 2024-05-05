@@ -148,7 +148,7 @@ export default function Home() {
               />
               <TextInput 
                 style={[styles.inputTextoEvento]} 
-                keyboardType='phone-pad' 
+                keyboardType='default' 
                 placeholder='Data do Evento' 
                 value={dataDoEvento} 
                 onChangeText={(dataEvento) => setDataDoEvento(dataEvento)} 

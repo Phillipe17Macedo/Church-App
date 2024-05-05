@@ -158,7 +158,7 @@ export default function Perfil() {
           />
           <TextInput
             style={[styles.inputDados]}
-            keyboardType="decimal-pad"
+            keyboardType="default"
             placeholder="Data de Nascimento"
             editable={editMode}
             value={usuario ? usuario.dataNascimento : ''}

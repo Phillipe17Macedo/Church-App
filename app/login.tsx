@@ -65,15 +65,16 @@ export default function Login() {
         <View style={[styles.containerInput]}>
           <TextInput
             style={[styles.inputDados]}
-            keyboardType="default"
+            keyboardType="email-address"
             placeholder="Email"
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
           <TextInput
             style={[styles.inputDados]}
-            keyboardType="visible-password"
+            keyboardType="default"
             placeholder="Senha"
+            secureTextEntry
             value={senha}
             onChangeText={(text) => setSenha(text)}
           />
