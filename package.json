@@ -1,6 +1,6 @@
 {
   "name": "Church App",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "main": "expo-router/entry",
   "scripts": {
     "android": "expo run:android",
