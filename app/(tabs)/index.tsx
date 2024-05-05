@@ -14,7 +14,7 @@ import {
   Text,
   Keyboard,
 } from 'react-native';
-
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, isAdmin } from '~/utils/firebase';
 import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
 
@@ -47,20 +47,28 @@ export default function Home() {
   const [horarioDoEvento, setHorarioDoEvento] = useState('');
 
   const handleAddEvento = async () => {
-    try{
+    try {
       let result = await launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [3, 2],
         quality: 1,
       });
       if (!result.canceled) {
-        const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, result.assets[0].uri);
+        const imageUri = result.assets[0].uri;
+        const imageName = imageUri.substring(imageUri.lastIndexOf('/') + 1);
+        const storage = getStorage(); // Renomeando a variável
+        const storageReference = storageRef(storage, `eventos/${imageName}`); // Renomeando a variável
+        const imageBlob = await fetch(imageUri).then((response) => response.blob());
+        await uploadBytes(storageReference, imageBlob); // Usando a referência renomeada
+        
+        const downloadURL = await getDownloadURL(storageReference); // Usando a referência renomeada
+        const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, downloadURL);
         const novoEvento = {
           id: eventoId,
           nomeEvento: tituloEvento,
           dataEvento: dataDoEvento,
           horarioEvento: horarioDoEvento,
-          imageUri: result.assets[0].uri,
+          imageUri: downloadURL,
         };
         setEventoItems([
           ...eventoItems, 

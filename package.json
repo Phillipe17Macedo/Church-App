@@ -12,10 +12,12 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "1.21.0",
+    "@react-native-firebase/storage": "^19.2.2",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "expo": "~50.0.17",
     "expo-constants": "~15.4.6",
+    "expo-image-picker": "~14.7.1",
     "expo-linking": "~6.2.2",
     "expo-router": "~3.4.10",
     "expo-status-bar": "~1.11.1",
@@ -35,11 +37,12 @@
     "react-native-web": "~0.19.10",
     "react-native-webview": "13.6.4",
     "react-router-dom": "^6.22.3",
-    "expo-image-picker": "~14.7.1"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.14",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
     "eslint": "^8.50.0",

@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, push, set, get, update, DataSnapshot, remove } from 'firebase/database';
+import { getStorage, ref as storageRef, uploadString, getDownloadURL } from 'firebase/storage';
 // Optionally import the services that you want to use
 // import {...} from "firebase/auth";
 // import {...} from "firebase/database";
@@ -162,6 +163,7 @@ export const buscarEventosDoBanco = async (): Promise<Evento[]> => {
     throw error;
   }
 };
+
 export const isAdmin = async (): Promise<boolean> => {
   try {
     const userId = await AsyncStorage.getItem('userId'); // Obtém o ID do usuário logado
