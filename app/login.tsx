@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#040316',
   },
   containerInput: {
-    backgroundColor: '#878787',
+    backgroundColor: '#3E4A59',
     alignItems: 'center',
     justifyContent:'space-between',
     flexDirection: 'column',
