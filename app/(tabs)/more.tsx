@@ -9,8 +9,8 @@ export default function More() {
       <StatusBar style="light" />
       <Stack.Screen options={{ title: 'Mais' }} />
       <View style={styles.container} >
-        <View style={[{backgroundColor: '#fff'}, {alignItems: 'center'}, {marginBottom: 20}]}>
-          <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: 'red'}, {textAlign: 'justify'}]}>
+        <View style={[{backgroundColor: '#3E4A59',}, {alignItems: 'center'}, {marginTop: 25},{marginBottom: 20}, {width: '100%'}, {justifyContent: 'center'}, {alignSelf: 'center'}, {borderRadius: 10}]}>
+          <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: '#fff'}, {textAlign: 'justify'}]}>
             ESTÁ TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
           </Text>
         </View>
@@ -22,6 +22,7 @@ export default function More() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    backgroundColor: '#040316',
+    paddingHorizontal: 25,
   },
 });

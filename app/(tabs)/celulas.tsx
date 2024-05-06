@@ -87,8 +87,8 @@ export default function Celulas() {
       <StatusBar style="light" />
       <View style={styles.container}>
         <ScrollView>
-          <View style={[{backgroundColor: '#fff'}, {alignItems: 'center'}, {marginTop: 25},{marginBottom: 20}, {width: '85%'}, {justifyContent: 'center'}, {alignSelf: 'center'}]}>
-            <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: 'red'}, {textAlign: 'justify'}]}>
+          <View style={[{backgroundColor: '#3E4A59',}, {alignItems: 'center'}, {marginTop: 25},{marginBottom: 20}, {width: '100%'}, {justifyContent: 'center'}, {alignSelf: 'center'}, {borderRadius: 10}]}>
+            <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: '#fff'}, {textAlign: 'justify'}]}>
               ESTÁ TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
             </Text>
           </View>
@@ -133,13 +133,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#040316',
+    paddingHorizontal: 25,
   },
   content: {
     alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
     flex: 1,
-    width: '85%',
+    width: '100%',
     height: 200,
     marginBottom: 20,
     backgroundColor: '#f1f1f1',
