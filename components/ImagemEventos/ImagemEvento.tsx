@@ -32,7 +32,7 @@ const ImagemEvento = (props: any) => {
 const styles = StyleSheet.create({
   containerEvento: {
     position: 'relative',
-    backgroundColor: '#fff',
+    backgroundColor: '#131926',
     borderRadius: 10,
     height: 245,
     marginTop: 15,
