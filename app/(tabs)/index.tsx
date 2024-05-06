@@ -297,6 +297,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 8,
     borderRadius: 7,
+    borderWidth: 1,
+    borderColor: '#B8D9D3',
+    shadowOffset:{width:5,height:5},
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 5,  
   },
   removerEventoButtonText: {
     color: 'white',
