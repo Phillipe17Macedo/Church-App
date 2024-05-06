@@ -187,7 +187,6 @@ export default function Home() {
                         dataEvento={item.data}
                         horarioEvento={item.horario}
                         imageUri={item.imagem} 
-                        onPress={() => completeEvento(index)} 
                       />
                       {isAdminUser && <RemoverEventoButton onPress={() => exibirConfirmacao(index)} />}
                     </TouchableOpacity>
