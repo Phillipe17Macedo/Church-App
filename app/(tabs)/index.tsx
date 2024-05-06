@@ -14,6 +14,7 @@ import {
   Text,
   Keyboard,
   Modal,
+  RefreshControl, 
 } from 'react-native';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, isAdmin } from '~/utils/firebase';
@@ -54,6 +55,7 @@ export default function Home() {
   const [eventoItems, setEventoItems] = useState<Evento[]>([]);
   const [confirmacaoVisivel, setConfirmacaoVisivel] = useState(false);
   const [eventoIndexToRemove, setEventoIndexToRemove] = useState(-1);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     // Verifica se o usuário é administrador ao carregar a tela
@@ -153,9 +155,25 @@ export default function Home() {
     }
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const eventosDoBanco = await buscarEventosDoBanco();
+      setEventoItems(eventosDoBanco);
+    } catch (error) {
+      console.error('Erro ao buscar eventos:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <StatusBar style="light" />
           <View style={[styles.areaEventos]}>
 
