@@ -87,8 +87,8 @@ export default function Celulas() {
       <StatusBar style="light" />
       <View style={styles.container}>
         <ScrollView>
-          <View style={[styles.category, {alignItems: 'center'}, {backgroundColor: '#fff'}]}>
-            <Text style={[styles.textCategory, {color: 'red'}]}>
+          <View style={[{backgroundColor: '#fff'}, {alignItems: 'center'}, {marginTop: 25},{marginBottom: 20}, {width: '85%'}, {justifyContent: 'center'}, {alignSelf: 'center'}]}>
+            <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: 'red'}, {textAlign: 'justify'}]}>
               ESTÁ TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
             </Text>
           </View>

@@ -2,7 +2,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, SafeAreaView, View } from 'react-native';
 import {Agenda, AgendaEntry} from 'react-native-calendars';
 
 export default function Eventos() {
@@ -15,6 +15,11 @@ export default function Eventos() {
     <SafeAreaView style={[styles.container]}>
       <StatusBar style="light" />
       <Stack.Screen options={{ title: 'Eventos' }} />
+      <View style={[{backgroundColor: '#fff'}, {alignItems: 'center'}, {marginBottom: 20}]}>
+        <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: 'red'}, {textAlign: 'justify'}]}>
+          ESTÁ TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
+        </Text>
+      </View>
       <Agenda
         style={{
           borderRadius: 15,
