@@ -125,7 +125,7 @@ export default function Perfil() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+        <StatusBar style="light" />
         <View style={[styles.containerInput]}>
           <View style={[styles.containerTitulo]}>
             <Text style={[styles.titulo]}>

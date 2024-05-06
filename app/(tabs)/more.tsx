@@ -6,7 +6,7 @@ import { StyleSheet, View } from 'react-native';
 export default function More() {
   return (
     <>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <Stack.Screen options={{ title: 'Mais' }} />
       <View style={styles.container} />
     </>

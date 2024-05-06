@@ -69,7 +69,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="celulas"
         options={{
-          title: 'Celulas',
+          title: 'Células',
           headerShown: true,
           tabBarIcon: ({ color, size, focused }) => {
             if (focused) {

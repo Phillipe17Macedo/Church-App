@@ -84,9 +84,14 @@ export default function Celulas() {
   };
   return (
     <>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <View style={styles.container}>
         <ScrollView>
+          <View style={[styles.category, {alignItems: 'center'}, {backgroundColor: '#fff'}]}>
+            <Text style={[styles.textCategory, {color: 'red'}]}>
+              ESTÁ TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
+            </Text>
+          </View>
           <CategoriaItem title="Célula de Jovens" />
           <CelulaItem
             imageSource={require('../../assets/img/celulaAdonai.png')}

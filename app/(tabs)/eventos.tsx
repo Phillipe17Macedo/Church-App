@@ -13,7 +13,7 @@ export default function Eventos() {
   };
   return (
     <SafeAreaView style={[styles.container]}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <Stack.Screen options={{ title: 'Eventos' }} />
       <Agenda
         style={{

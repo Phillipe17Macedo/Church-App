@@ -112,7 +112,7 @@ export default function Home() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <StatusBar style="auto" />
+        <StatusBar style="light" />
           <View style={[styles.areaEventos]}>
 
             <View style={[styles.areaContainerEvento]}>

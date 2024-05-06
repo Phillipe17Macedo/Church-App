@@ -79,7 +79,7 @@ export default function Sign() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+        <StatusBar style="light" />
         <View style={[styles.containerInput]}>
           <TextInput
             style={[styles.inputDados]}
