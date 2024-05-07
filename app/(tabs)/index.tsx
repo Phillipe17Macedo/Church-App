@@ -13,14 +13,49 @@ import {
   View,
   Text,
   Keyboard,
+  Modal,
+  RefreshControl, 
 } from 'react-native';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, isAdmin } from '~/utils/firebase';
 import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
 
+const RemoverEventoButton = ({ onPress }) => (
+  <TouchableOpacity onPress={onPress} style={styles.removerEventoButton}>
+    <Text style={styles.removerEventoButtonText}>Remover</Text>
+  </TouchableOpacity>
+);
+
+const ConfirmacaoRemocao = ({ visivel, onConfirmar, onCancelar }) => {
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visivel}
+      onRequestClose={onCancelar}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Tem certeza de que deseja remover este evento?</Text>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity onPress={onConfirmar} style={[styles.button, styles.confirmButton]}>
+              <Text style={styles.textStyle}>Confirmar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onCancelar} style={[styles.button, styles.cancelButton]}>
+              <Text style={styles.textStyle}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 export default function Home() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [eventoItems, setEventoItems] = useState<Evento[]>([]);
+  const [confirmacaoVisivel, setConfirmacaoVisivel] = useState(false);
+  const [eventoIndexToRemove, setEventoIndexToRemove] = useState(-1);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     // Verifica se o usuário é administrador ao carregar a tela
@@ -83,50 +118,77 @@ export default function Home() {
     }
     Keyboard.dismiss();
   }
+  const exibirConfirmacao = (index: number) => {
+    setEventoIndexToRemove(index);
+    setConfirmacaoVisivel(true);
+  };
 
-  const completeEvento = async (index: number) => {
+  const cancelarRemocao = () => {
+    setConfirmacaoVisivel(false);
+    setEventoIndexToRemove(-1);
+  };
+
+  const confirmarRemocao = async () => {
     try {
-      const eventoToRemove = eventoItems[index];
-      if (!eventoToRemove) {
-        console.error('O evento não foi encontrado.');
+      if (eventoIndexToRemove === -1) {
+        console.error('O evento a ser removido não foi encontrado.');
         return;
       }
   
-      // Verificar se o usuário é admin
+      const eventoToRemove = eventoItems[eventoIndexToRemove];
+  
       const isAdminUser = await isAdmin();
       if (!isAdminUser) {
         console.error('Apenas usuários administradores podem remover eventos.');
         return;
       }
   
-      // Remover o evento do array local
-      const updatedEventoItems = eventoItems.filter((_, i) => i !== index);
+      const updatedEventoItems = eventoItems.filter((_, i) => i !== eventoIndexToRemove);
       setEventoItems(updatedEventoItems);
   
-      // Remover o evento do banco de dados
       await removerEventoDoBanco(eventoToRemove.id);
     } catch (error) {
       console.error('Erro ao remover evento:', error);
+    } finally {
+      setConfirmacaoVisivel(false);
+      setEventoIndexToRemove(-1);
     }
-  }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const eventosDoBanco = await buscarEventosDoBanco();
+      setEventoItems(eventosDoBanco);
+    } catch (error) {
+      console.error('Erro ao buscar eventos:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <StatusBar style="auto" />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <StatusBar style="light" />
           <View style={[styles.areaEventos]}>
 
             <View style={[styles.areaContainerEvento]}>
               {
                 eventoItems.map((item, index) => {
                   return (
-                    <TouchableOpacity key={index} onPress={() => completeEvento(index)}>
+                    <TouchableOpacity key={index}>
                       <ImageEvento 
                         nomeEvento={item.titulo} 
                         dataEvento={item.data}
                         horarioEvento={item.horario}
                         imageUri={item.imagem} 
-                        onPress={() => completeEvento(index)} 
                       />
+                      {isAdminUser && <RemoverEventoButton onPress={() => exibirConfirmacao(index)} />}
                     </TouchableOpacity>
                   )
                 })
@@ -167,6 +229,11 @@ export default function Home() {
               </TouchableOpacity>
             </KeyboardAvoidingView>
           )}
+        <ConfirmacaoRemocao 
+          visivel={confirmacaoVisivel} 
+          onConfirmar={confirmarRemocao} 
+          onCancelar={cancelarRemocao} 
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -198,7 +265,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 10,
     borderColor: '#C0C0C0',
     borderWidth: 1,
     width: '100%',
@@ -221,5 +288,72 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     paddingBottom: 3,
     color: 'gray',
+  },
+  removerEventoButton: {
+    position: 'absolute',
+    top: 22,
+    right: 8,
+    backgroundColor: '#3E4A59',
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    borderRadius: 7,
+    borderWidth: 1,
+    borderColor: '#B8D9D3',
+    shadowOffset:{width:5,height:5},
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 5,  
+  },
+  removerEventoButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    minWidth: '40%',
+    alignItems: 'center',
+  },
+  confirmButton: {
+    backgroundColor: '#2196F3',
+  },
+  cancelButton: {
+    backgroundColor: '#FF5733',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

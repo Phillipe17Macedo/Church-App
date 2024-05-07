@@ -2,7 +2,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, SafeAreaView, View } from 'react-native';
 import {Agenda, AgendaEntry} from 'react-native-calendars';
 
 export default function Eventos() {
@@ -13,12 +13,17 @@ export default function Eventos() {
   };
   return (
     <SafeAreaView style={[styles.container]}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <Stack.Screen options={{ title: 'Eventos' }} />
+        <View style={[{backgroundColor: '#3E4A59',}, {alignItems: 'center'}, {marginTop: 25},{marginBottom: 20}, {width: '100%'}, {justifyContent: 'center'}, {alignSelf: 'center'}, {borderRadius: 10}]}>
+          <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: '#fff'}, {textAlign: 'justify'}]}>
+            ESTÁ TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
+          </Text>
+        </View>
       <Agenda
         style={{
           borderRadius: 15,
-          marginBottom: 80,
+          marginBottom: 100,
         }}
         items={items}
         renderItem={(item, isFirst) => (
@@ -33,7 +38,7 @@ export default function Eventos() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    paddingHorizontal: 25,
     backgroundColor: '#040316',
   },
   item: {

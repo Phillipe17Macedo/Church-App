@@ -61,7 +61,7 @@ export default function Login() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+        <StatusBar style="light" />
         <View style={[styles.containerInput]}>
           <TextInput
             style={[styles.inputDados]}
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#040316',
   },
   containerInput: {
-    backgroundColor: '#878787',
+    backgroundColor: '#3E4A59',
     alignItems: 'center',
     justifyContent:'space-between',
     flexDirection: 'column',
