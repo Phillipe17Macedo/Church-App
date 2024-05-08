@@ -1,7 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getDatabase, ref, set, get, update, DataSnapshot } from 'firebase/database';
+import { getDatabase, ref, update } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCyhMAnKhc2y_2EzP2LyO7-AbVEBjgj2ek',
@@ -27,7 +25,6 @@ interface Usuario {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
-const auth = getAuth(firebaseApp);
 
 export const atualizarDadosNoBanco = async (usuarioId: string, novosDados: Usuario) => {
     try {

@@ -1,8 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getDatabase, ref, set, get, update, DataSnapshot } from 'firebase/database';
-
 import { buscarDadosDoBanco } from './buscar';
 
 const firebaseConfig = {
@@ -16,20 +13,7 @@ const firebaseConfig = {
   measurementId: 'G-KHDPWMVYNN',
 };
 
-interface Usuario {
-  id: string;
-  nome: string;
-  telefone: string;
-  endereco: string;
-  email: string;
-  dataNascimento: string;
-  senha: string;
-  funcao: string;
-}
-
 const firebaseApp = initializeApp(firebaseConfig);
-const database = getDatabase(firebaseApp);
-const auth = getAuth(firebaseApp);
 
 export const isAdmin = async (): Promise<boolean> => {
     try {
@@ -48,4 +32,4 @@ export const isAdmin = async (): Promise<boolean> => {
       console.error('Erro ao verificar status de administrador:', error);
       return false; // Retorna falso em caso de erro
     }
-  };
+};

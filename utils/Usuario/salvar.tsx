@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, set, get, update, DataSnapshot } from 'firebase/database';
@@ -27,7 +26,6 @@ interface Usuario {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
-const auth = getAuth(firebaseApp);
 
 export const salvarUsuario = (usuario: Usuario) => {
     // Usar o UID do usuário como ID no Realtime Database
@@ -41,4 +39,4 @@ export const salvarUsuario = (usuario: Usuario) => {
       .catch((error) => {
         console.error('Erro ao cadastrar usuário:', error);
       });
-  };
+};

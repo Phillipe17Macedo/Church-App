@@ -1,7 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getDatabase, ref, set, get, update, DataSnapshot } from 'firebase/database';
+import { getDatabase, ref, get } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCyhMAnKhc2y_2EzP2LyO7-AbVEBjgj2ek',
@@ -27,7 +25,6 @@ interface Usuario {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
-const auth = getAuth(firebaseApp);
 
 export const loginUsuario = async (nomeUsuario: string, senha: string): Promise<Usuario | null> => {
     const usuariosRef = ref(database, 'usuarios');
@@ -55,4 +52,4 @@ export const loginUsuario = async (nomeUsuario: string, senha: string): Promise<
       console.error('Erro ao fazer login:', error);
       throw new Error('Erro ao fazer login'); // Lança o erro para que ele possa ser tratado em outro lugar
     }
-  };
+};
