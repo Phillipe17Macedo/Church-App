@@ -37,7 +37,7 @@ export default function Login() {
       Alert.alert('Login com Sucesso!');
       navigation.navigate('perfil');
     } catch (error) {
-      console.error('Erro ao fazer login:', error);
+      console.error('Erro ao fazer login: ', error);
       Alert.alert('Email ou Senha Inválidos!');
     }
   };
@@ -50,7 +50,7 @@ export default function Login() {
     try {
       const auth = getAuth();
       await sendPasswordResetEmail(auth, email);
-      Alert.alert('Um email para redefinição de senha foi enviado para ' + email);
+      Alert.alert('Email enviado para: ' + email);
     } catch (error) {
       console.error('Erro ao enviar email de redefinição de senha:', error);
       Alert.alert('Erro ao enviar email de redefinição de senha. Por favor, tente novamente mais tarde.');
