@@ -18,7 +18,10 @@ import {
 } from 'react-native';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { isAdmin } from '~/utils/Usuario/authAdmin';
-import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, } from '~/utils/Evento/firebaseEvento';
+import { buscarEventosDoBanco } from '~/utils/Evento/buscar';
+import { salvarEventoNoBanco } from '~/utils/Evento/salvar';
+import { removerEventoDoBanco } from '~/utils/Evento/remover';
+
 import ComponentEventos from '../../components/ComponentEventos/ComponentEventos';
 
 const RemoverEventoButton = ({ onPress }) => (
