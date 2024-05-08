@@ -2,16 +2,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
   Text,
   View,
-  Platform,
   TextInput,
   TouchableOpacity,
   Alert,

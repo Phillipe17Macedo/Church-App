@@ -15,7 +15,7 @@ import {
   Alert,
 } from 'react-native';
 
-import { salvarUsuario } from '../utils/firebase';
+import { salvarUsuario } from '../utils/Usuario/salvar';
 
 export default function Sign() {
   const [nome, setNome] = useState('');

@@ -17,8 +17,9 @@ import {
   RefreshControl, 
 } from 'react-native';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, isAdmin } from '~/utils/firebase';
-import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
+import { isAdmin } from '~/utils/Usuario/authAdmin';
+import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, } from '~/utils/Evento/firebaseEvento';
+import ComponentEventos from '../../components/ComponentEventos/ComponentEventos';
 
 const RemoverEventoButton = ({ onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.removerEventoButton}>
@@ -183,7 +184,7 @@ export default function Home() {
                 eventoItems.map((item, index) => {
                   return (
                     <TouchableOpacity key={index}>
-                      <ImageEvento 
+                      <ComponentEventos 
                         nomeEvento={item.titulo} 
                         dataEvento={item.data}
                         horarioEvento={item.horario}

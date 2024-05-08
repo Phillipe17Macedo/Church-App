@@ -15,7 +15,9 @@ import {
   Alert,
 } from 'react-native';
 
-import { atualizarDadosNoBanco, buscarDadosDoBanco, signOut } from '../utils/firebase';
+import { signOut } from '../utils/Usuario/signUser';
+import { buscarDadosDoBanco } from '~/utils/Usuario/buscar';
+import { atualizarDadosNoBanco } from '~/utils/Usuario/editar';
 
 interface Usuario {
   id: string;
