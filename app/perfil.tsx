@@ -4,12 +4,10 @@ import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet,
   SafeAreaView,
   ScrollView,
   Text,
   View,
-  Platform,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -18,6 +16,7 @@ import {
 import { signOut } from '../utils/Usuario/signUser';
 import { buscarDadosDoBanco } from '~/utils/Usuario/buscar';
 import { atualizarDadosNoBanco } from '~/utils/Usuario/editar';
+import { styles } from '../style/StylesPerfil/styles';
 
 interface Usuario {
   id: string;
@@ -196,104 +195,3 @@ export default function Perfil() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingLeft: 10,
-    paddingRight: 10,
-    backgroundColor: '#040316',
-  },
-  containerInput: {
-    backgroundColor: '#3E4A59',
-    alignItems: 'center',
-    justifyContent:'space-between',
-    flexDirection: 'column',
-    marginTop: 100,
-    paddingTop: 15,
-    paddingBottom: 5,
-    borderRadius: 20,
-    height: 'auto',
-    shadowOffset:{width:5,height:5},
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 5,  
-  },
-  containerTitulo: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 15,
-  },
-  titulo: {
-    color: '#fff',
-    fontSize: 23,
-    fontWeight: 'bold',
-    fontVariant: ['small-caps'],
-  },
-  inputDados: {
-    backgroundColor: '#fff',
-    height: 35,
-    width: '90%',
-    borderRadius: 15,
-    paddingLeft: 10,
-    borderWidth: 1,
-    borderColor: '#CACACA',
-    color: '#202022',
-    fontWeight: 'bold',
-    fontSize: 18,
-    fontVariant: ['small-caps'],
-    marginBottom: 10,
-    shadowOffset:{width:10,height:10},
-    shadowOpacity:0.5,
-    shadowRadius:10,
-    elevation:5,  
-  },
-  containerButton: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    width: '85%',
-  },
-  button: {
-    alignSelf: 'center',
-    backgroundColor: '#DAFDBA',
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 50,
-    marginTop: 40,
-    marginBottom: 25,
-    width: 130,
-    height: 55,
-    textAlign: 'center',
-    justifyContent: 'center',
-    shadowOffset:{width:10,height:10},
-    shadowOpacity:0.5,
-    shadowRadius:10,
-    elevation:5,  
-    borderWidth: 1,
-    borderColor: '#CACACA',
-  },
-  buttonText: {
-    color: '#012030',
-    fontWeight: 'bold',
-    fontSize: 17,
-    textAlign: 'center',
-    fontVariant: ['small-caps'],
-  },
-  containerTextLink:{
-    marginTop: 20,
-    marginBottom: 10,
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-    backgroundColor: '#F2F2F2',
-    padding: 5,
-    borderRadius: 10,
-  },
-  textLink: {
-    alignSelf: 'center',
-    fontSize: 18,
-    color: '#202022',
-    fontWeight: 'bold',
-    fontVariant: ['small-caps'],
-    padding: 4,
-  },
-});

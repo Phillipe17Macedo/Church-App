@@ -171,12 +171,12 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="light" />
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <StatusBar style="light" />
           <View style={[styles.areaEventos]}>
 
             <View style={[styles.areaContainerEvento]}>
