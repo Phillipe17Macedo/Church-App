@@ -89,7 +89,7 @@ export default function Celulas() {
         <ScrollView>
           <View style={[{backgroundColor: '#3E4A59',}, {alignItems: 'center'}, {marginTop: 25},{marginBottom: 20}, {width: '100%'}, {justifyContent: 'center'}, {alignSelf: 'center'}, {borderRadius: 10}]}>
             <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: '#fff'}, {textAlign: 'justify'}]}>
-              ESTÁ TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
+              ESTA TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
             </Text>
           </View>
           <CategoriaItem title="Célula de Jovens" />

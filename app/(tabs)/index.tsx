@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { launchImageLibraryAsync, ImagePickerResult } from 'expo-image-picker';
+import { launchImageLibraryAsync } from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import {
@@ -32,7 +32,8 @@ const ConfirmacaoRemocao = ({ visivel, onConfirmar, onCancelar }) => {
       animationType="slide"
       transparent={true}
       visible={visivel}
-      onRequestClose={onCancelar}>
+      onRequestClose={onCancelar}
+      >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>Tem certeza de que deseja remover este evento?</Text>

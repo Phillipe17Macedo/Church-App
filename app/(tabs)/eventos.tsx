@@ -5,21 +5,26 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, SafeAreaView, View } from 'react-native';
 import {Agenda, AgendaEntry} from 'react-native-calendars';
 
+import { styles } from '../../style/StylesEventos/styles';
+
 export default function Eventos() {
   const items: Record<string, AgendaEntry[]> = {
-    '2024-04-25': [{ name: 'Organização  da Equipe para o Encontro com Deus', height: 50, day: '2024-04-25' }],
-    '2024-04-26': [{ name: 'PRIMEIRO DIA DE ENCONTRO COM DEUS', height: 50, day: '2024-04-26' }],
-    '2024-04-27': [{ name: 'SEGUNDO DIA DE ENCONTRO COM DEUS', height: 50, day: '2024-04-27' }],
+    '2024-05-08': [{ name: 'Organização  da Equipe para o Encontro com Deus', height: 50, day: '2024-04-25' }],
+    '2024-05-09': [{ name: 'PRIMEIRO DIA DE ENCONTRO COM DEUS', height: 50, day: '2024-04-26' }],
+    '2024-05-10': [{ name: 'SEGUNDO DIA DE ENCONTRO COM DEUS', height: 50, day: '2024-04-27' }],
   };
   return (
     <SafeAreaView style={[styles.container]}>
       <StatusBar style="light" />
-      <Stack.Screen options={{ title: 'Eventos' }} />
+      <Stack.Screen options={{ title: 'Eventos' }} 
+      />
+
         <View style={[{backgroundColor: '#3E4A59',}, {alignItems: 'center'}, {marginTop: 25},{marginBottom: 20}, {width: '100%'}, {justifyContent: 'center'}, {alignSelf: 'center'}, {borderRadius: 10}]}>
           <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: '#fff'}, {textAlign: 'justify'}]}>
-            ESTÁ TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
+            ESTA TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
           </Text>
         </View>
+
       <Agenda
         style={{
           borderRadius: 15,
@@ -35,25 +40,3 @@ export default function Eventos() {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 25,
-    backgroundColor: '#040316',
-  },
-  item: {
-    flex: 1,
-    borderRadius: 8,
-    backgroundColor: '#CACACA',
-    marginTop: 15,
-    marginRight: 10,
-    textAlign: 'justify',
-    padding: 8,
-    marginBottom: 15,
-  },
-  itemText: {
-    color: '#202022',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
