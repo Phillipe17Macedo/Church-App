@@ -2,7 +2,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, SafeAreaView, View } from 'react-native';
+import { Text, SafeAreaView, View } from 'react-native';
 
 import { styles } from '../../style/StylesEventos/styles';
 import { ComponentAgenda } from '~/components/Agenda/ComponentAgenda';
