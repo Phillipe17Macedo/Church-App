@@ -12,6 +12,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
+import { styles } from '../../style/StylesCelulas/styles';
+
 interface Celula {
   imageSource: any;
   title: string;
@@ -89,7 +91,7 @@ export default function Celulas() {
         <ScrollView>
           <View style={[{backgroundColor: '#3E4A59',}, {alignItems: 'center'}, {marginTop: 25},{marginBottom: 20}, {width: '100%'}, {justifyContent: 'center'}, {alignSelf: 'center'}, {borderRadius: 10}]}>
             <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: '#fff'}, {textAlign: 'justify'}]}>
-              ESTÁ TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
+              ESTA TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
             </Text>
           </View>
           <CategoriaItem title="Célula de Jovens" />
@@ -128,80 +130,4 @@ export default function Celulas() {
       </View>
     </>
   );
-} 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#040316',
-    paddingHorizontal: 25,
-  },
-  content: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    width: '100%',
-    height: 200,
-    marginBottom: 20,
-    backgroundColor: '#f1f1f1',
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  containerEventos: {
-    position: 'relative',
-    width: '100%',
-    height: '75%',
-    textAlign: 'center',
-    bottom: 35,
-  },
-  images: {
-    width: '100%',
-    height: '100%',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  textContainer: {
-    position: 'absolute',
-    top: 130,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 80,
-    backgroundColor: '#3E4A59',
-    paddingTop: 10,
-    paddingLeft: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  textOne: {
-    color: '#fff',
-    textAlign: 'left',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  textTwo: {
-    color: '#fff',
-    textAlign: 'left',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  textThree: {
-    color: '#fff',
-    textAlign: 'left',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  category: {
-    marginTop: 5,
-    marginBottom: -7,
-    width: '85%',
-    height: 'auto',
-    alignSelf: 'center',
-  },
-  textCategory: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 21,
-    padding: 10,
-  },
-});
+}
