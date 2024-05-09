@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     },
     button: {
       alignSelf: 'center',
-      backgroundColor: '#DAFDBA',
+      backgroundColor: '#CACACA',
       paddingVertical: 10,
       paddingHorizontal: 25,
       borderRadius: 18,
@@ -68,7 +68,7 @@ export const styles = StyleSheet.create({
     },
     containerTextLink: {
       marginTop: 30,
-      marginBottom: 10,
+      marginBottom: 15,
       width: 130,
       height: 40,
       justifyContent: 'center',
