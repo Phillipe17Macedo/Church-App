@@ -13,7 +13,7 @@ const ComponentEventos = (props: any) => {
   return (
     <View style={[styles.containerEvento]}>
       <View style={[styles.containerImagemEvento]}>
-      <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={[styles.imagemEvento]} />
           ) : (
