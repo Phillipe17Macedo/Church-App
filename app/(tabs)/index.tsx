@@ -25,13 +25,21 @@ import { removerEventoDoBanco } from '~/utils/Evento/remover';
 
 import ComponentEventos from '../../components/ComponentEventos/ComponentEventos';
 
-const RemoverEventoButton = ({ onPress }) => (
+
+type RemoverEventoButtonProps = {
+  onPress: () => void;
+};
+const RemoverEventoButton = ({ onPress }: RemoverEventoButtonProps) => (
   <TouchableOpacity onPress={onPress} style={styles.removerEventoButton}>
     <Text style={styles.removerEventoButtonText}>Remover</Text>
   </TouchableOpacity>
 );
-
-const ConfirmacaoRemocao = ({ visivel, onConfirmar, onCancelar }) => {
+type ConfirmacaoRemocaoProps = {
+  visivel: boolean;
+  onConfirmar: () => void;
+  onCancelar: () => void;
+};
+const ConfirmacaoRemocao = ({ visivel, onConfirmar, onCancelar }: ConfirmacaoRemocaoProps) => {
   return (
     <Modal
       animationType="slide"
@@ -55,7 +63,6 @@ const ConfirmacaoRemocao = ({ visivel, onConfirmar, onCancelar }) => {
     </Modal>
   );
 };
-
 export default function Home() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [eventoItems, setEventoItems] = useState<Evento[]>([]);
