@@ -15,7 +15,7 @@ const ComponentCelulas = (props: any) => {
             <View style={[styles.containerImagemCelula]}>
                 <TouchableOpacity onPress={onPress}>
                     {imageUri ? (
-                        <Image source={{uri: imageUri}} style={[styles.imagemCelula]} />
+                        <Image source={{ uri: imageUri }} style={[styles.imagemCelula]} />
                     ) : (
                         <Image source={require('../../assets/img/RL/Jesus.jpeg')} style={[styles.imagemCelula]} />
                     )}
@@ -23,7 +23,7 @@ const ComponentCelulas = (props: any) => {
                         <Text style={[styles.textoNomeCelula]} >{nomeCelula}</Text>
                         <Text style={[styles.textoDiaCelula]} >{diaCelula}</Text>
                         <Text style={[styles.textoHorarioCelula]} >{horarioCelula}</Text>
-                        <Text style={[styles.textoEnderecoCelula]} ></Text>
+                        <Text style={[styles.textoEnderecoCelula]} >{enderecoCelula}</Text>
                     </View>
                 </TouchableOpacity>
             </View>

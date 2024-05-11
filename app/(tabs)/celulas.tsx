@@ -1,7 +1,7 @@
 import { launchImageLibraryAsync } from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   ScrollView,
   SafeAreaView,
   KeyboardAvoidingView,
@@ -27,7 +27,7 @@ type RemoverCelulaButtonProps = {
   onPress: () => void;
 };
 
-const RemoverCelulaButton = ({onPress}: RemoverCelulaButtonProps) => (
+const RemoverCelulaButton = ({ onPress }: RemoverCelulaButtonProps) => (
   <TouchableOpacity onPress={onPress} style={[styles.removerCelulaButton]}>
     <Text style={[styles.removerCelulaButtonText]}>Remover</Text>
   </TouchableOpacity>
@@ -37,14 +37,14 @@ type ConfirmacaoRemocaoPros = {
   onConfirmar: () => void;
   onCancelar: () => void;
 };
-const ConfirmarRemocao = ({visivel, onConfirmar, onCancelar}: ConfirmacaoRemocaoPros) => {
+const ConfirmarRemocao = ({ visivel, onConfirmar, onCancelar }: ConfirmacaoRemocaoPros) => {
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={visivel}
       onRequestClose={onCancelar}
-      >
+    >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>Tem certeza de que deseja remover este evento?</Text>
@@ -61,6 +61,7 @@ const ConfirmarRemocao = ({visivel, onConfirmar, onCancelar}: ConfirmacaoRemocao
     </Modal>
   );
 };
+
 export default function Celulas() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [celulaItems, setCelulaItems] = useState<Celula[]>([]);
@@ -98,7 +99,7 @@ export default function Celulas() {
         aspect: [3, 2],
         quality: 1,
       });
-      if(!result.canceled) {
+      if (!result.canceled) {
         const imageUri = result.assets[0].uri;
         const imageName = imageUri.substring(imageUri.lastIndexOf('/') + 1);
         const storage = getStorage();
@@ -143,14 +144,14 @@ export default function Celulas() {
 
   const confirmarRemocao = async () => {
     try {
-      if(celulaIndexToRemove === -1){
+      if (celulaIndexToRemove === -1) {
         console.error('A Celula a ser removida não foi encontrada.');
         return;
       }
       const celulaToRemove = celulaItems[celulaIndexToRemove];
 
       const isAdminUser = await isAdmin();
-      if(!isAdminUser){
+      if (!isAdminUser) {
         console.error('Apenas usuários administradores podem remover celulas.');
         return;
       }
@@ -169,7 +170,7 @@ export default function Celulas() {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    try{
+    try {
       const celulasDoBanco = await buscarCelulaDoBanco();
       setCelulaItems(celulasDoBanco);
     } catch (error) {
@@ -207,18 +208,18 @@ export default function Celulas() {
             }
           </View>
         </View>
-        
+
         {isAdminUser && (
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={[styles.containerInputNewCelula]}
-            >
+          >
             <TextInput
               style={[styles.inputTextoCelula]}
               keyboardType='default'
               placeholder='Nome da Célula'
               value={nomeDaCelula}
-              onChangeText={(nomeDaCelula) => setNomeDaCelula(nomeDaCelula)}  
+              onChangeText={(nomeDaCelula) => setNomeDaCelula(nomeDaCelula)}
             />
             <TextInput
               style={[styles.inputTextoCelula]}
