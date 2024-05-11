@@ -206,6 +206,51 @@ export default function Celulas() {
             }
           </View>
         </View>
+        {isAdminUser && (
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={[styles.containerInputNewCelula]}
+            >
+            <TextInput
+              style={[styles.inputTextoCelula]}
+              keyboardType='default'
+              placeholder='Nome da Célula'
+              value={nomeDaCelula}
+              onChangeText={(nomeDaCelula) => setNomeDaCelula(nomeDaCelula)}  
+            />
+            <TextInput
+              style={[styles.inputTextoCelula]}
+              keyboardType='default'
+              placeholder='Dia da Célula'
+              value={diaDaCelula}
+              onChangeText={(diaDaCelula) => setDiaDaCelula(diaDaCelula)}
+            />
+            <TextInput
+              style={[styles.inputTextoCelula]}
+              keyboardType='default'
+              placeholder='Horário da Célula'
+              value={horarioDaCelula}
+              onChangeText={(horarioDaCelula) => setHorarioDaCelula(horarioDaCelula)}
+            />
+            <TextInput
+              style={[styles.inputTextoCelula]}
+              keyboardType='default'
+              placeholder='Endereço da Célula'
+              value={enderecoDaCelula}
+              onChangeText={(enderecoDaCelula) => setEnderecoDaCelula(enderecoDaCelula)}
+            />
+            <TouchableOpacity onPress={() => handleAddCelula}>
+              <View style={[styles.containerIconeAddCelula]}>
+                <Text style={[styles.iconeAddCelula]}>+</Text>
+              </View>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        )}
+        <ConfirmarRemocao
+          visivel={confirmacaoVisivel}
+          onConfirmar={confirmarRemocao}
+          onCancelar={cancelarRemocao}
+        />
       </ScrollView>
     </SafeAreaView>
   );
