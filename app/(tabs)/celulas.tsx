@@ -195,11 +195,11 @@ export default function Celulas() {
                 return (
                   <TouchableOpacity key={index}>
                     <ComponentCelulas
-                      nomeCelula={item.nomeDaCelula}
-                      diaCelula={item.diaDaCelula}
-                      horarioCelula={item.horarioDaCelula}
-                      enderecoCelula={item.enderecoDaCelula}
-                      imageUri={item.imagem}
+                      nomeCelula={item.nomeCelula}
+                      diaCelula={item.diaCelula}
+                      horarioCelula={item.horarioCelula}
+                      enderecoCelula={item.enderecoCelula}
+                      imageUri={item.imagemUri}
                     />
                     {isAdminUser && <RemoverCelulaButton onPress={() => exibirConfirmacao(index)} />}
                   </TouchableOpacity>
