@@ -25,7 +25,7 @@ import ComponentCelulas from '~/components/ComponentCelulas/ComponentCelulas';
 
 type RemoverCelulaButtonProps = {
   onPress: () => void;
-}
+};
 
 const RemoverCelulaButton = ({onPress}: RemoverCelulaButtonProps) => (
   <TouchableOpacity onPress={onPress} style={[styles.removerCelulaButton]}>
@@ -171,6 +171,7 @@ export default function Celulas() {
     setRefreshing(true);
     try{
       const celulasDoBanco = await buscarCelulaDoBanco();
+      setCelulaItems(celulasDoBanco);
     } catch (error) {
       console.error('Erro ao buscar Celulas:', error);
     } finally {
@@ -206,6 +207,7 @@ export default function Celulas() {
             }
           </View>
         </View>
+        
         {isAdminUser && (
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -239,7 +241,7 @@ export default function Celulas() {
               value={enderecoDaCelula}
               onChangeText={(enderecoDaCelula) => setEnderecoDaCelula(enderecoDaCelula)}
             />
-            <TouchableOpacity onPress={() => handleAddCelula}>
+            <TouchableOpacity onPress={() => handleAddCelula()}>
               <View style={[styles.containerIconeAddCelula]}>
                 <Text style={[styles.iconeAddCelula]}>+</Text>
               </View>

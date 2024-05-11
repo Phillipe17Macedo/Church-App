@@ -17,7 +17,7 @@ const ComponentCelulas = (props: any) => {
                     {imageUri ? (
                         <Image source={{uri: imageUri}} style={[styles.imagemCelula]} />
                     ) : (
-                        <Image source={require('../../assets/img/RL/Jesus.png')} style={[styles.imagemCelula]} />
+                        <Image source={require('../../assets/img/RL/Jesus.jpeg')} style={[styles.imagemCelula]} />
                     )}
                     <View style={[styles.containerTextoCelula]} >
                         <Text style={[styles.textoNomeCelula]} >{nomeCelula}</Text>

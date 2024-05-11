@@ -24,7 +24,6 @@ import { removerEventoDoBanco } from '~/utils/Evento/remover';
 
 import ComponentEventos from '../../components/ComponentEventos/ComponentEventos';
 
-
 type RemoverEventoButtonProps = {
   onPress: () => void;
 };
