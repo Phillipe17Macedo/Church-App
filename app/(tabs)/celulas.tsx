@@ -62,6 +62,111 @@ const ConfirmarRemocao = ({visivel, onConfirmar, onCancelar}: ConfirmacaoRemocao
   );
 };
 export default function Celulas() {
+  const [isAdminUser, setIsAdminUser] = useState(false);
+  const [celulaItems, setCelulaItems] = useState<Celula[]>([]);
+  const [confirmacaoVisivel, setConfirmacaoVisivel] = useState(false);
+  const [celulaIndexToRemove, setCelulaIndexToRemove] = useState(-1);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const isAdminResult = await isAdmin();
+      setIsAdminUser(isAdminResult);
+    };
+    checkAdminStatus();
+
+    const fetchCelulas = async () => {
+      try {
+        const celulasDoBanco = await buscarCelulaDoBanco();
+        setCelulaItems(celulasDoBanco);
+      } catch (error) {
+        console.error('Erro ao buscar celulas:', error);
+      }
+    };
+    fetchCelulas();
+  }, []);
+
+  const [nomeDaCelula, setNomeDaCelula] = useState('');
+  const [diaDaCelula, setDiaDaCelula] = useState('');
+  const [horarioDaCelula, setHorarioDaCelula] = useState('');
+  const [enderecoDaCelula, setEnderecoDaCelula] = useState('');
+
+  const handleAddCelula = async () => {
+    try {
+      let result = await launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [3, 2],
+        quality: 1,
+      });
+      if(!result.canceled) {
+        const imageUri = result.assets[0].uri;
+        const imageName = imageUri.substring(imageUri.lastIndexOf('/') + 1);
+        const storage = getStorage();
+        const storageReference = storageRef(storage, `celulas/${imageName}`);
+        const imageBlob = await fetch(imageUri).then((response) => response.blob());
+        await uploadBytes(storageReference, imageBlob);
+
+        const downloadURL = await getDownloadURL(storageReference);
+        const celulaId = await salvarCelulaNoBanco(nomeDaCelula, diaDaCelula, horarioDaCelula, enderecoDaCelula, downloadURL);
+        const novaCelula = {
+          id: celulaId,
+          nomeCelula: nomeDaCelula,
+          diaCelula: diaDaCelula,
+          horarioCelula: horarioDaCelula,
+          enderecoCelula: enderecoDaCelula,
+          imageUri: downloadURL,
+        };
+        setCelulaItems([
+          ...celulaItems,
+          novaCelula,
+        ]);
+        setNomeDaCelula('');
+        setDiaDaCelula('');
+        setHorarioDaCelula('');
+        setEnderecoDaCelula('');
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar celula:', error);
+    }
+    Keyboard.dismiss();
+  };
+
+  const exibirConfirmacao = (index: number) => {
+    setCelulaIndexToRemove(index);
+    setConfirmacaoVisivel(true);
+  };
+
+  const cancelarRemocao = () => {
+    setConfirmacaoVisivel(false);
+    setCelulaIndexToRemove(-1);
+  };
+
+  const confirmarRemocao = async () => {
+    try {
+      if(celulaIndexToRemove === -1){
+        console.error('A Celula a ser removida não foi encontrada.');
+        return;
+      }
+      const celulaToRemove = celulaItems[celulaIndexToRemove];
+
+      const isAdminUser = await isAdmin();
+      if(!isAdminUser){
+        console.error('Apenas usuários administradores podem remover celulas.');
+        return;
+      }
+
+      const updateCelulaItems = celulaItems.filter((_, i) => i !== celulaIndexToRemove);
+      setCelulaItems(updateCelulaItems);
+
+      await removerCelulaDoBanco(celulaToRemove.id);
+    } catch (error) {
+      console.error('Erro ao remover celula:', error);
+    } finally {
+      setConfirmacaoVisivel(false);
+      setCelulaIndexToRemove(-1);
+    }
+  };
+
   return (
     <View style={styles.container}>
 

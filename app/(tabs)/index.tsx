@@ -127,7 +127,8 @@ export default function Home() {
       console.error('Erro ao adicionar evento:', error);
     }
     Keyboard.dismiss();
-  }
+  };
+  
   const exibirConfirmacao = (index: number) => {
     setEventoIndexToRemove(index);
     setConfirmacaoVisivel(true);
