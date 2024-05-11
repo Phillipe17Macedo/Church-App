@@ -167,9 +167,46 @@ export default function Celulas() {
     }
   };
 
-  return (
-    <View style={styles.container}>
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try{
+      const celulasDoBanco = await buscarCelulaDoBanco();
+    } catch (error) {
+      console.error('Erro ao buscar Celulas:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
-    </View>
+  return (
+    <SafeAreaView style={[styles.container]}>
+      <StatusBar style='light' />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View style={[styles.areaCelulas]}>
+          <View style={[styles.areaContainerCelula]}>
+            {
+              celulaItems.map((item, index) => {
+                return (
+                  <TouchableOpacity key={index}>
+                    <ComponentCelulas
+                      nomeCelula={item.nomeDaCelula}
+                      diaCelula={item.diaDaCelula}
+                      horarioCelula={item.horarioDaCelula}
+                      enderecoCelula={item.enderecoDaCelula}
+                      imageUri={item.imagem}
+                    />
+                    {isAdminUser && <RemoverCelulaButton onPress={() => exibirConfirmacao(index)} />}
+                  </TouchableOpacity>
+                )
+              })
+            }
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
