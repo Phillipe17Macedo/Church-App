@@ -34,6 +34,7 @@ export const salvarCelulaNoBanco = async (
             imagemCelula,
         });
         console.log('Celula salva com sucesso!');
+        console.log('URI Imagem: ', imagemCelula);
     } catch (error) {
         console.error('Erro ao salvar celula:', error);
         throw error;

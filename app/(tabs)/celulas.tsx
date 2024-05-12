@@ -108,6 +108,7 @@ export default function Celulas() {
         await uploadBytes(storageReference, imageBlob);
 
         const downloadURL = await getDownloadURL(storageReference);
+        console.log('URL da Imagem: ', downloadURL);
         const celulaId = await salvarCelulaNoBanco(nomeDaCelula, diaDaCelula, horarioDaCelula, enderecoDaCelula, downloadURL);
         const novaCelula = {
           id: celulaId,
@@ -117,6 +118,7 @@ export default function Celulas() {
           enderecoCelula: enderecoDaCelula,
           imageUri: downloadURL,
         };
+        console.log('Nova Célula: ', novaCelula);
         setCelulaItems([
           ...celulaItems,
           novaCelula,
@@ -199,7 +201,7 @@ export default function Celulas() {
                       diaCelula={item.diaCelula}
                       horarioCelula={item.horarioCelula}
                       enderecoCelula={item.enderecoCelula}
-                      imageUri={item.imagemUri}
+                      imageUri={item.imageUri}
                     />
                     {isAdminUser && <RemoverCelulaButton onPress={() => exibirConfirmacao(index)} />}
                   </TouchableOpacity>
