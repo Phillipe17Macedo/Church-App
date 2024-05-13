@@ -14,11 +14,11 @@ const firebaseConfig = {
 
 interface Celula {
     id: string;
-    nomeCelula: string;
-    diaCelula: string;
-    horarioCelula: string;
-    enderecoCelula: string;
-    imagemCelula: string;
+    titulo: string;
+    data: string;
+    horario: string;
+    endereco: string;
+    imagem: string;
 }
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -34,11 +34,11 @@ export const buscarCelulaDoBanco = async (): Promise<Celula[]> => {
             const celulaData = childSnapshot.val();
             const celula: Celula = {
                 id: childSnapshot.key !== null ? childSnapshot.key : '',
-                nomeCelula: celulaData.nomeCelula,
-                diaCelula: celulaData.diaCelula,
-                horarioCelula: celulaData.horarioCelula,
-                enderecoCelula: celulaData.enderecoCelula,
-                imagemCelula: celulaData.imagemCelula,
+                titulo: celulaData.titulo,
+                data: celulaData.data,
+                horario: celulaData.horario,
+                endereco: celulaData.endereco,
+                imagem: celulaData.imagem,
             };
             celulas.push(celula);
         });

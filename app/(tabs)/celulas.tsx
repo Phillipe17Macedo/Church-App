@@ -87,10 +87,10 @@ export default function Celulas() {
     fetchCelulas();
   }, []);
 
-  const [nomeDaCelula, setNomeDaCelula] = useState('');
-  const [diaDaCelula, setDiaDaCelula] = useState('');
-  const [horarioDaCelula, setHorarioDaCelula] = useState('');
-  const [enderecoDaCelula, setEnderecoDaCelula] = useState('');
+  const [tituloCelula, setTituloCelula] = useState('');
+  const [dataCelula, setDataCelula] = useState('');
+  const [horarioCelula, setHorarioCelula] = useState('');
+  const [enderecoCelula, setEnderecoCelula] = useState('');
 
   const handleAddCelula = async () => {
     try {
@@ -109,13 +109,13 @@ export default function Celulas() {
 
         const downloadURL = await getDownloadURL(storageReference);
         console.log('URL da Imagem: ', downloadURL);
-        const celulaId = await salvarCelulaNoBanco(nomeDaCelula, diaDaCelula, horarioDaCelula, enderecoDaCelula, downloadURL);
+        const celulaId = await salvarCelulaNoBanco(tituloCelula, dataCelula, horarioCelula, enderecoCelula, downloadURL);
         const novaCelula = {
           id: celulaId,
-          nomeCelula: nomeDaCelula,
-          diaCelula: diaDaCelula,
-          horarioCelula: horarioDaCelula,
-          enderecoCelula: enderecoDaCelula,
+          nomeCelula: tituloCelula,
+          diaCelula: dataCelula,
+          horarioCelula: horarioCelula,
+          enderecoCelula: enderecoCelula,
           imageUri: downloadURL,
         };
         console.log('Nova Célula: ', novaCelula);
@@ -123,10 +123,10 @@ export default function Celulas() {
           ...celulaItems,
           novaCelula,
         ]);
-        setNomeDaCelula('');
-        setDiaDaCelula('');
-        setHorarioDaCelula('');
-        setEnderecoDaCelula('');
+        setTituloCelula('');
+        setDataCelula('');
+        setHorarioCelula('');
+        setEnderecoCelula('');
       }
     } catch (error) {
       console.error('Erro ao adicionar celula:', error);
@@ -197,11 +197,11 @@ export default function Celulas() {
                 return (
                   <TouchableOpacity key={index}>
                     <ComponentCelulas
-                      nomeCelula={item.nomeCelula}
-                      diaCelula={item.diaCelula}
-                      horarioCelula={item.horarioCelula}
-                      enderecoCelula={item.enderecoCelula}
-                      imageUri={item.imageUri}
+                      nomeCelula={item.titulo}
+                      dataCelula={item.data}
+                      horarioCelula={item.horario}
+                      enderecoCelula={item.endereco}
+                      imageUri={item.imagem}
                     />
                     {isAdminUser && <RemoverCelulaButton onPress={() => exibirConfirmacao(index)} />}
                   </TouchableOpacity>
@@ -220,29 +220,29 @@ export default function Celulas() {
               style={[styles.inputTextoCelula]}
               keyboardType='default'
               placeholder='Nome da Célula'
-              value={nomeDaCelula}
-              onChangeText={(nomeDaCelula) => setNomeDaCelula(nomeDaCelula)}
+              value={tituloCelula}
+              onChangeText={(nomeCelula) => setTituloCelula(nomeCelula)}
             />
             <TextInput
               style={[styles.inputTextoCelula]}
               keyboardType='default'
               placeholder='Dia da Célula'
-              value={diaDaCelula}
-              onChangeText={(diaDaCelula) => setDiaDaCelula(diaDaCelula)}
+              value={dataCelula}
+              onChangeText={(dataCelula) => setDataCelula(dataCelula)}
             />
             <TextInput
               style={[styles.inputTextoCelula]}
               keyboardType='default'
               placeholder='Horário da Célula'
-              value={horarioDaCelula}
-              onChangeText={(horarioDaCelula) => setHorarioDaCelula(horarioDaCelula)}
+              value={horarioCelula}
+              onChangeText={(horarioCelula) => setHorarioCelula(horarioCelula)}
             />
             <TextInput
               style={[styles.inputTextoCelula]}
               keyboardType='default'
               placeholder='Endereço da Célula'
-              value={enderecoDaCelula}
-              onChangeText={(enderecoDaCelula) => setEnderecoDaCelula(enderecoDaCelula)}
+              value={enderecoCelula}
+              onChangeText={(enderecoCelula) => setEnderecoCelula(enderecoCelula)}
             />
             <TouchableOpacity onPress={() => handleAddCelula()}>
               <View style={[styles.containerIconeAddCelula]}>

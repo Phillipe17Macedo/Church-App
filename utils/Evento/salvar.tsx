@@ -34,7 +34,6 @@ export const salvarEventoNoBanco = async (
         horario,
         imagem,
       });
-  
       console.log('Evento salvo com sucesso!');
     } catch (error) {
       console.error('Erro ao salvar evento:', error);

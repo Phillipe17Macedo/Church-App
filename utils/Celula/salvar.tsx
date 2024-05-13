@@ -17,24 +17,24 @@ const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
 export const salvarCelulaNoBanco = async (
-    nomeCelula: string,
-    diaCelula: string,
-    horarioCelula: string,
-    enderecoCelula: string,
-    imagemCelula: string,
+    titulo: string,
+    data: string,
+    horario: string,
+    endereco: string,
+    imagem: string,
 ) => {
     try {
         const celulasRef = ref(database, 'celulas');
         const novaCelulaRef = push(celulasRef);
         await set(novaCelulaRef, {
-            nomeCelula,
-            diaCelula,
-            horarioCelula,
-            enderecoCelula,
-            imagemCelula,
+            titulo,
+            data,
+            horario,
+            endereco,
+            imagem,
         });
         console.log('Celula salva com sucesso!');
-        console.log('URI Imagem: ', imagemCelula);
+        console.log('URI Imagem: ', imagem);
     } catch (error) {
         console.error('Erro ao salvar celula:', error);
         throw error;
