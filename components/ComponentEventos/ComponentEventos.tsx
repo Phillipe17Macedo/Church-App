@@ -1,19 +1,19 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { Text, View, TouchableOpacity, Image } from 'react-native';
 
 import { styles } from '../../components/ComponentEventos/styles'
 
 const ComponentEventos = (props: any) => {
   const { nomeEvento, dataEvento, horarioEvento, imageUri, onPress } = props;
-  console.log("Nome do Evento: ",nomeEvento);
-  console.log("Data do Evento: ",dataEvento);
-  console.log("Hora do Evento: ",horarioEvento);
-  console.log("Endereço da Imagem: ",imageUri);
+  console.log("Nome do Evento: ", nomeEvento);
+  console.log("Data do Evento: ", dataEvento);
+  console.log("Hora do Evento: ", horarioEvento);
+  console.log("Endereço da Imagem: ", imageUri);
   return (
     <View style={[styles.containerEvento]}>
       <View style={[styles.containerImagemEvento]}>
-      <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={[styles.imagemEvento]} />
           ) : (

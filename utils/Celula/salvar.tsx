@@ -16,27 +16,27 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
-export const salvarEventoNoBanco = async (
+export const salvarCelulaNoBanco = async (
     titulo: string,
     data: string,
     horario: string,
-    imagem: string
-  ) => {
+    endereco: string,
+    imagem: string,
+) => {
     try {
-      // Referência para o nó 'eventos' no banco de dados
-      const eventosRef = ref(database, 'eventos');
-      // Cria um novo nó para o evento com um ID único gerado automaticamente
-      const novoEventoRef = push(eventosRef);
-      // Define os dados do evento
-      await set(novoEventoRef, {
-        titulo,
-        data,
-        horario,
-        imagem,
-      });
-      console.log('Evento salvo com sucesso!');
+        const celulasRef = ref(database, 'celulas');
+        const novaCelulaRef = push(celulasRef);
+        await set(novaCelulaRef, {
+            titulo,
+            data,
+            horario,
+            endereco,
+            imagem,
+        });
+        console.log('Celula salva com sucesso!');
+        console.log('URI Imagem: ', imagem);
     } catch (error) {
-      console.error('Erro ao salvar evento:', error);
-      throw error;
+        console.error('Erro ao salvar celula:', error);
+        throw error;
     }
 };
