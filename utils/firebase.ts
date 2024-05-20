@@ -3,15 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, push, set, get, update, DataSnapshot, remove } from 'firebase/database';
-import { getStorage, ref as storageRef, uploadString, getDownloadURL } from 'firebase/storage';
-// Optionally import the services that you want to use
-// import {...} from "firebase/auth";
-// import {...} from "firebase/database";
-// import {...} from "firebase/firestore";
-// import {...} from "firebase/functions";
-// import {...} from "firebase/storage";
 
-// Initialize Firebase
 const firebaseConfig = {
   apiKey: 'AIzaSyCyhMAnKhc2y_2EzP2LyO7-AbVEBjgj2ek',
   authDomain: 'videiraapp.firebaseapp.com',
@@ -22,6 +14,7 @@ const firebaseConfig = {
   appId: '1:348499807286:web:c9bcbc26c1c9acad9adc97',
   measurementId: 'G-KHDPWMVYNN',
 };
+
 interface Usuario {
   id: string;
   nome: string;
@@ -32,6 +25,7 @@ interface Usuario {
   senha: string;
   funcao: string;
 }
+
 interface Evento {
   id: string;
   titulo: string;
@@ -39,6 +33,7 @@ interface Evento {
   horario: string;
   imagem: string;
 }
+
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 const auth = getAuth(firebaseApp);
@@ -102,6 +97,7 @@ export const atualizarDadosNoBanco = async (usuarioId: string, novosDados: Usuar
     throw error;
   }
 };
+
 export const buscarDadosDoBanco = async (userId: string): Promise<Usuario | null> => {
   try {
     const usuarioRef = ref(database, `usuarios/${userId}`);
@@ -140,6 +136,7 @@ export const buscarDadosDoBanco = async (userId: string): Promise<Usuario | null
     throw error;
   }
 };
+
 export const buscarEventosDoBanco = async (): Promise<Evento[]> => {
   try {
     const eventosRef = ref(database, 'eventos');
@@ -182,6 +179,7 @@ export const isAdmin = async (): Promise<boolean> => {
     return false; // Retorna falso em caso de erro
   }
 };
+
 export const salvarEventoNoBanco = async (
   titulo: string,
   data: string,
@@ -229,4 +227,5 @@ export const editarEventoNoBanco = async (eventoId: string, novosDados: Evento) 
     throw error;
   }
 };
+
 export default database;

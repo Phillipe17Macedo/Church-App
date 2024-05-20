@@ -2,53 +2,25 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, SafeAreaView } from 'react-native';
-import {Agenda, AgendaEntry} from 'react-native-calendars';
+import { Text, SafeAreaView, View } from 'react-native';
+
+import { styles } from '../../style/StylesEventos/styles';
+import { ComponentAgenda } from '~/components/Agenda/ComponentAgenda';
 
 export default function Eventos() {
-  const items: Record<string, AgendaEntry[]> = {
-    '2024-04-25': [{ name: 'Organização  da Equipe para o Encontro com Deus', height: 50, day: '2024-04-25' }],
-    '2024-04-26': [{ name: 'PRIMEIRO DIA DE ENCONTRO COM DEUS', height: 50, day: '2024-04-26' }],
-    '2024-04-27': [{ name: 'SEGUNDO DIA DE ENCONTRO COM DEUS', height: 50, day: '2024-04-27' }],
-  };
   return (
     <SafeAreaView style={[styles.container]}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <Stack.Screen options={{ title: 'Eventos' }} />
-      <Agenda
-        style={{
-          borderRadius: 15,
-          marginBottom: 80,
-        }}
-        items={items}
-        renderItem={(item, isFirst) => (
-          <TouchableOpacity style={styles.item}>
-            <Text style={styles.itemText}>{item.name}</Text>
-          </TouchableOpacity>
-        )}
-      />
+
+      <View style={[{backgroundColor: '#3E4A59',}, {alignItems: 'center'}, {marginTop: 25},{marginBottom: 20}, {width: '100%'}, {justifyContent: 'center'}, {alignSelf: 'center'}, {borderRadius: 10}]}>
+        <Text style={[{fontSize: 21}, {paddingHorizontal: 2}, {paddingVertical: 3}, {color: '#fff'}, {textAlign: 'justify'}]}>
+          ESTA TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
+        </Text>
+      </View>
+
+      <ComponentAgenda/>
+
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: '#040316',
-  },
-  item: {
-    flex: 1,
-    borderRadius: 8,
-    backgroundColor: '#CACACA',
-    marginTop: 15,
-    marginRight: 10,
-    textAlign: 'justify',
-    padding: 8,
-    marginBottom: 15,
-  },
-  itemText: {
-    color: '#202022',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});

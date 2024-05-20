@@ -1,9 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { launchImageLibraryAsync, ImagePickerResult } from 'expo-image-picker';
+import { launchImageLibraryAsync } from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet,
   ScrollView,
   SafeAreaView,
   KeyboardAvoidingView,
@@ -13,24 +12,69 @@ import {
   View,
   Text,
   Keyboard,
+  Modal,
+  RefreshControl,
 } from 'react-native';
+import { styles } from '../../style/StylesHome/styles';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { salvarEventoNoBanco, removerEventoDoBanco, buscarEventosDoBanco, isAdmin } from '~/utils/firebase';
-import ImageEvento from '../../components/ImagemEventos/ImagemEvento';
+import { isAdmin } from '~/utils/Usuario/authAdmin';
+import { buscarEventosDoBanco } from '~/utils/Evento/buscar';
+import { salvarEventoNoBanco } from '~/utils/Evento/salvar';
+import { removerEventoDoBanco } from '~/utils/Evento/remover';
 
+import ComponentEventos from '../../components/ComponentEventos/ComponentEventos';
+
+type RemoverEventoButtonProps = {
+  onPress: () => void;
+};
+const RemoverEventoButton = ({ onPress }: RemoverEventoButtonProps) => (
+  <TouchableOpacity onPress={onPress} style={styles.removerEventoButton}>
+    <Text style={styles.removerEventoButtonText}>Remover</Text>
+  </TouchableOpacity>
+);
+type ConfirmacaoRemocaoProps = {
+  visivel: boolean;
+  onConfirmar: () => void;
+  onCancelar: () => void;
+};
+const ConfirmacaoRemocao = ({ visivel, onConfirmar, onCancelar }: ConfirmacaoRemocaoProps) => {
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={visivel}
+      onRequestClose={onCancelar}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Tem certeza de que deseja remover este evento?</Text>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity onPress={onConfirmar} style={[styles.button, styles.confirmButton]}>
+              <Text style={styles.textStyle}>Confirmar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onCancelar} style={[styles.button, styles.cancelButton]}>
+              <Text style={styles.textStyle}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
 export default function Home() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [eventoItems, setEventoItems] = useState<Evento[]>([]);
+  const [confirmacaoVisivel, setConfirmacaoVisivel] = useState(false);
+  const [eventoIndexToRemove, setEventoIndexToRemove] = useState(-1);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    // Verifica se o usuário é administrador ao carregar a tela
     const checkAdminStatus = async () => {
       const isAdminResult = await isAdmin();
       setIsAdminUser(isAdminResult);
     };
     checkAdminStatus();
 
-    // Busca os eventos do banco de dados ao carregar a tela
     const fetchEventos = async () => {
       try {
         const eventosDoBanco = await buscarEventosDoBanco();
@@ -60,7 +104,7 @@ export default function Home() {
         const storageReference = storageRef(storage, `eventos/${imageName}`); // Renomeando a variável
         const imageBlob = await fetch(imageUri).then((response) => response.blob());
         await uploadBytes(storageReference, imageBlob); // Usando a referência renomeada
-        
+
         const downloadURL = await getDownloadURL(storageReference); // Usando a referência renomeada
         const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, downloadURL);
         const novoEvento = {
@@ -71,7 +115,7 @@ export default function Home() {
           imageUri: downloadURL,
         };
         setEventoItems([
-          ...eventoItems, 
+          ...eventoItems,
           novoEvento
         ]);
         setTituloEvento('');
@@ -82,144 +126,124 @@ export default function Home() {
       console.error('Erro ao adicionar evento:', error);
     }
     Keyboard.dismiss();
-  }
+  };
 
-  const completeEvento = async (index: number) => {
+  const exibirConfirmacao = (index: number) => {
+    setEventoIndexToRemove(index);
+    setConfirmacaoVisivel(true);
+  };
+
+  const cancelarRemocao = () => {
+    setConfirmacaoVisivel(false);
+    setEventoIndexToRemove(-1);
+  };
+
+  const confirmarRemocao = async () => {
     try {
-      const eventoToRemove = eventoItems[index];
-      if (!eventoToRemove) {
-        console.error('O evento não foi encontrado.');
+      if (eventoIndexToRemove === -1) {
+        console.error('O evento a ser removido não foi encontrado.');
         return;
       }
-  
-      // Verificar se o usuário é admin
+
+      const eventoToRemove = eventoItems[eventoIndexToRemove];
+
       const isAdminUser = await isAdmin();
       if (!isAdminUser) {
         console.error('Apenas usuários administradores podem remover eventos.');
         return;
       }
-  
-      // Remover o evento do array local
-      const updatedEventoItems = eventoItems.filter((_, i) => i !== index);
+
+      const updatedEventoItems = eventoItems.filter((_, i) => i !== eventoIndexToRemove);
       setEventoItems(updatedEventoItems);
-  
-      // Remover o evento do banco de dados
+
       await removerEventoDoBanco(eventoToRemove.id);
     } catch (error) {
       console.error('Erro ao remover evento:', error);
+    } finally {
+      setConfirmacaoVisivel(false);
+      setEventoIndexToRemove(-1);
     }
-  }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const eventosDoBanco = await buscarEventosDoBanco();
+      setEventoItems(eventosDoBanco);
+    } catch (error) {
+      console.error('Erro ao buscar eventos:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <StatusBar style="auto" />
-          <View style={[styles.areaEventos]}>
+      <StatusBar style="light" />
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View style={[styles.areaEventos]}>
+          <View style={[styles.areaContainerEvento]}>
+            {
+              eventoItems.map((item, index) => {
+                return (
+                  <TouchableOpacity key={index}>
+                    <ComponentEventos
+                      nomeEvento={item.titulo}
+                      dataEvento={item.data}
+                      horarioEvento={item.horario}
+                      imageUri={item.imagem}
+                    />
+                    {isAdminUser && <RemoverEventoButton onPress={() => exibirConfirmacao(index)} />}
+                  </TouchableOpacity>
+                )
+              })
+            }
+          </View>
+        </View>
 
-            <View style={[styles.areaContainerEvento]}>
-              {
-                eventoItems.map((item, index) => {
-                  return (
-                    <TouchableOpacity key={index} onPress={() => completeEvento(index)}>
-                      <ImageEvento 
-                        nomeEvento={item.titulo} 
-                        dataEvento={item.data}
-                        horarioEvento={item.horario}
-                        imageUri={item.imagem} 
-                        onPress={() => completeEvento(index)} 
-                      />
-                    </TouchableOpacity>
-                  )
-                })
-              }
-            </View>
-          </View>        
-
-          {isAdminUser &&(
-            <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
-              style={[styles.containerInputNewEvento]}
-            >  
-              <TextInput 
-                style={[styles.inputTextoEvento]} 
-                keyboardType='default' 
-                placeholder='Nome do Evento' 
-                value={tituloEvento} 
-                onChangeText={(nomeEvento) => setTituloEvento(nomeEvento)} 
-              />
-              <TextInput 
-                style={[styles.inputTextoEvento]} 
-                keyboardType='default' 
-                placeholder='Data do Evento' 
-                value={dataDoEvento} 
-                onChangeText={(dataEvento) => setDataDoEvento(dataEvento)} 
-              />
-              <TextInput 
-                style={[styles.inputTextoEvento]} 
-                keyboardType='default' 
-                placeholder='Horário do Evento' 
-                value={horarioDoEvento} 
-                onChangeText={(horarioEvento) => setHorarioDoEvento(horarioEvento)} 
-              />
-              <TouchableOpacity onPress={() => handleAddEvento()}>
-                <View style={[styles.containerIconeAddEvento]}>
-                  <Text style={[styles.iconeAddEvento]}>+</Text>
-                </View>
-              </TouchableOpacity>
-            </KeyboardAvoidingView>
-          )}
+        {isAdminUser && (
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={[styles.containerInputNewEvento]}
+          >
+            <TextInput
+              style={[styles.inputTextoEvento]}
+              keyboardType='default'
+              placeholder='Nome do Evento'
+              value={tituloEvento}
+              onChangeText={(nomeEvento) => setTituloEvento(nomeEvento)}
+            />
+            <TextInput
+              style={[styles.inputTextoEvento]}
+              keyboardType='default'
+              placeholder='Data do Evento'
+              value={dataDoEvento}
+              onChangeText={(dataEvento) => setDataDoEvento(dataEvento)}
+            />
+            <TextInput
+              style={[styles.inputTextoEvento]}
+              keyboardType='default'
+              placeholder='Horário do Evento'
+              value={horarioDoEvento}
+              onChangeText={(horarioEvento) => setHorarioDoEvento(horarioEvento)}
+            />
+            <TouchableOpacity onPress={() => handleAddEvento()}>
+              <View style={[styles.containerIconeAddEvento]}>
+                <Text style={[styles.iconeAddEvento]}>+</Text>
+              </View>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        )}
+        <ConfirmacaoRemocao
+          visivel={confirmacaoVisivel}
+          onConfirmar={confirmarRemocao}
+          onCancelar={cancelarRemocao}
+        />
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#040316',
-    paddingBottom: 100,
-  },
-  areaEventos:{
-    paddingHorizontal: 25,
-  },
-  areaContainerEvento: {
-    marginTop: 10,
-  },
-  containerInputNewEvento:{
-    flex: 1,
-    position: 'relative',
-    marginTop: 10,
-    width: '85%',
-    height: 'auto',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inputTextoEvento: {
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderColor: '#C0C0C0',
-    borderWidth: 1,
-    width: '100%',
-    height: 40,
-    marginBottom: 5,
-  },
-  containerIconeAddEvento: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#fff',
-    borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#C0C0C0',
-    borderWidth: 1,
-    marginBottom: 5,
-  },
-  iconeAddEvento: {
-    fontSize: 30,
-    fontWeight: 'normal',
-    paddingBottom: 3,
-    color: 'gray',
-  },
-});

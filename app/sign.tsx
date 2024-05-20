@@ -4,18 +4,17 @@ import { StatusBar } from 'expo-status-bar';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import React, { useState } from 'react';
 import {
-  StyleSheet,
   SafeAreaView,
   ScrollView,
   Text,
   View,
-  Platform,
   TextInput,
   TouchableOpacity,
   Alert,
 } from 'react-native';
 
-import { salvarUsuario } from '../utils/firebase';
+import { salvarUsuario } from '../utils/Usuario/salvar';
+import { styles } from '../style/StylesSign/styles';
 
 export default function Sign() {
   const [nome, setNome] = useState('');
@@ -78,8 +77,8 @@ export default function Sign() {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="light" />
       <ScrollView>
-        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         <View style={[styles.containerInput]}>
           <TextInput
             style={[styles.inputDados]}
@@ -138,90 +137,3 @@ export default function Sign() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingLeft: 10,
-    paddingRight: 10,
-    backgroundColor: '#040316',
-  },
-  containerInput: {
-    backgroundColor: '#878787',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'column',
-    marginTop: 20,
-    paddingTop: 15,
-    paddingBottom: 5,
-    borderRadius: 20,
-    height: 'auto',
-    shadowOffset: { width: 5, height: 5 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  inputDados: {
-    backgroundColor: '#fff',
-    height: 35,
-    width: '90%',
-    borderRadius: 15,
-    paddingLeft: 10,
-    borderWidth: 1,
-    borderColor: '#CACACA',
-    color: '#202022',
-    fontWeight: 'bold',
-    fontSize: 18,
-    fontVariant: ['small-caps'],
-    marginBottom: 10,
-    shadowOffset: { width: 10, height: 10 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  button: {
-    alignSelf: 'center',
-    backgroundColor: '#DAFDBA',
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 18,
-    marginTop: 15,
-    marginBottom: 10,
-    width: '90%',
-    height: 50,
-    textAlign: 'center',
-    justifyContent: 'center',
-    shadowOffset:{width:10,height:10},
-    shadowOpacity:0.5,
-    shadowRadius:10,
-    elevation:5,  
-    borderWidth: 1,
-    borderColor: '#CACACA',
-  },
-  buttonText: {
-    color: '#012030',
-    fontWeight: 'bold',
-    fontSize: 19,
-    textAlign: 'center',
-    fontVariant: ['small-caps'],
-  },
-  containerTextLink: {
-    marginTop: 30,
-    marginBottom: 10,
-    width: 130,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F2F2F2',
-    padding: 5,
-    borderRadius: 13,
-  },
-  textLink: {
-    alignSelf: 'center',
-    fontSize: 18,
-    color: '#202022',
-    fontWeight: 'bold',
-    fontVariant: ['small-caps'],
-    padding: 4,
-  },
-});
