@@ -3,8 +3,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingHorizontal: 10,
     backgroundColor: '#040316',
   },
   containerInput: {
@@ -58,7 +57,7 @@ export const styles = StyleSheet.create({
   },
   button: {
     alignSelf: 'center',
-    backgroundColor: '#DAFDBA',
+    backgroundColor: '#CACACA',
     paddingVertical: 10,
     paddingHorizontal: 25,
     borderRadius: 50,
@@ -84,10 +83,10 @@ export const styles = StyleSheet.create({
   },
   containerTextLink:{
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 15,
     justifyContent: 'space-between',
     flexDirection: 'column',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#DAFDBA',
     padding: 5,
     borderRadius: 10,
   },
