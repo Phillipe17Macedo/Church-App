@@ -3,6 +3,19 @@
     "name": "Church App",
     "slug": "church-App",
     "version": "2.0.7",
+    "scheme": "church-app",
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/iconVideira.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    },
     "orientation": "portrait",
     "icon": "./assets/iconVideira.png",
     "scheme": "church-app",
@@ -16,14 +29,14 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "7",
+      "buildNumber": "8",
       "supportsTablet": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Permissão para acessar a biblioteca de fotos"
       }
     },
     "android": {
-      "versionCode": 7,
+      "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/iconVideira.png",
         "backgroundColor": "#ffffff"

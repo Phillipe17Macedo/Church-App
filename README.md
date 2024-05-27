@@ -1,50 +1,50 @@
-# Welcome to your Expo app 👋
+Church App
+Este é um aplicativo móvel desenvolvido para a Igreja Videira para ajudar na organização de eventos e atividades da igreja.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Funcionalidades Principais
+- Adição e visualização de eventos da igreja.
+- Upload de imagens para os eventos.
+- Remoção de eventos.
+- Interface de usuário intuitiva e amigável.
 
-## Get started
+Instalação:
+Para rodar o aplicativo localmente, siga as etapas abaixo:
 
-1. Install dependencies
+1- Certifique-se de ter o Node.js instalado na sua máquina. Você pode baixá-lo em nodejs.org.
 
-   ```bash
-   npm install
-   ```
+2-Clone este repositório para o seu ambiente local:
 
-2. Start the app
+git clone https://github.com/seu-usuario/church-app.git
 
-   ```bash
-    npx expo start
-   ```
+3- Navegue até o diretório do projeto:
 
-In the output, you'll find options to open the app in a
+cd church-app
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+4- Instale as dependências do projeto:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+npm install
 
-## Get a fresh project
+5- Inicie o servidor de desenvolvimento:
 
-When you're ready, run:
+npm start
 
-```bash
-npm run reset-project
-```
+6- O aplicativo será aberto no seu navegador ou emulado no seu dispositivo móvel.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Tecnologias Utilizadas:
 
-## Learn more
+React Native
 
-To learn more about developing your project with Expo, look at the following resources:
+Expo
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+JavaScript
 
-## Join the community
+CSS
 
-Join our community of developers creating universal apps.
+Contribuição
+Contribuições são bem-vindas! Sinta-se à vontade para enviar um pull request ou abrir uma issue para relatar problemas ou sugerir melhorias.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Autores
+Phillipe Macedo - Desenvolvedor de Software - [Meu Linkedin](https://www.linkedin.com/in/phillipe-macedo-234524239/)
+
+Licença
+Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para detalhes.
