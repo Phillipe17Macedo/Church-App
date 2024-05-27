@@ -16,12 +16,12 @@ import {
 } from 'react-native';
 import { styles } from '../../style/StylesCelulas/styles';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { isAdmin } from '~/utils/Usuario/authAdmin';
-import { buscarCelulaDoBanco } from '~/utils/Celula/buscar';
-import { salvarCelulaNoBanco } from '~/utils/Celula/salvar';
-import { removerCelulaDoBanco } from '~/utils/Celula/remover';
+import { isAdmin } from '@/utils/Usuario/authAdmin';
+import { buscarCelulaDoBanco } from '@/utils/Celula/buscar';
+import { salvarCelulaNoBanco } from '@/utils/Celula/salvar';
+import { removerCelulaDoBanco } from '@/utils/Celula/remover';
 
-import ComponentCelulas from '~/components/ComponentCelulas/ComponentCelulas';
+import ComponentCelulas from '@/components/ComponentCelulas/ComponentCelulas';
 
 type RemoverCelulaButtonProps = {
   onPress: () => void;

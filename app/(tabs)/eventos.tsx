@@ -5,7 +5,7 @@ import React from 'react';
 import { Text, SafeAreaView, View } from 'react-native';
 
 import { styles } from '../../style/StylesEventos/styles';
-import { ComponentAgenda } from '~/components/Agenda/ComponentAgenda';
+import { ComponentAgenda } from '@/components/Agenda/ComponentAgenda';
 
 export default function Eventos() {
   return (
