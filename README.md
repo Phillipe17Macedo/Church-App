@@ -32,13 +32,19 @@ npm start
 
 Tecnologias Utilizadas:
 
-React Native
+##React Native
 
-Expo
+##Expo
 
-JavaScript
+##Typescript
 
-CSS
+##Api Firebase
+
+##Api Firebase Database
+
+##Api Firebase Auth
+
+##Api Firebase Storage
 
 Contribuição
 Contribuições são bem-vindas! Sinta-se à vontade para enviar um pull request ou abrir uma issue para relatar problemas ou sugerir melhorias.
