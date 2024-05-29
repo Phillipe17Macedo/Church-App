@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Text, ScrollView } from 'react-native';
 
 import { styles } from '../../style/StylesMore/styles'
+import OptionsMore from '@/components/OptionsScreenMore/OptionsMore';
 
 export default function More() {
   return (
@@ -16,6 +17,9 @@ export default function More() {
             ESTA TELA SERÁ LANÇADA EM BREVE COM SUAS FUNCIONALIDADES
           </Text>
         </View>
+
+        <OptionsMore/>
+
     </ScrollView>
   );
 }

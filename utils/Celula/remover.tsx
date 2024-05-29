@@ -20,6 +20,7 @@ interface Celula {
     horarioCelula: string;
     enderecoCelula: string;
     imagemCelula: string;
+    linkEnderecoMaps: string;
 }
 
 const firebaseApp = initializeApp(firebaseConfig);
