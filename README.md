@@ -26,7 +26,7 @@ npm install
 
 5- Inicie o servidor de desenvolvimento:
 
-npm start
+npx espo start -c
 
 6- O aplicativo será aberto no seu navegador ou emulado no seu dispositivo móvel.
 
