@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Text, ScrollView } from 'react-native';
 
 import { styles } from '../../style/StylesMore/styles'
-import OptionsMore from '@/components/OptionsScreebMore/OptionsMore';
+import OptionsMore from '@/components/OptionsScreenMore/OptionsMore';
 
 export default function More() {
   return (

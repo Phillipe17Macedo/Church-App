@@ -91,6 +91,7 @@ export default function Celulas() {
   const [dataCelula, setDataCelula] = useState('');
   const [horarioCelula, setHorarioCelula] = useState('');
   const [enderecoCelula, setEnderecoCelula] = useState('');
+  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState('');
 
   const handleAddCelula = async () => {
     try {
@@ -250,7 +251,8 @@ export default function Celulas() {
               style={[styles.inputTextoCelula]}
               keyboardType='default'
               placeholder='Link do Endereço Maps'
-
+              value={linkEnderecoMaps}
+              onChangeText={(linkEnderecoMaps) => setLinkEnderecoMaps(linkEnderecoMaps)}
             />
 
             <TouchableOpacity onPress={() => handleAddCelula()}>
