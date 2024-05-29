@@ -109,7 +109,7 @@ export default function Celulas() {
 
         const downloadURL = await getDownloadURL(storageReference);
         console.log('URL da Imagem: ', downloadURL);
-        const celulaId = await salvarCelulaNoBanco(tituloCelula, dataCelula, horarioCelula, enderecoCelula, downloadURL);
+        const celulaId = await salvarCelulaNoBanco(tituloCelula, dataCelula, horarioCelula, enderecoCelula, downloadURL, linkEnderecoMaps);
         const novaCelula = {
           id: celulaId,
           nomeCelula: tituloCelula,
@@ -117,6 +117,7 @@ export default function Celulas() {
           horarioCelula: horarioCelula,
           enderecoCelula: enderecoCelula,
           imageUri: downloadURL,
+          linkEnderecoMaps: linkEnderecoMaps,
         };
         console.log('Nova Célula: ', novaCelula);
         setCelulaItems([
@@ -127,6 +128,7 @@ export default function Celulas() {
         setDataCelula('');
         setHorarioCelula('');
         setEnderecoCelula('');
+        setLinkEnderecoMaps('');
       }
     } catch (error) {
       console.error('Erro ao adicionar celula:', error);
@@ -244,6 +246,13 @@ export default function Celulas() {
               value={enderecoCelula}
               onChangeText={(enderecoCelula) => setEnderecoCelula(enderecoCelula)}
             />
+            <TextInput
+              style={[styles.inputTextoCelula]}
+              keyboardType='default'
+              placeholder='Link do Endereço Maps'
+
+            />
+
             <TouchableOpacity onPress={() => handleAddCelula()}>
               <View style={[styles.containerIconeAddCelula]}>
                 <Text style={[styles.iconeAddCelula]}>+</Text>
