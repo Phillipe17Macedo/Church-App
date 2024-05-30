@@ -19,6 +19,10 @@ interface Celula {
     horario: string;
     endereco: string;
     imagem: string;
+    linkEnderecoMaps: string;
+    nomeLider: string;
+    numeroLider: string;
+    descricao: string;
 }
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -39,6 +43,10 @@ export const buscarCelulaDoBanco = async (): Promise<Celula[]> => {
                 horario: celulaData.horario,
                 endereco: celulaData.endereco,
                 imagem: celulaData.imagem,
+                linkEnderecoMaps: celulaData.linkEnderecoMaps,
+                nomeLider: celulaData.nomeLider,
+                numeroLider: celulaData.numeroLider,
+                descricao: celulaData.descricao
             };
             celulas.push(celula);
         });

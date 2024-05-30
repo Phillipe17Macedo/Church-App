@@ -1,10 +1,15 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity } from 'react-native';
-import { styles } from './styles'; // Certifique-se de ajustar o caminho para o seu arquivo de estilos
+import { styles } from './styles';
 
 const InfoCelulaModal = ({ visible, celula, onClose }) => {
+  const handleOpenMaps = () => {
+    if (celula && celula.linkEnderecoMaps) {
+      Linking.openURL(celula.linkEnderecoMaps);
+    }
+  };
   return (
-    <Modal
+<Modal
       animationType="slide"
       transparent={true}
       visible={visible}
@@ -12,15 +17,19 @@ const InfoCelulaModal = ({ visible, celula, onClose }) => {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          {celula && (
+          {celula ? (
             <>
-              <Text style={styles.modalText}>Nome da Célula: {celula.nomeCelula}</Text>
-              <Text style={styles.modalText}>Horário: {celula.horarioCelula}</Text>
-              <Text style={styles.modalText}>Data: {celula.diaCelula}</Text>
-              <Text style={styles.modalText}>Endereço: {celula.enderecoCelula}</Text>
-              <Text style={styles.modalText}>Link do Endereço Maps: {celula.linkEnderecoMaps}</Text>
-              <Text style={styles.modalText}>Número de Contato: {celula.numeroContato}</Text>
+              <Text style={styles.modalText}>Nome da Célula: {celula.titulo}</Text>
+              <Text style={styles.modalText}>Data: {celula.data}</Text>
+              <Text style={styles.modalText}>Horário: {celula.horario}</Text>
+              <Text style={styles.modalText}>Endereço: {celula.endereco}</Text>
+              <Text style={styles.modalText}>Nome do Líder: {celula.nomeLider}</Text>
+              <Text style={styles.modalText}>Número do Líder: {celula.numeroLider}</Text>
+              <Text style={styles.modalText} onPress={handleOpenMaps}>Link do Endereço Maps: {celula.linkEnderecoMaps}</Text>
+              <Text style={styles.modalText}>Descrição: {celula.descricao}</Text>
             </>
+          ) : (
+            <Text style={styles.modalText}>Carregando...</Text>
           )}
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
@@ -34,4 +43,4 @@ const InfoCelulaModal = ({ visible, celula, onClose }) => {
   );
 };
 
-export default CelulaModal;
+export default InfoCelulaModal;

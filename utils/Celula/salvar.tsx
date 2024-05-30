@@ -22,7 +22,10 @@ export const salvarCelulaNoBanco = async (
     horario: string,
     endereco: string,
     imagem: string,
-    linkEnderecoMaps: string
+    linkEnderecoMaps: string,
+    nomeLider: string,
+    numeroLider: string,
+    descricao: string
 ) => {
     try {
         const celulasRef = ref(database, 'celulas');
@@ -33,7 +36,10 @@ export const salvarCelulaNoBanco = async (
             horario,
             endereco,
             imagem,
-            linkEnderecoMaps
+            linkEnderecoMaps,
+            nomeLider,
+            numeroLider,
+            descricao
         });
         console.log('Celula salva com sucesso!');
         console.log('URI Imagem: ', imagem);
