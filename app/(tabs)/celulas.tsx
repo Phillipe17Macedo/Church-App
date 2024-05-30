@@ -23,6 +23,7 @@ import { removerCelulaDoBanco } from '@/utils/Celula/remover';
 
 import InfoCelulaModal from '@/components/ComponentCelulas/ModalInformacoesCelula/InfoCelulaModal';
 import ComponentCelulas from '@/components/ComponentCelulas/ComponentCelulas';
+import { Celula } from '@/types';
 
 type RemoverCelulaButtonProps = {
   onPress: () => void;
@@ -118,25 +119,21 @@ export default function Celulas() {
         await uploadBytes(storageReference, imageBlob);
 
         const downloadURL = await getDownloadURL(storageReference);
-        console.log('URL da Imagem: ', downloadURL);
         const celulaId = await salvarCelulaNoBanco(tituloCelula, dataCelula, horarioCelula, enderecoCelula, downloadURL, linkEnderecoMaps, nomeLider, numeroLider, descricao);
-        const novaCelula = {
+        const novaCelula: Celula = {
           id: celulaId,
-          nomeCelula: tituloCelula,
-          diaCelula: dataCelula,
-          horarioCelula: horarioCelula,
-          enderecoCelula: enderecoCelula,
-          imageUri: downloadURL,
+          titulo: tituloCelula,
+          data: dataCelula,
+          horario: horarioCelula,
+          endereco: enderecoCelula,
+          imagem: downloadURL,
           linkEnderecoMaps: linkEnderecoMaps,
           nomeLider: nomeLider,
           numeroLider: numeroLider,
           descricao: descricao
         };
         console.log('Nova Célula: ', novaCelula);
-        setCelulaItems([
-          ...celulaItems,
-          novaCelula,
-        ]);
+        setCelulaItems([...celulaItems, novaCelula]);
         setTituloCelula('');
         setDataCelula('');
         setHorarioCelula('');

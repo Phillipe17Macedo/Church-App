@@ -1,8 +1,15 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, Linking } from 'react-native';
+import { Celula } from '@/types';
 import { styles } from './styles';
 
-const InfoCelulaModal = ({ visible, celula, onClose }) => {
+interface InfoCelulaModalProps {
+  visible: boolean;
+  celula: Celula | null;
+  onClose: () => void;
+}
+
+const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({ visible, celula, onClose }) => {
   const handleOpenMaps = () => {
     if (celula && celula.linkEnderecoMaps) {
       Linking.openURL(celula.linkEnderecoMaps);
