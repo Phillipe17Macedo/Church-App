@@ -1,22 +1,22 @@
 import React from "react";
 import { Modal, View, Text, TouchableOpacity, Linking } from "react-native";
-import { Celula } from "@/types";
+import { Evento } from "@/types";
 import { styles } from "./styles";
 
-interface InfoCelulaModalProps {
+interface InfoEventoModalProps {
   visible: boolean;
-  celula: Celula | null;
+  evento: Evento | null;
   onClose: () => void;
 }
 
-const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({
+const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
   visible,
-  celula,
+  evento,
   onClose,
 }) => {
   const handleOpenMaps = () => {
-    if (celula && celula.linkEnderecoMaps) {
-      Linking.openURL(celula.linkEnderecoMaps);
+    if (evento && evento.linkEnderecoMaps) {
+      Linking.openURL(evento.linkEnderecoMaps);
     }
   };
   return (
@@ -28,40 +28,28 @@ const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({
     >
       <View style={styles.ViewCentralizada}>
         <View style={styles.modalView}>
-          {celula ? (
+          {evento ? (
             <>
               <Text style={styles.textoPadraoModal}>
-                Nome da Célula:{" "}
-                <Text style={styles.textoInformacaoCelula}>
-                  {celula.titulo}
+                Nome do Evento:{" "}
+                <Text style={styles.textoInformacaoEvento}>
+                  {evento.titulo}
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
                 Data:{" "}
-                <Text style={styles.textoInformacaoCelula}>{celula.data}</Text>
+                <Text style={styles.textoInformacaoEvento}>{evento.data}</Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
                 Horário:{" "}
-                <Text style={styles.textoInformacaoCelula}>
-                  {celula.horario}
+                <Text style={styles.textoInformacaoEvento}>
+                  {evento.horario}
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
                 Endereço:{" "}
-                <Text style={styles.textoInformacaoCelula}>
-                  {celula.endereco}
-                </Text>
-              </Text>
-              <Text style={styles.textoPadraoModal}>
-                Nome do Líder:{" "}
-                <Text style={styles.textoInformacaoCelula}>
-                  {celula.nomeLider}
-                </Text>
-              </Text>
-              <Text style={styles.textoPadraoModal}>
-                Número do Líder:{" "}
-                <Text style={styles.textoInformacaoCelula}>
-                  {celula.numeroLider}
+                <Text style={styles.textoInformacaoEvento}>
+                  {evento.endereco}
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal} onPress={handleOpenMaps}>
@@ -70,9 +58,19 @@ const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
+                Número do Responsável:{" "}
+                <Text style={styles.textoInformacaoEvento}>
+                  {evento.numeroContato}
+                </Text>
+              </Text>
+              <Text style={styles.textoPadraoModal}>
+                Valor:{" "}
+                <Text style={styles.textoInformacaoEvento}>{evento.valor}</Text>
+              </Text>
+              <Text style={styles.textoPadraoModal}>
                 Descrição:{" "}
-                <Text style={styles.textoInformacaoCelula}>
-                  {celula.descricao}
+                <Text style={styles.textoInformacaoEvento}>
+                  {evento.descricao}
                 </Text>
               </Text>
             </>
@@ -88,4 +86,4 @@ const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({
   );
 };
 
-export default InfoCelulaModal;
+export default InfoEventoModal;
