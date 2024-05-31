@@ -27,6 +27,10 @@ export const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     backgroundColor: "#2196F3",
+    width: 100,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   textoBotao: {
     color: "white",

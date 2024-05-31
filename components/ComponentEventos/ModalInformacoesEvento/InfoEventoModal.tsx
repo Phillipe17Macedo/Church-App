@@ -58,7 +58,7 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
-                Número do Responsável:{" "}
+                Número de Contato:{" "}
                 <Text style={styles.textoInformacaoEvento}>
                   {evento.numeroContato}
                 </Text>
