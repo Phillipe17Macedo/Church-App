@@ -16,10 +16,10 @@ import {
 } from 'react-native';
 import { styles } from '../../style/StylesCelulas/styles';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { isAdmin } from '@/utils/Usuario/authAdmin';
-import { buscarCelulaDoBanco } from '@/utils/Celula/buscar';
-import { salvarCelulaNoBanco } from '@/utils/Celula/salvar';
-import { removerCelulaDoBanco } from '@/utils/Celula/remover';
+import { isAdmin } from '@/connection/Usuario/authAdmin';
+import { buscarCelulaDoBanco } from '@/connection/Celula/buscar';
+import { salvarCelulaNoBanco } from '@/connection/Celula/salvar';
+import { removerCelulaDoBanco } from '@/connection/Celula/remover';
 
 import InfoCelulaModal from '@/components/ComponentCelulas/ModalInformacoesCelula/InfoCelulaModal';
 import ComponentCelulas from '@/components/ComponentCelulas/ComponentCelulas';

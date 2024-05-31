@@ -13,7 +13,7 @@ import {
   Alert,
 } from 'react-native';
 
-import { salvarUsuario } from '../utils/Usuario/salvar';
+import { salvarUsuario } from '../connection/Usuario/salvar';
 import { styles } from '../style/StylesSign/styles';
 
 export default function Sign() {

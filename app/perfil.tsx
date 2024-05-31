@@ -13,9 +13,9 @@ import {
   Alert,
 } from 'react-native';
 
-import { signOut } from '../utils/Usuario/signUser';
-import { buscarDadosDoBanco } from '@/utils/Usuario/buscar';
-import { atualizarDadosNoBanco } from '@/utils/Usuario/editar';
+import { signOut } from '../connection/Usuario/signUser';
+import { buscarDadosDoBanco } from '@/connection/Usuario/buscar';
+import { atualizarDadosNoBanco } from '@/connection/Usuario/editar';
 import { styles } from '../style/StylesPerfil/styles';
 
 interface Usuario {
