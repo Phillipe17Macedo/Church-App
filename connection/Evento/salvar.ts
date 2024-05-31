@@ -20,7 +20,12 @@ export const salvarEventoNoBanco = async (
     titulo: string,
     data: string,
     horario: string,
-    imagem: string
+    imagem: string,
+    endereco: string,
+    linkEnderecoMaps: string,
+    numeroContato: string,
+    valor: string,
+    descricao: string
   ) => {
     try {
       // Referência para o nó 'eventos' no banco de dados
@@ -33,6 +38,11 @@ export const salvarEventoNoBanco = async (
         data,
         horario,
         imagem,
+        endereco,
+        linkEnderecoMaps,
+        numeroContato,
+        valor,
+        descricao
       });
       console.log('Evento salvo com sucesso!');
     } catch (error) {
