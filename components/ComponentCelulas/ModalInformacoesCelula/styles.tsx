@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  centeredView: {
+  ViewCentralizada: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
@@ -22,21 +22,35 @@ export const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  button: {
+  botaoSair: {
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-  },
-  buttonClose: {
     backgroundColor: "#2196F3",
   },
-  textStyle: {
+  textoBotao: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
   },
-  modalText: {
+  textoPadraoModal: {
     marginBottom: 15,
-    textAlign: "center",
+    textAlign: "left",
+    fontWeight: 'bold',
+    alignSelf: 'flex-start',
+    fontSize: 18, 
+    color: '#011F26',
+    fontVariant: ['small-caps']
   },
+  textoInformacaoCelula: {
+    fontWeight: 'normal',
+    fontSize: 14,
+    color: '#011F26',
+    textDecorationLine: 'underline',
+    fontVariant: ['small-caps']
+  },
+  textoLinkMaps: {
+    fontWeight: 'bold',
+    color: '#2196F3',
+  }
 });

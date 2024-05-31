@@ -1,32 +1,48 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity } from 'react-native';
-import { styles } from './styles'; // Certifique-se de ajustar o caminho para o seu arquivo de estilos
+import { Modal, View, Text, TouchableOpacity, Linking } from 'react-native';
+import { Celula } from '@/types';
+import { styles } from './styles';
 
-const InfoCelulaModal = ({ visible, celula, onClose }) => {
+interface InfoCelulaModalProps {
+  visible: boolean;
+  celula: Celula | null;
+  onClose: () => void;
+}
+
+const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({ visible, celula, onClose }) => {
+  const handleOpenMaps = () => {
+    if (celula && celula.linkEnderecoMaps) {
+      Linking.openURL(celula.linkEnderecoMaps);
+    }
+  };
   return (
-    <Modal
+<Modal
       animationType="slide"
       transparent={true}
       visible={visible}
       onRequestClose={onClose}
     >
-      <View style={styles.centeredView}>
+      <View style={styles.ViewCentralizada}>
         <View style={styles.modalView}>
-          {celula && (
+          {celula ? (
             <>
-              <Text style={styles.modalText}>Nome da Célula: {celula.nomeCelula}</Text>
-              <Text style={styles.modalText}>Horário: {celula.horarioCelula}</Text>
-              <Text style={styles.modalText}>Data: {celula.diaCelula}</Text>
-              <Text style={styles.modalText}>Endereço: {celula.enderecoCelula}</Text>
-              <Text style={styles.modalText}>Link do Endereço Maps: {celula.linkEnderecoMaps}</Text>
-              <Text style={styles.modalText}>Número de Contato: {celula.numeroContato}</Text>
+              <Text style={styles.textoPadraoModal}>Nome da Célula: <Text style={styles.textoInformacaoCelula}>{celula.titulo}</Text></Text>
+              <Text style={styles.textoPadraoModal}>Data: <Text style={styles.textoInformacaoCelula}>{celula.data}</Text></Text>
+              <Text style={styles.textoPadraoModal}>Horário: <Text style={styles.textoInformacaoCelula}>{celula.horario}</Text></Text>
+              <Text style={styles.textoPadraoModal}>Endereço: <Text style={styles.textoInformacaoCelula}>{celula.endereco}</Text></Text>
+              <Text style={styles.textoPadraoModal}>Nome do Líder: <Text style={styles.textoInformacaoCelula}>{celula.nomeLider}</Text></Text>
+              <Text style={styles.textoPadraoModal}>Número do Líder: <Text style={styles.textoInformacaoCelula}>{celula.numeroLider}</Text></Text>
+              <Text style={styles.textoPadraoModal} onPress={handleOpenMaps}><Text style={styles.textoLinkMaps}>Link do Endereço no Google Maps</Text></Text>
+              <Text style={styles.textoPadraoModal}>Descrição: <Text style={styles.textoInformacaoCelula}>{celula.descricao}</Text></Text>
             </>
+          ) : (
+            <Text style={styles.textoPadraoModal}>Carregando...</Text>
           )}
           <TouchableOpacity
-            style={[styles.button, styles.buttonClose]}
+            style={[styles.botaoSair]}
             onPress={onClose}
           >
-            <Text style={styles.textStyle}>Fechar</Text>
+            <Text style={styles.textoBotao}>Fechar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -34,4 +50,4 @@ const InfoCelulaModal = ({ visible, celula, onClose }) => {
   );
 };
 
-export default CelulaModal;
+export default InfoCelulaModal;

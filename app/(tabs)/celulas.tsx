@@ -21,7 +21,9 @@ import { buscarCelulaDoBanco } from '@/utils/Celula/buscar';
 import { salvarCelulaNoBanco } from '@/utils/Celula/salvar';
 import { removerCelulaDoBanco } from '@/utils/Celula/remover';
 
+import InfoCelulaModal from '@/components/ComponentCelulas/ModalInformacoesCelula/InfoCelulaModal';
 import ComponentCelulas from '@/components/ComponentCelulas/ComponentCelulas';
+import { Celula } from '@/types';
 
 type RemoverCelulaButtonProps = {
   onPress: () => void;
@@ -32,11 +34,13 @@ const RemoverCelulaButton = ({ onPress }: RemoverCelulaButtonProps) => (
     <Text style={[styles.removerCelulaButtonText]}>Remover</Text>
   </TouchableOpacity>
 );
+
 type ConfirmacaoRemocaoPros = {
   visivel: boolean;
   onConfirmar: () => void;
   onCancelar: () => void;
 };
+
 const ConfirmarRemocao = ({ visivel, onConfirmar, onCancelar }: ConfirmacaoRemocaoPros) => {
   return (
     <Modal
@@ -69,6 +73,18 @@ export default function Celulas() {
   const [celulaIndexToRemove, setCelulaIndexToRemove] = useState(-1);
   const [refreshing, setRefreshing] = useState(false);
 
+  const [tituloCelula, setTituloCelula] = useState('');
+  const [dataCelula, setDataCelula] = useState('');
+  const [horarioCelula, setHorarioCelula] = useState('');
+  const [enderecoCelula, setEnderecoCelula] = useState('');
+  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState('');
+  const [nomeLider, setNomeLider] = useState('');
+  const [numeroLider, setNumeroLider] = useState('');
+  const [descricao, setDescricao] = useState('');
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCelula, setSelectedCelula] = useState(null);
+
   useEffect(() => {
     const checkAdminStatus = async () => {
       const isAdminResult = await isAdmin();
@@ -87,12 +103,6 @@ export default function Celulas() {
     fetchCelulas();
   }, []);
 
-  const [tituloCelula, setTituloCelula] = useState('');
-  const [dataCelula, setDataCelula] = useState('');
-  const [horarioCelula, setHorarioCelula] = useState('');
-  const [enderecoCelula, setEnderecoCelula] = useState('');
-  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState('');
-
   const handleAddCelula = async () => {
     try {
       let result = await launchImageLibraryAsync({
@@ -109,27 +119,29 @@ export default function Celulas() {
         await uploadBytes(storageReference, imageBlob);
 
         const downloadURL = await getDownloadURL(storageReference);
-        console.log('URL da Imagem: ', downloadURL);
-        const celulaId = await salvarCelulaNoBanco(tituloCelula, dataCelula, horarioCelula, enderecoCelula, downloadURL, linkEnderecoMaps);
-        const novaCelula = {
+        const celulaId = await salvarCelulaNoBanco(tituloCelula, dataCelula, horarioCelula, enderecoCelula, downloadURL, linkEnderecoMaps, nomeLider, numeroLider, descricao);
+        const novaCelula: Celula = {
           id: celulaId,
-          nomeCelula: tituloCelula,
-          diaCelula: dataCelula,
-          horarioCelula: horarioCelula,
-          enderecoCelula: enderecoCelula,
-          imageUri: downloadURL,
+          titulo: tituloCelula,
+          data: dataCelula,
+          horario: horarioCelula,
+          endereco: enderecoCelula,
+          imagem: downloadURL,
           linkEnderecoMaps: linkEnderecoMaps,
+          nomeLider: nomeLider,
+          numeroLider: numeroLider,
+          descricao: descricao
         };
         console.log('Nova Célula: ', novaCelula);
-        setCelulaItems([
-          ...celulaItems,
-          novaCelula,
-        ]);
+        setCelulaItems([...celulaItems, novaCelula]);
         setTituloCelula('');
         setDataCelula('');
         setHorarioCelula('');
         setEnderecoCelula('');
         setLinkEnderecoMaps('');
+        setNomeLider('');
+        setNumeroLider('');
+        setDescricao('');
       }
     } catch (error) {
       console.error('Erro ao adicionar celula:', error);
@@ -185,6 +197,13 @@ export default function Celulas() {
     }
   };
 
+  const handleCelulaPress = (celula: any) => {
+    console.log("Celula clicada: ", celula);
+    setSelectedCelula(celula);
+    setModalVisible(true);
+    console.log("Estado do setVisible: ", setModalVisible);
+  };
+
   return (
     <SafeAreaView style={[styles.container]}>
       <StatusBar style='light' />
@@ -198,13 +217,14 @@ export default function Celulas() {
             {
               celulaItems.map((item, index) => {
                 return (
-                  <TouchableOpacity key={index}>
+                  <TouchableOpacity key={index} onPress={() => handleCelulaPress(item)}>
                     <ComponentCelulas
                       nomeCelula={item.titulo}
                       dataCelula={item.data}
                       horarioCelula={item.horario}
                       enderecoCelula={item.endereco}
                       imageUri={item.imagem}
+                      onPress={() => handleCelulaPress(item)}
                     />
                     {isAdminUser && <RemoverCelulaButton onPress={() => exibirConfirmacao(index)} />}
                   </TouchableOpacity>
@@ -254,6 +274,27 @@ export default function Celulas() {
               value={linkEnderecoMaps}
               onChangeText={(linkEnderecoMaps) => setLinkEnderecoMaps(linkEnderecoMaps)}
             />
+            <TextInput
+              style={[styles.inputTextoCelula]}
+              keyboardType='default'
+              placeholder='Nome do Líder'
+              value={nomeLider}
+              onChangeText={(nomeLider) => setNomeLider(nomeLider)}
+            />
+            <TextInput
+              style={[styles.inputTextoCelula]}
+              keyboardType='default'
+              placeholder='Número do Líder'
+              value={numeroLider}
+              onChangeText={(numeroLider) => setNumeroLider(numeroLider)}
+            />
+            <TextInput
+              style={[styles.inputTextoCelula]}
+              keyboardType='default'
+              placeholder='Descrição'
+              value={descricao}
+              onChangeText={(descricao) => setDescricao(descricao)}
+            />
 
             <TouchableOpacity onPress={() => handleAddCelula()}>
               <View style={[styles.containerIconeAddCelula]}>
@@ -268,6 +309,11 @@ export default function Celulas() {
           onCancelar={cancelarRemocao}
         />
       </ScrollView>
+      <InfoCelulaModal
+        visible={modalVisible}
+        celula={selectedCelula}
+        onClose={() => setModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
