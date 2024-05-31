@@ -23,6 +23,7 @@ import { salvarEventoNoBanco } from '@/connection/Evento/salvar';
 import { removerEventoDoBanco } from '@/connection/Evento/remover';
 
 import ComponentEventos from '../../components/ComponentEventos/ComponentEventos';
+import { Evento } from '@/types';
 
 type RemoverEventoButtonProps = {
   onPress: () => void;
@@ -68,6 +69,15 @@ export default function Home() {
   const [eventoIndexToRemove, setEventoIndexToRemove] = useState(-1);
   const [refreshing, setRefreshing] = useState(false);
 
+  const [tituloEvento, setTituloEvento] = useState('');
+  const [dataDoEvento, setDataDoEvento] = useState('');
+  const [horarioDoEvento, setHorarioDoEvento] = useState('');
+  const [enderecoDoEvento, setEnderecoDoEvento] = useState('');
+  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState('');
+  const [numeroContato, setNumeroContato] = useState('');
+  const [valor, setValor] = useState('');
+  const [descricao, setDescricao] = useState('');
+
   useEffect(() => {
     const checkAdminStatus = async () => {
       const isAdminResult = await isAdmin();
@@ -86,10 +96,6 @@ export default function Home() {
     fetchEventos();
   }, []);
 
-  const [tituloEvento, setTituloEvento] = useState('');
-  const [dataDoEvento, setDataDoEvento] = useState('');
-  const [horarioDoEvento, setHorarioDoEvento] = useState('');
-
   const handleAddEvento = async () => {
     try {
       let result = await launchImageLibraryAsync({
@@ -106,21 +112,29 @@ export default function Home() {
         await uploadBytes(storageReference, imageBlob); // Usando a referência renomeada
 
         const downloadURL = await getDownloadURL(storageReference); // Usando a referência renomeada
-        const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, downloadURL);
-        const novoEvento = {
+        const eventoId = await salvarEventoNoBanco(tituloEvento, dataDoEvento, horarioDoEvento, downloadURL, enderecoDoEvento, linkEnderecoMaps, numeroContato, valor, descricao);
+        const novoEvento: Evento = {
           id: eventoId,
-          nomeEvento: tituloEvento,
-          dataEvento: dataDoEvento,
-          horarioEvento: horarioDoEvento,
-          imageUri: downloadURL,
+          titulo: tituloEvento,
+          data: dataDoEvento,
+          horario: horarioDoEvento,
+          imagem: downloadURL,
+          endereco: enderecoDoEvento,
+          linkEnderecoMaps: linkEnderecoMaps,
+          numeroContato: numeroContato,
+          valor: valor,
+          descricao: descricao
         };
-        setEventoItems([
-          ...eventoItems,
-          novoEvento
-        ]);
+        console.log('Novo Evento: ', novoEvento);
+        setEventoItems([...eventoItems, novoEvento]);
         setTituloEvento('');
         setDataDoEvento('');
         setHorarioDoEvento('');
+        setEnderecoDoEvento('');
+        setLinkEnderecoMaps('');
+        setNumeroContato('');
+        setValor('');
+        setDescricao('');
       }
     } catch (error) {
       console.error('Erro ao adicionar evento:', error);
