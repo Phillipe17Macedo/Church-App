@@ -39,19 +39,19 @@ export const styles = StyleSheet.create({
   },
   textoPadraoModal: {
     marginBottom: 15,
-    textAlign: "left",
+    textAlign: "justify",
     fontWeight: 'bold',
     alignSelf: 'flex-start',
     fontSize: 18, 
     color: '#011F26',
     fontVariant: ['small-caps']
   },
-  textoInformacaoCelula: {
+  textoInformacaoEvento: {
     fontWeight: 'normal',
     fontSize: 14,
     color: '#011F26',
     textDecorationLine: 'underline',
-    fontVariant: ['small-caps']
+    fontVariant: ['small-caps'],
   },
   textoLinkMaps: {
     fontWeight: 'bold',

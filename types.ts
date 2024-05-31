@@ -9,4 +9,17 @@ export interface Celula {
   nomeLider: string;
   numeroLider: string;
   descricao: string;
-  }
+};
+
+export interface Evento {
+  id: string;
+  titulo: string;
+  data: string;
+  horario: string;
+  imagem: string;
+  endereco: string;
+  linkEnderecoMaps: string;
+  numeroContato: string;
+  valor: string;
+  descricao: string;
+};

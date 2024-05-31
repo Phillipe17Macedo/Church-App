@@ -1,6 +1,6 @@
-import { launchImageLibraryAsync } from 'expo-image-picker';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import { launchImageLibraryAsync } from "expo-image-picker";
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   SafeAreaView,
@@ -13,17 +13,22 @@ import {
   Keyboard,
   Modal,
   RefreshControl,
-} from 'react-native';
-import { styles } from '../../style/StylesCelulas/styles';
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { isAdmin } from '@/utils/Usuario/authAdmin';
-import { buscarCelulaDoBanco } from '@/utils/Celula/buscar';
-import { salvarCelulaNoBanco } from '@/utils/Celula/salvar';
-import { removerCelulaDoBanco } from '@/utils/Celula/remover';
+} from "react-native";
+import { styles } from "../../style/StylesCelulas/styles";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import { isAdmin } from "@/connection/Usuario/authAdmin";
+import { buscarCelulaDoBanco } from "@/connection/Celula/buscar";
+import { salvarCelulaNoBanco } from "@/connection/Celula/salvar";
+import { removerCelulaDoBanco } from "@/connection/Celula/remover";
 
-import InfoCelulaModal from '@/components/ComponentCelulas/ModalInformacoesCelula/InfoCelulaModal';
-import ComponentCelulas from '@/components/ComponentCelulas/ComponentCelulas';
-import { Celula } from '@/types';
+import InfoCelulaModal from "@/components/ComponentCelulas/ModalInformacoesCelula/InfoCelulaModal";
+import ComponentCelulas from "@/components/ComponentCelulas/ComponentCelulas";
+import { Celula } from "@/types";
 
 type RemoverCelulaButtonProps = {
   onPress: () => void;
@@ -41,7 +46,11 @@ type ConfirmacaoRemocaoPros = {
   onCancelar: () => void;
 };
 
-const ConfirmarRemocao = ({ visivel, onConfirmar, onCancelar }: ConfirmacaoRemocaoPros) => {
+const ConfirmarRemocao = ({
+  visivel,
+  onConfirmar,
+  onCancelar,
+}: ConfirmacaoRemocaoPros) => {
   return (
     <Modal
       animationType="slide"
@@ -51,12 +60,20 @@ const ConfirmarRemocao = ({ visivel, onConfirmar, onCancelar }: ConfirmacaoRemoc
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>Tem certeza de que deseja remover este evento?</Text>
+          <Text style={styles.modalText}>
+            Tem certeza de que deseja remover este evento?
+          </Text>
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity onPress={onConfirmar} style={[styles.button, styles.confirmButton]}>
+            <TouchableOpacity
+              onPress={onConfirmar}
+              style={[styles.button, styles.confirmButton]}
+            >
               <Text style={styles.textStyle}>Confirmar</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onCancelar} style={[styles.button, styles.cancelButton]}>
+            <TouchableOpacity
+              onPress={onCancelar}
+              style={[styles.button, styles.cancelButton]}
+            >
               <Text style={styles.textStyle}>Cancelar</Text>
             </TouchableOpacity>
           </View>
@@ -73,14 +90,14 @@ export default function Celulas() {
   const [celulaIndexToRemove, setCelulaIndexToRemove] = useState(-1);
   const [refreshing, setRefreshing] = useState(false);
 
-  const [tituloCelula, setTituloCelula] = useState('');
-  const [dataCelula, setDataCelula] = useState('');
-  const [horarioCelula, setHorarioCelula] = useState('');
-  const [enderecoCelula, setEnderecoCelula] = useState('');
-  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState('');
-  const [nomeLider, setNomeLider] = useState('');
-  const [numeroLider, setNumeroLider] = useState('');
-  const [descricao, setDescricao] = useState('');
+  const [tituloCelula, setTituloCelula] = useState("");
+  const [dataCelula, setDataCelula] = useState("");
+  const [horarioCelula, setHorarioCelula] = useState("");
+  const [enderecoCelula, setEnderecoCelula] = useState("");
+  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState("");
+  const [nomeLider, setNomeLider] = useState("");
+  const [numeroLider, setNumeroLider] = useState("");
+  const [descricao, setDescricao] = useState("");
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedCelula, setSelectedCelula] = useState(null);
@@ -97,7 +114,7 @@ export default function Celulas() {
         const celulasDoBanco = await buscarCelulaDoBanco();
         setCelulaItems(celulasDoBanco);
       } catch (error) {
-        console.error('Erro ao buscar celulas:', error);
+        console.error("Erro ao buscar celulas:", error);
       }
     };
     fetchCelulas();
@@ -112,14 +129,26 @@ export default function Celulas() {
       });
       if (!result.canceled) {
         const imageUri = result.assets[0].uri;
-        const imageName = imageUri.substring(imageUri.lastIndexOf('/') + 1);
+        const imageName = imageUri.substring(imageUri.lastIndexOf("/") + 1);
         const storage = getStorage();
         const storageReference = storageRef(storage, `celulas/${imageName}`);
-        const imageBlob = await fetch(imageUri).then((response) => response.blob());
+        const imageBlob = await fetch(imageUri).then((response) =>
+          response.blob()
+        );
         await uploadBytes(storageReference, imageBlob);
 
         const downloadURL = await getDownloadURL(storageReference);
-        const celulaId = await salvarCelulaNoBanco(tituloCelula, dataCelula, horarioCelula, enderecoCelula, downloadURL, linkEnderecoMaps, nomeLider, numeroLider, descricao);
+        const celulaId = await salvarCelulaNoBanco(
+          tituloCelula,
+          dataCelula,
+          horarioCelula,
+          enderecoCelula,
+          downloadURL,
+          linkEnderecoMaps,
+          nomeLider,
+          numeroLider,
+          descricao
+        );
         const novaCelula: Celula = {
           id: celulaId,
           titulo: tituloCelula,
@@ -130,21 +159,21 @@ export default function Celulas() {
           linkEnderecoMaps: linkEnderecoMaps,
           nomeLider: nomeLider,
           numeroLider: numeroLider,
-          descricao: descricao
+          descricao: descricao,
         };
-        console.log('Nova Célula: ', novaCelula);
+        console.log("Nova Célula: ", novaCelula);
         setCelulaItems([...celulaItems, novaCelula]);
-        setTituloCelula('');
-        setDataCelula('');
-        setHorarioCelula('');
-        setEnderecoCelula('');
-        setLinkEnderecoMaps('');
-        setNomeLider('');
-        setNumeroLider('');
-        setDescricao('');
+        setTituloCelula("");
+        setDataCelula("");
+        setHorarioCelula("");
+        setEnderecoCelula("");
+        setLinkEnderecoMaps("");
+        setNomeLider("");
+        setNumeroLider("");
+        setDescricao("");
       }
     } catch (error) {
-      console.error('Erro ao adicionar celula:', error);
+      console.error("Erro ao adicionar celula:", error);
     }
     Keyboard.dismiss();
   };
@@ -162,23 +191,25 @@ export default function Celulas() {
   const confirmarRemocao = async () => {
     try {
       if (celulaIndexToRemove === -1) {
-        console.error('A Celula a ser removida não foi encontrada.');
+        console.error("A Celula a ser removida não foi encontrada.");
         return;
       }
       const celulaToRemove = celulaItems[celulaIndexToRemove];
 
       const isAdminUser = await isAdmin();
       if (!isAdminUser) {
-        console.error('Apenas usuários administradores podem remover celulas.');
+        console.error("Apenas usuários administradores podem remover celulas.");
         return;
       }
 
-      const updateCelulaItems = celulaItems.filter((_, i) => i !== celulaIndexToRemove);
+      const updateCelulaItems = celulaItems.filter(
+        (_, i) => i !== celulaIndexToRemove
+      );
       setCelulaItems(updateCelulaItems);
 
       await removerCelulaDoBanco(celulaToRemove.id);
     } catch (error) {
-      console.error('Erro ao remover celula:', error);
+      console.error("Erro ao remover celula:", error);
     } finally {
       setConfirmacaoVisivel(false);
       setCelulaIndexToRemove(-1);
@@ -191,7 +222,7 @@ export default function Celulas() {
       const celulasDoBanco = await buscarCelulaDoBanco();
       setCelulaItems(celulasDoBanco);
     } catch (error) {
-      console.error('Erro ao buscar Celulas:', error);
+      console.error("Erro ao buscar Celulas:", error);
     } finally {
       setRefreshing(false);
     }
@@ -201,12 +232,11 @@ export default function Celulas() {
     console.log("Celula clicada: ", celula);
     setSelectedCelula(celula);
     setModalVisible(true);
-    console.log("Estado do setVisible: ", setModalVisible);
   };
 
   return (
     <SafeAreaView style={[styles.container]}>
-      <StatusBar style='light' />
+      <StatusBar style="light" />
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -214,23 +244,28 @@ export default function Celulas() {
       >
         <View style={[styles.areaCelulas]}>
           <View style={[styles.areaContainerCelula]}>
-            {
-              celulaItems.map((item, index) => {
-                return (
-                  <TouchableOpacity key={index} onPress={() => handleCelulaPress(item)}>
-                    <ComponentCelulas
-                      nomeCelula={item.titulo}
-                      dataCelula={item.data}
-                      horarioCelula={item.horario}
-                      enderecoCelula={item.endereco}
-                      imageUri={item.imagem}
-                      onPress={() => handleCelulaPress(item)}
+            {celulaItems.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleCelulaPress(item)}
+                >
+                  <ComponentCelulas
+                    nomeCelula={item.titulo}
+                    dataCelula={item.data}
+                    horarioCelula={item.horario}
+                    enderecoCelula={item.endereco}
+                    imageUri={item.imagem}
+                    onPress={() => handleCelulaPress(item)}
+                  />
+                  {isAdminUser && (
+                    <RemoverCelulaButton
+                      onPress={() => exibirConfirmacao(index)}
                     />
-                    {isAdminUser && <RemoverCelulaButton onPress={() => exibirConfirmacao(index)} />}
-                  </TouchableOpacity>
-                )
-              })
-            }
+                  )}
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 
@@ -241,57 +276,61 @@ export default function Celulas() {
           >
             <TextInput
               style={[styles.inputTextoCelula]}
-              keyboardType='default'
-              placeholder='Nome da Célula'
+              keyboardType="default"
+              placeholder="Nome da Célula"
               value={tituloCelula}
               onChangeText={(nomeCelula) => setTituloCelula(nomeCelula)}
             />
             <TextInput
               style={[styles.inputTextoCelula]}
-              keyboardType='default'
-              placeholder='Dia da Célula'
+              keyboardType="default"
+              placeholder="Dia da Célula"
               value={dataCelula}
               onChangeText={(dataCelula) => setDataCelula(dataCelula)}
             />
             <TextInput
               style={[styles.inputTextoCelula]}
-              keyboardType='default'
-              placeholder='Horário da Célula'
+              keyboardType="default"
+              placeholder="Horário da Célula"
               value={horarioCelula}
               onChangeText={(horarioCelula) => setHorarioCelula(horarioCelula)}
             />
             <TextInput
               style={[styles.inputTextoCelula]}
-              keyboardType='default'
-              placeholder='Endereço da Célula'
+              keyboardType="default"
+              placeholder="Endereço da Célula"
               value={enderecoCelula}
-              onChangeText={(enderecoCelula) => setEnderecoCelula(enderecoCelula)}
+              onChangeText={(enderecoCelula) =>
+                setEnderecoCelula(enderecoCelula)
+              }
             />
             <TextInput
               style={[styles.inputTextoCelula]}
-              keyboardType='default'
-              placeholder='Link do Endereço Maps'
+              keyboardType="default"
+              placeholder="Link do Endereço Maps"
               value={linkEnderecoMaps}
-              onChangeText={(linkEnderecoMaps) => setLinkEnderecoMaps(linkEnderecoMaps)}
+              onChangeText={(linkEnderecoMaps) =>
+                setLinkEnderecoMaps(linkEnderecoMaps)
+              }
             />
             <TextInput
               style={[styles.inputTextoCelula]}
-              keyboardType='default'
-              placeholder='Nome do Líder'
+              keyboardType="default"
+              placeholder="Nome do Líder"
               value={nomeLider}
               onChangeText={(nomeLider) => setNomeLider(nomeLider)}
             />
             <TextInput
               style={[styles.inputTextoCelula]}
-              keyboardType='default'
-              placeholder='Número do Líder'
+              keyboardType="default"
+              placeholder="Número do Líder"
               value={numeroLider}
               onChangeText={(numeroLider) => setNumeroLider(numeroLider)}
             />
             <TextInput
               style={[styles.inputTextoCelula]}
-              keyboardType='default'
-              placeholder='Descrição'
+              keyboardType="default"
+              placeholder="Descrição"
               value={descricao}
               onChangeText={(descricao) => setDescricao(descricao)}
             />
