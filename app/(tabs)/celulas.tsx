@@ -232,7 +232,6 @@ export default function Celulas() {
     console.log("Celula clicada: ", celula);
     setSelectedCelula(celula);
     setModalVisible(true);
-    console.log("Estado do setVisible: ", setModalVisible);
   };
 
   return (

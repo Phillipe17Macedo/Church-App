@@ -226,6 +226,12 @@ export default function Home() {
     }
   };
 
+  const handleEventoPress = (evento: any) => {
+    console.log("Evento clicado: ", evento);
+    setSelectedEvento(evento);
+    setModalVisible(true);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
@@ -238,12 +244,16 @@ export default function Home() {
           <View style={[styles.areaContainerEvento]}>
             {eventoItems.map((item, index) => {
               return (
-                <TouchableOpacity key={index}>
+                <TouchableOpacity 
+                  key={index}
+                  onPress={() => handleEventoPress(item)}
+                >
                   <ComponentEventos
                     nomeEvento={item.titulo}
                     dataEvento={item.data}
                     horarioEvento={item.horario}
                     imageUri={item.imagem}
+                    onPress={() => handleEventoPress(item)}
                   />
                   {isAdminUser && (
                     <RemoverEventoButton
