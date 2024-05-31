@@ -56,5 +56,7 @@ export const styles = StyleSheet.create({
   textoLinkMaps: {
     fontWeight: 'bold',
     color: '#2196F3',
-  }
+    fontSize: 15,
+    alignContent: 'space-between'
+  },
 });

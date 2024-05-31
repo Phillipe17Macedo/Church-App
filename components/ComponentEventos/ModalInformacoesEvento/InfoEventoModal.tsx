@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, View, Text, TouchableOpacity, Linking } from "react-native";
 import { Evento } from "@/types";
 import { styles } from "./styles";
+import { Fontisto } from '@expo/vector-icons';
 
 interface InfoEventoModalProps {
   visible: boolean;
@@ -54,7 +55,8 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
               </Text>
               <Text style={styles.textoPadraoModal} onPress={handleOpenMaps}>
                 <Text style={styles.textoLinkMaps}>
-                  Link do Endereço no Google Maps
+                  <Fontisto name="map" size={18} color="#2196F3"/>
+                    Link do Endereço no Google Maps
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>

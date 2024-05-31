@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
   },
   textoPadraoModal: {
     marginBottom: 15,
-    textAlign: "left",
+    textAlign: "justify",
     fontWeight: 'bold',
     alignSelf: 'flex-start',
     fontSize: 18, 
@@ -51,10 +51,12 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: '#011F26',
     textDecorationLine: 'underline',
-    fontVariant: ['small-caps']
+    fontVariant: ['small-caps'],
   },
   textoLinkMaps: {
     fontWeight: 'bold',
     color: '#2196F3',
-  }
+    fontSize: 15,
+    alignContent: 'space-between'
+  },
 });
