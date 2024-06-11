@@ -2,7 +2,7 @@
   "expo": {
     "name": "Church App",
     "slug": "church-App",
-    "version": "2.0.8",
+    "version": "2.0.9",
     "scheme": "church-app",
     "web": {
       "bundler": "metro",

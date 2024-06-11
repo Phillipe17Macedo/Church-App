@@ -1,7 +1,7 @@
 {
   "name": "church-app",
   "main": "expo-router/entry",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "scripts": {
     "start": "expo start",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
@@ -38,7 +38,7 @@
     "react": "18.2.0",
     "react-big-calendar": "^1.12.2",
     "react-dom": "18.2.0",
-    "react-native": "^0.74.1",
+    "react-native": "0.74.1",
     "react-native-calendars": "^1.1305.0",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-reanimated": "~3.10.1",
