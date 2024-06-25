@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'normal',
     fontSize: 14,
     color: '#011F26',
-    textDecorationLine: 'underline',
+    //textDecorationLine: 'underline',
     fontVariant: ['small-caps']
   },
   textoLinkMaps: {
@@ -58,5 +58,10 @@ export const styles = StyleSheet.create({
     color: '#2196F3',
     fontSize: 15,
     alignContent: 'space-between'
+  },
+  textoNumeroLider: {
+    fontWeight: 'bold',
+    color: "#2196F3",
+    fontSize: 15,
   },
 });

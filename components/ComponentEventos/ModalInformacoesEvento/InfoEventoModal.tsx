@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, View, Text, TouchableOpacity, Linking } from "react-native";
 import { Evento } from "@/types";
 import { styles } from "./styles";
-import { Fontisto } from '@expo/vector-icons';
+import { Fontisto } from "@expo/vector-icons";
 
 interface InfoEventoModalProps {
   visible: boolean;
@@ -15,11 +15,19 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
   evento,
   onClose,
 }) => {
+  
   const handleOpenMaps = () => {
     if (evento && evento.linkEnderecoMaps) {
       Linking.openURL(evento.linkEnderecoMaps);
     }
   };
+
+  const handleCell = () => {
+    if (evento && evento.numeroContato) {
+      Linking.openURL(`tel:${evento.numeroContato}`);
+    }
+  }
+  
   return (
     <Modal
       animationType="slide"
@@ -38,11 +46,11 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
-                Data:{" "}
+                Data do Evento:{" "}
                 <Text style={styles.textoInformacaoEvento}>{evento.data}</Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
-                Horário:{" "}
+                Horário do Evento:{" "}
                 <Text style={styles.textoInformacaoEvento}>
                   {evento.horario}
                 </Text>
@@ -55,13 +63,13 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
               </Text>
               <Text style={styles.textoPadraoModal} onPress={handleOpenMaps}>
                 <Text style={styles.textoLinkMaps}>
-                  <Fontisto name="map" size={18} color="#2196F3"/>
-                    Link do Endereço no Google Maps
+                  <Fontisto name="map" size={18} color="#2196F3" />
+                  Link do Endereço no Google Maps
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
                 Número de Contato:{" "}
-                <Text style={styles.textoInformacaoEvento}>
+                <Text style={styles.textoNumeroContato} onPress={handleCell}>
                   {evento.numeroContato}
                 </Text>
               </Text>

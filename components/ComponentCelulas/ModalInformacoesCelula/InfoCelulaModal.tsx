@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, View, Text, TouchableOpacity, Linking } from "react-native";
 import { Celula } from "@/types";
 import { styles } from "./styles";
-import { Fontisto } from '@expo/vector-icons';
+import { Fontisto } from "@expo/vector-icons";
 
 interface InfoCelulaModalProps {
   visible: boolean;
@@ -15,11 +15,19 @@ const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({
   celula,
   onClose,
 }) => {
+
   const handleOpenMaps = () => {
     if (celula && celula.linkEnderecoMaps) {
       Linking.openURL(celula.linkEnderecoMaps);
     }
   };
+
+  const handleCell = () => {
+    if (celula && celula.numeroLider) {
+      Linking.openURL(`tel:${celula.numeroLider}`);
+    }
+  }
+
   return (
     <Modal
       animationType="slide"
@@ -61,14 +69,14 @@ const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({
               </Text>
               <Text style={styles.textoPadraoModal}>
                 Número do Líder:{" "}
-                <Text style={styles.textoInformacaoCelula}>
+                <Text style={styles.textoNumeroLider} onPress={handleCell}>
                   {celula.numeroLider}
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal} onPress={handleOpenMaps}>
                 <Text style={styles.textoLinkMaps}>
-                  <Fontisto name="map" size={18} color="#2196F3"/>
-                    Link do Endereço no Google Maps
+                  <Fontisto name="map" size={18} color="#2196F3" />
+                  Link do Endereço no Google Maps
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
