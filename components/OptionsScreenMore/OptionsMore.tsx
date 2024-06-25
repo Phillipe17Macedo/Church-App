@@ -6,14 +6,14 @@ import { styles } from './styles';
 export default function OptionsMore() {
   return (
     <View style={styles.container}>
-        <TouchableOpacity>
-            <Text style={[{color: 'black', padding: 5, backgroundColor: 'lightgray', marginBottom: 10,}]}>Dizímos & Ofertas</Text>
+        <TouchableOpacity style={[styles.constainerOpcoes]}>
+            <Text style={[styles.textoOpcoes]}>Dizímos & Ofertas</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-            <Text style={[{color: 'black', padding: 5, backgroundColor: 'lightgray', marginBottom: 10,}]}>Palavras</Text>
+        <TouchableOpacity style={[styles.constainerOpcoes]} >
+            <Text style={[styles.textoOpcoes]} >Palavras</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-            <Text style={[{color: 'black', padding: 5, backgroundColor: 'lightgray', marginBottom: 10,}]}>Bíblia</Text>
+        <TouchableOpacity style={[styles.constainerOpcoes]} >
+            <Text style={[styles.textoOpcoes]} >Bíblia</Text>
         </TouchableOpacity>
     </View>
   );
