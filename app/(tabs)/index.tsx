@@ -14,6 +14,7 @@ import {
   Keyboard,
   Modal,
   RefreshControl,
+  ActivityIndicator
 } from "react-native";
 import { styles } from "../../style/StylesHome/styles";
 import {
@@ -98,6 +99,9 @@ export default function Home() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvento, setSelectedEvento] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -230,6 +234,20 @@ export default function Home() {
     console.log("Evento clicado: ", evento);
     setSelectedEvento(evento);
     setModalVisible(true);
+  };
+
+  const fetchEventos = async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const eventosDoBanco = await buscarEventosDoBanco();
+      setEventoItems(eventosDoBanco);
+    } catch (error) {
+      console.error("Erro ao buscar eventos:", error);
+      setError('Erro ao buscar informações');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

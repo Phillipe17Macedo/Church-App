@@ -19,7 +19,7 @@ export default function TabLayout() {
           alignSelf: 'center',
           left: 18,
           right: 15,
-          elevation: 0,
+          elevation: 3,
           borderRadius: 20,
           height: 70,
           paddingTop: 10,
