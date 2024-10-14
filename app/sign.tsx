@@ -1,8 +1,7 @@
-/* eslint-disable prettier/prettier */
-import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import React, { useState } from 'react';
+import { Link } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -11,33 +10,40 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-} from 'react-native';
+} from "react-native";
 
-import { salvarUsuario } from '../connection/Usuario/salvar';
-import { styles } from '../style/StylesSign/styles';
+import { salvarUsuario } from "../connection/Usuario/salvar";
+import { styles } from "../style/StylesSign/styles";
 
 export default function Sign() {
-  const [nome, setNome] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [email, setEmail] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
-  const [senha, setSenha] = useState('');
-  const [funcao, setFuncao] = useState('');
+  const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [email, setEmail] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [senha, setSenha] = useState("");
+  const [funcao, setFuncao] = useState("");
 
   const auth = getAuth(); // Obtendo a instância de autenticação do Firebase
 
   const handleSavePress = () => {
     // Verificar se todos os campos foram preenchidos
-    if (!nome || !telefone || !endereco || !email || !dataNascimento || !senha) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos.');
+    if (
+      !nome ||
+      !telefone ||
+      !endereco ||
+      !email ||
+      !dataNascimento ||
+      !senha
+    ) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos.");
       return;
     }
 
     // Verificar se o email é válido
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      Alert.alert('Erro', 'Por favor, insira um endereço de email válido.');
+      Alert.alert("Erro", "Por favor, insira um endereço de email válido.");
       return;
     }
 
@@ -59,20 +65,20 @@ export default function Sign() {
         };
         salvarUsuario(novoUsuario);
         // Limpar os campos após salvar o usuário
-        setNome('');
-        setTelefone('');
-        setEndereco('');
-        setEmail('');
-        setDataNascimento('');
-        setSenha('');
-        setFuncao('');
+        setNome("");
+        setTelefone("");
+        setEndereco("");
+        setEmail("");
+        setDataNascimento("");
+        setSenha("");
+        setFuncao("");
         // Mostrar uma mensagem de sucesso
-        Alert.alert('Sucesso', 'Usuário cadastrado com sucesso.');
+        Alert.alert("Sucesso", "Usuário cadastrado com sucesso.");
       })
       .catch((error) => {
         // Ocorreu um erro ao registrar o usuário
         const errorMessage = error.message;
-        Alert.alert('Erro', errorMessage);
+        Alert.alert("Erro", errorMessage);
       });
   };
   return (
@@ -123,15 +129,15 @@ export default function Sign() {
             value={senha}
             onChangeText={(text) => setSenha(text)}
           />
-        <TouchableOpacity style={styles.button} onPress={handleSavePress}>
-          <Text style={styles.buttonText}>SALVAR</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleSavePress}>
+            <Text style={styles.buttonText}>SALVAR</Text>
+          </TouchableOpacity>
 
-        <View style={[styles.containerTextLink]}>
-          <Link href="/login" style={[styles.textLink]}>
-            LOGIN
-          </Link>
-        </View>
+          <View style={[styles.containerTextLink]}>
+            <Link href="/login" style={[styles.textLink]}>
+              LOGIN
+            </Link>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
