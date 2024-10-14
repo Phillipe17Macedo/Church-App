@@ -1,20 +1,14 @@
-/* eslint-disable prettier/prettier */
 import { launchImageLibraryAsync } from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  TextInput,
   TouchableOpacity,
   View,
   Text,
   Keyboard,
-  Modal,
   RefreshControl,
-  ActivityIndicator
 } from "react-native";
 import { styles } from "../../style/StylesHome/styles";
 import {
@@ -31,6 +25,8 @@ import { removerEventoDoBanco } from "@/connection/Evento/remover";
 import ComponentEventos from "../../components/ComponentEventos/ComponentEventos";
 import { Evento } from "@/types";
 import InfoEventoModal from "@/components/ComponentEventos/ModalInformacoesEvento/InfoEventoModal";
+import { ModalEventos } from "@/components/ModalEventos/ModalEventos";
+import { ConfirmModal } from "@/components/ModalConfirm/ConfirmModal";
 
 type RemoverEventoButtonProps = {
   onPress: () => void;
@@ -40,47 +36,7 @@ const RemoverEventoButton = ({ onPress }: RemoverEventoButtonProps) => (
     <Text style={styles.removerEventoButtonText}>Remover</Text>
   </TouchableOpacity>
 );
-type ConfirmacaoRemocaoProps = {
-  visivel: boolean;
-  onConfirmar: () => void;
-  onCancelar: () => void;
-};
-const ConfirmacaoRemocao = ({
-  visivel,
-  onConfirmar,
-  onCancelar,
-}: ConfirmacaoRemocaoProps) => {
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visivel}
-      onRequestClose={onCancelar}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            Tem certeza de que deseja remover este evento?
-          </Text>
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              onPress={onConfirmar}
-              style={[styles.button, styles.confirmButton]}
-            >
-              <Text style={styles.textStyle}>Confirmar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={onCancelar}
-              style={[styles.button, styles.cancelButton]}
-            >
-              <Text style={styles.textStyle}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
+
 export default function Home() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [eventoItems, setEventoItems] = useState<Evento[]>([]);
@@ -98,10 +54,11 @@ export default function Home() {
   const [descricao, setDescricao] = useState("");
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedEvento, setSelectedEvento] = useState(null);
+  const [modalFormVisible, setModalFormVisible] = useState(false);
+  const [selectedEvento, setSelectedEvento] = useState<Evento | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -120,6 +77,22 @@ export default function Home() {
     };
     fetchEventos();
   }, []);
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleOpenModalForm = () => {
+    setModalFormVisible(true);
+  };
+
+  const handleCloseModalForm = () => {
+    setModalFormVisible(false);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
 
   const handleAddEvento = async () => {
     try {
@@ -238,13 +211,13 @@ export default function Home() {
 
   const fetchEventos = async () => {
     setIsLoading(true);
-    setError('');
+    setError("");
     try {
       const eventosDoBanco = await buscarEventosDoBanco();
       setEventoItems(eventosDoBanco);
     } catch (error) {
       console.error("Erro ao buscar eventos:", error);
-      setError('Erro ao buscar informações');
+      setError("Erro ao buscar informações");
     } finally {
       setIsLoading(false);
     }
@@ -262,7 +235,7 @@ export default function Home() {
           <View style={[styles.areaContainerEvento]}>
             {eventoItems.map((item, index) => {
               return (
-                <TouchableOpacity 
+                <TouchableOpacity
                   key={index}
                   onPress={() => handleEventoPress(item)}
                 >
@@ -285,74 +258,37 @@ export default function Home() {
         </View>
 
         {isAdminUser && (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={[styles.containerInputNewEvento]}
-          >
-            <TextInput
-              style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Nome do Evento"
-              value={tituloEvento}
-              onChangeText={(nomeEvento) => setTituloEvento(nomeEvento)}
-            />
-            <TextInput
-              style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Data do Evento"
-              value={dataDoEvento}
-              onChangeText={(dataEvento) => setDataDoEvento(dataEvento)}
-            />
-            <TextInput
-              style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Horário do Evento"
-              value={horarioDoEvento}
-              onChangeText={(horarioEvento) =>
-                setHorarioDoEvento(horarioEvento)
-              }
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Endereço do Evento"
-              value={enderecoDoEvento}
-              onChangeText={(enderecoEvento) => setEnderecoDoEvento(enderecoEvento)}
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Link do Endereço do Evento"
-              value={linkEnderecoMaps}
-              onChangeText={(linkEvento) => setLinkEnderecoMaps(linkEvento)}
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Número de Contato"
-              value={numeroContato}
-              onChangeText={(numeroEvento) => setNumeroContato(numeroEvento)}
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Valor do Evento"
-              value={valor}
-              onChangeText={(valorEvento) => setValor(valorEvento)}
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Descrição do Evento"
-              value={descricao}
-              onChangeText={(descricaoEvento) => setDescricao(descricaoEvento)}
-            />
-            <TouchableOpacity onPress={() => handleAddEvento()}>
-              <View style={[styles.containerIconeAddEvento]}>
-                <Text style={[styles.iconeAddEvento]}>+</Text>
-              </View>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
+          <TouchableOpacity onPress={handleOpenModalForm}>
+            <View style={[styles.containerIconeAddEvento]}>
+              <Text style={[styles.iconeAddEvento]}>+</Text>
+            </View>
+          </TouchableOpacity>
         )}
-        <ConfirmacaoRemocao
-          visivel={confirmacaoVisivel}
-          onConfirmar={confirmarRemocao}
-          onCancelar={cancelarRemocao}
+        <ModalEventos
+          visible={modalFormVisible}
+          onClose={handleCloseModalForm}
+          onSubmit={handleAddEvento}
+          tituloEvento={tituloEvento}
+          setTituloEvento={setTituloEvento}
+          dataDoEvento={dataDoEvento}
+          setDataDoEvento={setDataDoEvento}
+          horarioDoEvento={horarioDoEvento}
+          setHorarioDoEvento={setHorarioDoEvento}
+          enderecoDoEvento={enderecoDoEvento}
+          setEnderecoDoEvento={setEnderecoDoEvento}
+          linkEnderecoMaps={linkEnderecoMaps}
+          setLinkEnderecoMaps={setLinkEnderecoMaps}
+          numeroContato={numeroContato}
+          setNumeroContato={setNumeroContato}
+          valor={valor}
+          setValor={setValor}
+          descricao={descricao}
+          setDescricao={setDescricao}
+        />
+        <ConfirmModal
+          visible={confirmacaoVisivel}
+          onConfirm={confirmarRemocao}
+          onCancel={cancelarRemocao}
         />
       </ScrollView>
       <InfoEventoModal
