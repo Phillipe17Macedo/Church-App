@@ -43,6 +43,7 @@ export const styles = StyleSheet.create({
       borderColor: '#C0C0C0',
       borderWidth: 1,
       marginBottom: 5,
+      alignSelf: "center",
     },
     iconeAddEvento: {
       fontSize: 30,
