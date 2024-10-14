@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars *//* eslint-disable prettier/prettier */
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Link } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -11,12 +10,12 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-} from 'react-native';
+} from "react-native";
 
-import { signOut } from '../connection/Usuario/signUser';
-import { buscarDadosDoBanco } from '@/connection/Usuario/buscar';
-import { atualizarDadosNoBanco } from '@/connection/Usuario/editar';
-import { styles } from '../style/StylesPerfil/styles';
+import { signOut } from "../connection/Usuario/signUser";
+import { buscarDadosDoBanco } from "@/connection/Usuario/buscar";
+import { atualizarDadosNoBanco } from "@/connection/Usuario/editar";
+import { styles } from "../style/StylesPerfil/styles";
 
 interface Usuario {
   id: string;
@@ -31,13 +30,13 @@ interface Usuario {
 
 export default function Perfil() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
-  const [nome, setNome] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [email, setEmail] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
-  const [senha, setSenha] = useState('');
-  const [funcao, setFuncao] = useState('');
+  const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [email, setEmail] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [senha, setSenha] = useState("");
+  const [funcao, setFuncao] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [logado, setLogado] = useState(false);
 
@@ -47,7 +46,7 @@ export default function Perfil() {
 
   const verificarUsuarioLogado = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
+      const userId = await AsyncStorage.getItem("userId");
       if (userId) {
         const usuario = await buscarDadosDoBanco(userId);
         if (usuario) {
@@ -61,9 +60,9 @@ export default function Perfil() {
         setUsuario(null);
         setLogado(false);
       }
-      console.log('Usuario está:', logado); // Adicionando mensagem de console para depuração
+      console.log("Usuario está:", logado); // Adicionando mensagem de console para depuração
     } catch (error) {
-      console.error('Erro ao verificar se o usuário está logado:', error);
+      console.error("Erro ao verificar se o usuário está logado:", error);
       setUsuario(null);
       setLogado(false);
     }
@@ -74,22 +73,22 @@ export default function Perfil() {
       await signOut();
       setLogado(false);
       limparCampos();
-      Alert.alert('Logout realizado com sucesso.');
-      console.log('Logout realizado com Sucesso.');
+      Alert.alert("Logout realizado com sucesso.");
+      console.log("Logout realizado com Sucesso.");
     } catch (error) {
-      console.error('Erro ao fazer logout:', error);
-      Alert.alert('Erro ao fazer logout.');
+      console.error("Erro ao fazer logout:", error);
+      Alert.alert("Erro ao fazer logout.");
     }
   };
 
   const limparCampos = () => {
-    setNome('');
-    setTelefone('');
-    setEndereco('');
-    setEmail('');
-    setDataNascimento('');
-    setSenha('');
-    setFuncao('');
+    setNome("");
+    setTelefone("");
+    setEndereco("");
+    setEmail("");
+    setDataNascimento("");
+    setSenha("");
+    setFuncao("");
   };
 
   const handleEditPress = () => {
@@ -99,11 +98,11 @@ export default function Perfil() {
   const handleSavePress = () => {
     setEditMode(false);
     if (!usuario) {
-      console.error('Usuário não encontrado para atualização.');
+      console.error("Usuário não encontrado para atualização.");
       return;
     }
-  
-    const novosDados = { 
+
+    const novosDados = {
       id: usuario.id,
       nome: nome || usuario.nome,
       telefone: telefone || usuario.telefone,
@@ -113,13 +112,13 @@ export default function Perfil() {
       senha: senha || usuario.senha,
       funcao: funcao || usuario.funcao,
     };
-  
+
     atualizarDadosNoBanco(usuario.id, novosDados)
       .then(() => {
-        console.log('Dados do usuário atualizados com sucesso!');
+        console.log("Dados do usuário atualizados com sucesso!");
       })
       .catch((error) => {
-        console.error('Erro ao atualizar dados do usuário:', error);
+        console.error("Erro ao atualizar dados do usuário:", error);
       });
   };
 
@@ -129,41 +128,47 @@ export default function Perfil() {
         <StatusBar style="light" />
         <View style={[styles.containerInput]}>
           <View style={[styles.containerTitulo]}>
-            <Text style={[styles.titulo]}>
-              DADOS PESSOAIS
-            </Text>
+            <Text style={[styles.titulo]}>DADOS PESSOAIS</Text>
           </View>
           <TextInput
             style={[styles.inputDados]}
             keyboardType="default"
             placeholder="Nome"
             editable={editMode}
-            value={usuario ? usuario.nome : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, nome: text } : null)}
+            value={usuario ? usuario.nome : ""}
+            onChangeText={(text) =>
+              setUsuario(usuario ? { ...usuario, nome: text } : null)
+            }
           />
           <TextInput
             style={[styles.inputDados]}
             keyboardType="phone-pad"
             placeholder="Telefone"
             editable={editMode}
-            value={usuario ? usuario.telefone : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, telefone: text } : null)}
+            value={usuario ? usuario.telefone : ""}
+            onChangeText={(text) =>
+              setUsuario(usuario ? { ...usuario, telefone: text } : null)
+            }
           />
           <TextInput
             style={[styles.inputDados]}
             keyboardType="default"
             placeholder="Endereço"
             editable={editMode}
-            value={usuario ? usuario.endereco : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, endereco: text } : null)}
+            value={usuario ? usuario.endereco : ""}
+            onChangeText={(text) =>
+              setUsuario(usuario ? { ...usuario, endereco: text } : null)
+            }
           />
           <TextInput
             style={[styles.inputDados]}
             keyboardType="default"
             placeholder="Data de Nascimento"
             editable={editMode}
-            value={usuario ? usuario.dataNascimento : ''}
-            onChangeText={(text) => setUsuario(usuario ? { ...usuario, dataNascimento: text } : null)}
+            value={usuario ? usuario.dataNascimento : ""}
+            onChangeText={(text) =>
+              setUsuario(usuario ? { ...usuario, dataNascimento: text } : null)
+            }
           />
 
           <View style={[styles.containerButton]}>
@@ -178,17 +183,21 @@ export default function Perfil() {
             )}
 
             {!logado ? (
-              <TouchableOpacity style={[styles.button]} >
-                <Link href='/login'style={[styles.buttonText]}>LOGIN</Link>
+              <TouchableOpacity style={[styles.button]}>
+                <Link href="/login" style={[styles.buttonText]}>
+                  LOGIN
+                </Link>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={[styles.button]} onPress={handleLogout} >
+              <TouchableOpacity style={[styles.button]} onPress={handleLogout}>
                 <Text style={[styles.buttonText]}>SAIR</Text>
               </TouchableOpacity>
             )}
           </View>
           <View style={[styles.containerTextLink]}>
-            <Link href="/sign" style={[styles.textLink]} >CADASTRAR-SE</Link>
+            <Link href="/sign" style={[styles.textLink]}>
+              CADASTRAR-SE
+            </Link>
           </View>
         </View>
       </ScrollView>
