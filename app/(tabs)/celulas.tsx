@@ -1,18 +1,14 @@
 import { launchImageLibraryAsync } from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   ScrollView,
   SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  TextInput,
   TouchableOpacity,
   View,
   Text,
-  Keyboard,
-  Modal,
   RefreshControl,
+  Modal,
 } from "react-native";
 import { styles } from "../../style/StylesCelulas/styles";
 import {
@@ -28,101 +24,32 @@ import { removerCelulaDoBanco } from "@/connection/Celula/remover";
 
 import InfoCelulaModal from "@/components/ComponentCelulas/ModalInformacoesCelula/InfoCelulaModal";
 import ComponentCelulas from "@/components/ComponentCelulas/ComponentCelulas";
+import AddCelulaForm from "@/components/ComponentCelulas/ModalAddCelula/AddCelulaModal";
+import ModalConfirmacaoRemocaoCelula from "@/components/ComponentCelulas/ModalRemocao/ModalConfirmacaoRemocaoCelula";
 import { Celula } from "@/types";
-
-type RemoverCelulaButtonProps = {
-  onPress: () => void;
-};
-
-const RemoverCelulaButton = ({ onPress }: RemoverCelulaButtonProps) => (
-  <TouchableOpacity onPress={onPress} style={[styles.removerCelulaButton]}>
-    <Text style={[styles.removerCelulaButtonText]}>Remover</Text>
-  </TouchableOpacity>
-);
-
-type ConfirmacaoRemocaoPros = {
-  visivel: boolean;
-  onConfirmar: () => void;
-  onCancelar: () => void;
-};
-
-const ConfirmarRemocao = ({
-  visivel,
-  onConfirmar,
-  onCancelar,
-}: ConfirmacaoRemocaoPros) => {
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visivel}
-      onRequestClose={onCancelar}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            Tem certeza de que deseja remover este evento?
-          </Text>
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              onPress={onConfirmar}
-              style={[styles.button, styles.confirmButton]}
-            >
-              <Text style={styles.textStyle}>Confirmar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={onCancelar}
-              style={[styles.button, styles.cancelButton]}
-            >
-              <Text style={styles.textStyle}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
 
 export default function Celulas() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [celulaItems, setCelulaItems] = useState<Celula[]>([]);
   const [confirmacaoVisivel, setConfirmacaoVisivel] = useState(false);
-  const [celulaIndexToRemove, setCelulaIndexToRemove] = useState(-1);
+  const [celulaIndexToRemove, setCelulaIndexToRemove] = useState<number | null>(
+    null
+  );
   const [refreshing, setRefreshing] = useState(false);
-
-  const [tituloCelula, setTituloCelula] = useState("");
-  const [dataCelula, setDataCelula] = useState("");
-  const [horarioCelula, setHorarioCelula] = useState("");
-  const [enderecoCelula, setEnderecoCelula] = useState("");
-  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState("");
-  const [nomeLider, setNomeLider] = useState("");
-  const [numeroLider, setNumeroLider] = useState("");
-  const [descricao, setDescricao] = useState("");
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedCelula, setSelectedCelula] = useState(null);
+  const [addCelulaModalVisible, setAddCelulaModalVisible] = useState(false);
+  const [selectedCelula, setSelectedCelula] = useState<Celula | null>(null);
 
   useEffect(() => {
-    const checkAdminStatus = async () => {
-      const isAdminResult = await isAdmin();
-      setIsAdminUser(isAdminResult);
-    };
-    checkAdminStatus();
-
-    const fetchCelulas = async () => {
-      try {
-        const celulasDoBanco = await buscarCelulaDoBanco();
-        setCelulaItems(celulasDoBanco);
-      } catch (error) {
-        console.error("Erro ao buscar celulas:", error);
-      }
-    };
+    const initializeAdminStatus = async () => setIsAdminUser(await isAdmin());
+    const fetchCelulas = async () =>
+      setCelulaItems(await buscarCelulaDoBanco());
+    initializeAdminStatus();
     fetchCelulas();
   }, []);
 
-  const handleAddCelula = async () => {
+  const handleAddCelula = async (celulaData: Omit<Celula, "id" | "imagem">) => {
     try {
-      let result = await launchImageLibraryAsync({
+      const result = await launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [3, 2],
         quality: 1,
@@ -130,52 +57,31 @@ export default function Celulas() {
       if (!result.canceled) {
         const imageUri = result.assets[0].uri;
         const imageName = imageUri.substring(imageUri.lastIndexOf("/") + 1);
-        const storage = getStorage();
-        const storageReference = storageRef(storage, `celulas/${imageName}`);
+        const storageReference = storageRef(
+          getStorage(),
+          `celulas/${imageName}`
+        );
         const imageBlob = await fetch(imageUri).then((response) =>
           response.blob()
         );
-        await uploadBytes(storageReference, imageBlob);
 
+        await uploadBytes(storageReference, imageBlob);
         const downloadURL = await getDownloadURL(storageReference);
-        const celulaId = await salvarCelulaNoBanco(
-          tituloCelula,
-          dataCelula,
-          horarioCelula,
-          enderecoCelula,
-          downloadURL,
-          linkEnderecoMaps,
-          nomeLider,
-          numeroLider,
-          descricao
-        );
-        const novaCelula: Celula = {
-          id: celulaId,
-          titulo: tituloCelula,
-          data: dataCelula,
-          horario: horarioCelula,
-          endereco: enderecoCelula,
+
+        const celulaId = await salvarCelulaNoBanco({
+          ...celulaData,
           imagem: downloadURL,
-          linkEnderecoMaps: linkEnderecoMaps,
-          nomeLider: nomeLider,
-          numeroLider: numeroLider,
-          descricao: descricao,
-        };
-        console.log("Nova Célula: ", novaCelula);
-        setCelulaItems([...celulaItems, novaCelula]);
-        setTituloCelula("");
-        setDataCelula("");
-        setHorarioCelula("");
-        setEnderecoCelula("");
-        setLinkEnderecoMaps("");
-        setNomeLider("");
-        setNumeroLider("");
-        setDescricao("");
+        });
+
+        setCelulaItems([
+          ...celulaItems,
+          { id: celulaId ?? "", ...celulaData, imagem: downloadURL },
+        ]);
+        setAddCelulaModalVisible(false);
       }
     } catch (error) {
-      console.error("Erro ao adicionar celula:", error);
+      console.error("Erro ao adicionar célula:", error);
     }
-    Keyboard.dismiss();
   };
 
   const exibirConfirmacao = (index: number) => {
@@ -183,175 +89,102 @@ export default function Celulas() {
     setConfirmacaoVisivel(true);
   };
 
-  const cancelarRemocao = () => {
-    setConfirmacaoVisivel(false);
-    setCelulaIndexToRemove(-1);
-  };
-
   const confirmarRemocao = async () => {
+    if (celulaIndexToRemove === null) return;
+    const celulaToRemove = celulaItems[celulaIndexToRemove];
     try {
-      if (celulaIndexToRemove === -1) {
-        console.error("A Celula a ser removida não foi encontrada.");
-        return;
-      }
-      const celulaToRemove = celulaItems[celulaIndexToRemove];
-
-      const isAdminUser = await isAdmin();
-      if (!isAdminUser) {
-        console.error("Apenas usuários administradores podem remover celulas.");
-        return;
-      }
-
-      const updateCelulaItems = celulaItems.filter(
-        (_, i) => i !== celulaIndexToRemove
-      );
-      setCelulaItems(updateCelulaItems);
-
       await removerCelulaDoBanco(celulaToRemove.id);
+      setCelulaItems(celulaItems.filter((_, i) => i !== celulaIndexToRemove));
     } catch (error) {
-      console.error("Erro ao remover celula:", error);
+      console.error("Erro ao remover célula:", error);
     } finally {
       setConfirmacaoVisivel(false);
-      setCelulaIndexToRemove(-1);
+      setCelulaIndexToRemove(null);
     }
   };
 
-  const onRefresh = async () => {
+  const cancelarRemocao = () => {
+    setConfirmacaoVisivel(false);
+    setCelulaIndexToRemove(null);
+  };
+
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const celulasDoBanco = await buscarCelulaDoBanco();
-      setCelulaItems(celulasDoBanco);
+      setCelulaItems(await buscarCelulaDoBanco());
     } catch (error) {
-      console.error("Erro ao buscar Celulas:", error);
+      console.error("Erro ao buscar células:", error);
     } finally {
       setRefreshing(false);
     }
-  };
+  }, []);
 
-  const handleCelulaPress = (celula: any) => {
-    console.log("Celula clicada: ", celula);
+  const handleCelulaPress = (celula: Celula) => {
     setSelectedCelula(celula);
-    setModalVisible(true);
   };
 
   return (
-    <SafeAreaView style={[styles.container]}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View style={[styles.areaCelulas]}>
-          <View style={[styles.areaContainerCelula]}>
-            {celulaItems.map((item, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
+        <View style={styles.areaCelulas}>
+          {celulaItems.map((item, index) => (
+            <View key={item.id} style={styles.areaContainerCelula}>
+              <TouchableOpacity onPress={() => handleCelulaPress(item)}>
+                <ComponentCelulas
+                  nomeCelula={item.titulo}
+                  dataCelula={item.data}
+                  horarioCelula={item.horario}
+                  enderecoCelula={item.endereco}
+                  imageUri={item.imagem}
                   onPress={() => handleCelulaPress(item)}
+                />
+              </TouchableOpacity>
+              {isAdminUser && (
+                <TouchableOpacity
+                  style={styles.removerCelulaButton}
+                  onPress={() => exibirConfirmacao(index)}
                 >
-                  <ComponentCelulas
-                    nomeCelula={item.titulo}
-                    dataCelula={item.data}
-                    horarioCelula={item.horario}
-                    enderecoCelula={item.endereco}
-                    imageUri={item.imagem}
-                    onPress={() => handleCelulaPress(item)}
-                  />
-                  {isAdminUser && (
-                    <RemoverCelulaButton
-                      onPress={() => exibirConfirmacao(index)}
-                    />
-                  )}
+                  <Text style={styles.removerCelulaButtonText}>Remover</Text>
                 </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-
-        {isAdminUser && (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={[styles.containerInputNewCelula]}
-          >
-            <TextInput
-              style={[styles.inputTextoCelula]}
-              keyboardType="default"
-              placeholder="Nome da Célula"
-              value={tituloCelula}
-              onChangeText={(nomeCelula) => setTituloCelula(nomeCelula)}
-            />
-            <TextInput
-              style={[styles.inputTextoCelula]}
-              keyboardType="default"
-              placeholder="Dia da Célula"
-              value={dataCelula}
-              onChangeText={(dataCelula) => setDataCelula(dataCelula)}
-            />
-            <TextInput
-              style={[styles.inputTextoCelula]}
-              keyboardType="default"
-              placeholder="Horário da Célula"
-              value={horarioCelula}
-              onChangeText={(horarioCelula) => setHorarioCelula(horarioCelula)}
-            />
-            <TextInput
-              style={[styles.inputTextoCelula]}
-              keyboardType="default"
-              placeholder="Endereço da Célula"
-              value={enderecoCelula}
-              onChangeText={(enderecoCelula) =>
-                setEnderecoCelula(enderecoCelula)
-              }
-            />
-            <TextInput
-              style={[styles.inputTextoCelula]}
-              keyboardType="default"
-              placeholder="Link do Endereço Maps"
-              value={linkEnderecoMaps}
-              onChangeText={(linkEnderecoMaps) =>
-                setLinkEnderecoMaps(linkEnderecoMaps)
-              }
-            />
-            <TextInput
-              style={[styles.inputTextoCelula]}
-              keyboardType="default"
-              placeholder="Nome do Líder"
-              value={nomeLider}
-              onChangeText={(nomeLider) => setNomeLider(nomeLider)}
-            />
-            <TextInput
-              style={[styles.inputTextoCelula]}
-              keyboardType="default"
-              placeholder="Número do Líder"
-              value={numeroLider}
-              onChangeText={(numeroLider) => setNumeroLider(numeroLider)}
-            />
-            <TextInput
-              style={[styles.inputTextoCelula]}
-              keyboardType="default"
-              placeholder="Descrição"
-              value={descricao}
-              onChangeText={(descricao) => setDescricao(descricao)}
-            />
-
-            <TouchableOpacity onPress={() => handleAddCelula()}>
-              <View style={[styles.containerIconeAddCelula]}>
-                <Text style={[styles.iconeAddCelula]}>+</Text>
+              )}
+            </View>
+          ))}
+          {isAdminUser && (
+            <TouchableOpacity onPress={() => setAddCelulaModalVisible(true)}>
+              <View style={styles.containerIconeAddCelula}>
+                <Text style={styles.iconeAddCelula}>+</Text>
               </View>
             </TouchableOpacity>
-          </KeyboardAvoidingView>
-        )}
-        <ConfirmarRemocao
-          visivel={confirmacaoVisivel}
-          onConfirmar={confirmarRemocao}
-          onCancelar={cancelarRemocao}
-        />
+          )}
+        </View>
       </ScrollView>
+
+      <Modal
+        visible={addCelulaModalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <AddCelulaForm
+          onSubmit={handleAddCelula}
+          onClose={() => setAddCelulaModalVisible(false)}
+        />
+      </Modal>
+
+      <ModalConfirmacaoRemocaoCelula
+        visivel={confirmacaoVisivel}
+        onConfirmar={confirmarRemocao}
+        onCancelar={cancelarRemocao}
+      />
+
       <InfoCelulaModal
-        visible={modalVisible}
+        visible={Boolean(selectedCelula)}
         celula={selectedCelula}
-        onClose={() => setModalVisible(false)}
+        onClose={() => setSelectedCelula(null)}
       />
     </SafeAreaView>
   );
