@@ -15,7 +15,6 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
   evento,
   onClose,
 }) => {
-  
   const handleOpenMaps = () => {
     if (evento && evento.linkEnderecoMaps) {
       Linking.openURL(evento.linkEnderecoMaps);
@@ -26,8 +25,8 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
     if (evento && evento.numeroContato) {
       Linking.openURL(`tel:${evento.numeroContato}`);
     }
-  }
-  
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -68,7 +67,7 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
-                Número de Contato:{" "}
+                Número de Contato:{"  "}
                 <Text style={styles.textoNumeroContato} onPress={handleCell}>
                   {evento.numeroContato}
                 </Text>

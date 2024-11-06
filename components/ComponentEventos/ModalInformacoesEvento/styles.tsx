@@ -6,6 +6,8 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
+    backgroundColor: "#00000099",
+    height: "100%",
   },
   modalView: {
     margin: 20,
@@ -29,8 +31,8 @@ export const styles = StyleSheet.create({
     backgroundColor: "#2196F3",
     width: 100,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   textoBotao: {
     color: "white",
@@ -40,28 +42,28 @@ export const styles = StyleSheet.create({
   textoPadraoModal: {
     marginBottom: 15,
     textAlign: "justify",
-    fontWeight: 'bold',
-    alignSelf: 'flex-start',
-    fontSize: 18, 
-    color: '#011F26',
-    fontVariant: ['small-caps']
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+    fontSize: 15,
+    color: "#011F26",
+    fontVariant: ["small-caps"],
   },
   textoInformacaoEvento: {
-    fontWeight: 'normal',
+    fontWeight: "normal",
     fontSize: 14,
-    color: '#011F26',
+    color: "#011F26",
     //textDecorationLine: 'underline',
-    fontVariant: ['small-caps'],
+    fontVariant: ["small-caps"],
   },
   textoLinkMaps: {
-    fontWeight: 'bold',
-    color: '#2196F3',
-    fontSize: 15,
-    alignContent: 'space-between'
-  },
-  textoNumeroContato: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: "#2196F3",
     fontSize: 15,
-  }
+    alignContent: "space-between",
+  },
+  textoNumeroContato: {
+    fontWeight: "bold",
+    color: "#2196F3",
+    fontSize: 15,
+  },
 });
