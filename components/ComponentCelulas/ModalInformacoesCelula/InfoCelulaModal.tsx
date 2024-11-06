@@ -1,5 +1,12 @@
 import React from "react";
-import { Modal, View, Text, TouchableOpacity, Linking } from "react-native";
+import {
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  Linking,
+  Alert,
+} from "react-native";
 import { Celula } from "@/types";
 import { styles } from "./styles";
 import { Fontisto } from "@expo/vector-icons";
@@ -15,18 +22,40 @@ const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({
   celula,
   onClose,
 }) => {
-
   const handleOpenMaps = () => {
     if (celula && celula.linkEnderecoMaps) {
       Linking.openURL(celula.linkEnderecoMaps);
     }
   };
 
-  const handleCell = () => {
+  const handleContactOptions = () => {
     if (celula && celula.numeroLider) {
-      Linking.openURL(`tel:${celula.numeroLider}`);
+      const formattedNumber = celula.numeroLider.replace(/\D/g, ""); // Remove non-digit characters
+
+      Alert.alert(
+        "Contato do Líder",
+        "Escolha o aplicativo para entrar em contato:",
+        [
+          {
+            text: "Telefone",
+            onPress: () => Linking.openURL(`tel:${formattedNumber}`),
+          },
+          {
+            text: "WhatsApp",
+            onPress: () => Linking.openURL(`https://wa.me/${formattedNumber}`),
+          },
+          {
+            text: "Telegram",
+            onPress: () => Linking.openURL(`https://t.me/+${formattedNumber}`),
+          },
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+        ]
+      );
     }
-  }
+  };
 
   return (
     <Modal
@@ -69,7 +98,10 @@ const InfoCelulaModal: React.FC<InfoCelulaModalProps> = ({
               </Text>
               <Text style={styles.textoPadraoModal}>
                 Número do Líder:{" "}
-                <Text style={styles.textoNumeroLider} onPress={handleCell}>
+                <Text
+                  style={styles.textoNumeroLider}
+                  onPress={handleContactOptions}
+                >
                   {celula.numeroLider}
                 </Text>
               </Text>

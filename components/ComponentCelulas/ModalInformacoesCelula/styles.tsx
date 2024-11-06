@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#00000099",
     marginTop: 22,
   },
   modalView: {
@@ -29,8 +30,8 @@ export const styles = StyleSheet.create({
     backgroundColor: "#2196F3",
     width: 100,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   textoBotao: {
     color: "white",
@@ -40,27 +41,27 @@ export const styles = StyleSheet.create({
   textoPadraoModal: {
     marginBottom: 15,
     textAlign: "left",
-    fontWeight: 'bold',
-    alignSelf: 'flex-start',
-    fontSize: 18, 
-    color: '#011F26',
-    fontVariant: ['small-caps']
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+    fontSize: 18,
+    color: "#011F26",
+    fontVariant: ["small-caps"],
   },
   textoInformacaoCelula: {
-    fontWeight: 'normal',
+    fontWeight: "normal",
     fontSize: 14,
-    color: '#011F26',
+    color: "#011F26",
     //textDecorationLine: 'underline',
-    fontVariant: ['small-caps']
+    fontVariant: ["small-caps"],
   },
   textoLinkMaps: {
-    fontWeight: 'bold',
-    color: '#2196F3',
+    fontWeight: "bold",
+    color: "#2196F3",
     fontSize: 15,
-    alignContent: 'space-between'
+    alignContent: "space-between",
   },
   textoNumeroLider: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: "#2196F3",
     fontSize: 15,
   },
