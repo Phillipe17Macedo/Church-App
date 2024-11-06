@@ -1,20 +1,14 @@
-/* eslint-disable prettier/prettier */
 import { launchImageLibraryAsync } from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  TextInput,
   TouchableOpacity,
   View,
   Text,
-  Keyboard,
   Modal,
   RefreshControl,
-  ActivityIndicator
 } from "react-native";
 import { styles } from "../../style/StylesHome/styles";
 import {
@@ -31,6 +25,8 @@ import { removerEventoDoBanco } from "@/connection/Evento/remover";
 import ComponentEventos from "../../components/ComponentEventos/ComponentEventos";
 import { Evento } from "@/types";
 import InfoEventoModal from "@/components/ComponentEventos/ModalInformacoesEvento/InfoEventoModal";
+import AddEventoForm from "@/components/ComponentEventos/ModalAddEvento/AddEventoModal";
+import ModalConfirmacaoRemocao from "@/components/ComponentEventos/ModalRemocao/ModalConfirmacaoRemocao";
 
 type RemoverEventoButtonProps = {
   onPress: () => void;
@@ -40,54 +36,13 @@ const RemoverEventoButton = ({ onPress }: RemoverEventoButtonProps) => (
     <Text style={styles.removerEventoButtonText}>Remover</Text>
   </TouchableOpacity>
 );
-type ConfirmacaoRemocaoProps = {
-  visivel: boolean;
-  onConfirmar: () => void;
-  onCancelar: () => void;
-};
-const ConfirmacaoRemocao = ({
-  visivel,
-  onConfirmar,
-  onCancelar,
-}: ConfirmacaoRemocaoProps) => {
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visivel}
-      onRequestClose={onCancelar}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            Tem certeza de que deseja remover este evento?
-          </Text>
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              onPress={onConfirmar}
-              style={[styles.button, styles.confirmButton]}
-            >
-              <Text style={styles.textStyle}>Confirmar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={onCancelar}
-              style={[styles.button, styles.cancelButton]}
-            >
-              <Text style={styles.textStyle}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
+
 export default function Home() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [eventoItems, setEventoItems] = useState<Evento[]>([]);
   const [confirmacaoVisivel, setConfirmacaoVisivel] = useState(false);
   const [eventoIndexToRemove, setEventoIndexToRemove] = useState(-1);
   const [refreshing, setRefreshing] = useState(false);
-
   const [tituloEvento, setTituloEvento] = useState("");
   const [dataDoEvento, setDataDoEvento] = useState("");
   const [horarioDoEvento, setHorarioDoEvento] = useState("");
@@ -97,11 +52,9 @@ export default function Home() {
   const [valor, setValor] = useState("");
   const [descricao, setDescricao] = useState("");
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedEvento, setSelectedEvento] = useState(null);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [addEventoModalVisible, setAddEventoModalVisible] = useState(false);
+  const [infoEventoModalVisible, setInfoEventoModalVisible] = useState(false);
+  const [selectedEvento, setSelectedEvento] = useState<Evento | null>(null);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -121,9 +74,18 @@ export default function Home() {
     fetchEventos();
   }, []);
 
-  const handleAddEvento = async () => {
+  const handleAddEvento = async (eventoData: {
+    titulo: string;
+    data: string;
+    horario: string;
+    endereco: string;
+    linkEnderecoMaps: string;
+    numeroContato: string;
+    valor: string;
+    descricao: string;
+  }) => {
     try {
-      let result = await launchImageLibraryAsync({
+      const result = await launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [3, 2],
         quality: 1,
@@ -131,52 +93,38 @@ export default function Home() {
       if (!result.canceled) {
         const imageUri = result.assets[0].uri;
         const imageName = imageUri.substring(imageUri.lastIndexOf("/") + 1);
-        const storage = getStorage(); // Renomeando a variável
-        const storageReference = storageRef(storage, `eventos/${imageName}`); // Renomeando a variável
+        const storage = getStorage();
+        const storageReference = storageRef(storage, `eventos/${imageName}`);
         const imageBlob = await fetch(imageUri).then((response) =>
           response.blob()
         );
-        await uploadBytes(storageReference, imageBlob); // Usando a referência renomeada
+        await uploadBytes(storageReference, imageBlob);
 
-        const downloadURL = await getDownloadURL(storageReference); // Usando a referência renomeada
+        const downloadURL = await getDownloadURL(storageReference);
+
         const eventoId = await salvarEventoNoBanco(
-          tituloEvento,
-          dataDoEvento,
-          horarioDoEvento,
+          eventoData.titulo,
+          eventoData.data,
+          eventoData.horario,
           downloadURL,
-          enderecoDoEvento,
-          linkEnderecoMaps,
-          numeroContato,
-          valor,
-          descricao
+          eventoData.endereco,
+          eventoData.linkEnderecoMaps,
+          eventoData.numeroContato,
+          eventoData.valor,
+          eventoData.descricao
         );
+
         const novoEvento: Evento = {
           id: eventoId,
-          titulo: tituloEvento,
-          data: dataDoEvento,
-          horario: horarioDoEvento,
+          ...eventoData,
           imagem: downloadURL,
-          endereco: enderecoDoEvento,
-          linkEnderecoMaps: linkEnderecoMaps,
-          numeroContato: numeroContato,
-          valor: valor,
-          descricao: descricao,
         };
-        console.log("Novo Evento: ", novoEvento);
         setEventoItems([...eventoItems, novoEvento]);
-        setTituloEvento("");
-        setDataDoEvento("");
-        setHorarioDoEvento("");
-        setEnderecoDoEvento("");
-        setLinkEnderecoMaps("");
-        setNumeroContato("");
-        setValor("");
-        setDescricao("");
+        setAddEventoModalVisible(false);
       }
     } catch (error) {
       console.error("Erro ao adicionar evento:", error);
     }
-    Keyboard.dismiss();
   };
 
   const exibirConfirmacao = (index: number) => {
@@ -197,8 +145,6 @@ export default function Home() {
       }
 
       const eventoToRemove = eventoItems[eventoIndexToRemove];
-
-      const isAdminUser = await isAdmin();
       if (!isAdminUser) {
         console.error("Apenas usuários administradores podem remover eventos.");
         return;
@@ -230,24 +176,9 @@ export default function Home() {
     }
   };
 
-  const handleEventoPress = (evento: any) => {
-    console.log("Evento clicado: ", evento);
+  const handleEventoPress = (evento: Evento) => {
     setSelectedEvento(evento);
-    setModalVisible(true);
-  };
-
-  const fetchEventos = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      const eventosDoBanco = await buscarEventosDoBanco();
-      setEventoItems(eventosDoBanco);
-    } catch (error) {
-      console.error("Erro ao buscar eventos:", error);
-      setError('Erro ao buscar informações');
-    } finally {
-      setIsLoading(false);
-    }
+    setInfoEventoModalVisible(true);
   };
 
   return (
@@ -258,108 +189,59 @@ export default function Home() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View style={[styles.areaEventos]}>
-          <View style={[styles.areaContainerEvento]}>
-            {eventoItems.map((item, index) => {
-              return (
-                <TouchableOpacity 
-                  key={index}
-                  onPress={() => handleEventoPress(item)}
-                >
-                  <ComponentEventos
-                    nomeEvento={item.titulo}
-                    dataEvento={item.data}
-                    horarioEvento={item.horario}
-                    imageUri={item.imagem}
-                    onPress={() => handleEventoPress(item)}
-                  />
-                  {isAdminUser && (
-                    <RemoverEventoButton
-                      onPress={() => exibirConfirmacao(index)}
-                    />
-                  )}
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-
-        {isAdminUser && (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={[styles.containerInputNewEvento]}
-          >
-            <TextInput
-              style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Nome do Evento"
-              value={tituloEvento}
-              onChangeText={(nomeEvento) => setTituloEvento(nomeEvento)}
-            />
-            <TextInput
-              style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Data do Evento"
-              value={dataDoEvento}
-              onChangeText={(dataEvento) => setDataDoEvento(dataEvento)}
-            />
-            <TextInput
-              style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Horário do Evento"
-              value={horarioDoEvento}
-              onChangeText={(horarioEvento) =>
-                setHorarioDoEvento(horarioEvento)
-              }
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Endereço do Evento"
-              value={enderecoDoEvento}
-              onChangeText={(enderecoEvento) => setEnderecoDoEvento(enderecoEvento)}
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Link do Endereço do Evento"
-              value={linkEnderecoMaps}
-              onChangeText={(linkEvento) => setLinkEnderecoMaps(linkEvento)}
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Número de Contato"
-              value={numeroContato}
-              onChangeText={(numeroEvento) => setNumeroContato(numeroEvento)}
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Valor do Evento"
-              value={valor}
-              onChangeText={(valorEvento) => setValor(valorEvento)}
-            />
-            <TextInput style={[styles.inputTextoEvento]}
-              keyboardType="default"
-              placeholder="Descrição do Evento"
-              value={descricao}
-              onChangeText={(descricaoEvento) => setDescricao(descricaoEvento)}
-            />
-            <TouchableOpacity onPress={() => handleAddEvento()}>
-              <View style={[styles.containerIconeAddEvento]}>
-                <Text style={[styles.iconeAddEvento]}>+</Text>
-              </View>
+        <View style={styles.areaEventos}>
+          {eventoItems.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => handleEventoPress(item)}
+            >
+              <ComponentEventos
+                nomeEvento={item.titulo}
+                dataEvento={item.data}
+                horarioEvento={item.horario}
+                imageUri={item.imagem}
+                onPress={() => handleEventoPress(item)}
+              />
+              {isAdminUser && (
+                <RemoverEventoButton onPress={() => exibirConfirmacao(index)} />
+              )}
             </TouchableOpacity>
-          </KeyboardAvoidingView>
-        )}
-        <ConfirmacaoRemocao
-          visivel={confirmacaoVisivel}
-          onConfirmar={confirmarRemocao}
-          onCancelar={cancelarRemocao}
-        />
+          ))}
+        </View>
       </ScrollView>
-      <InfoEventoModal
-        visible={modalVisible}
-        evento={selectedEvento}
-        onClose={() => setModalVisible(false)}
+
+      {isAdminUser && (
+        <TouchableOpacity onPress={() => setAddEventoModalVisible(true)}>
+          <View style={styles.containerIconeAddEvento}>
+            <Text style={styles.iconeAddEvento}>+</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+
+      <Modal
+        visible={addEventoModalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <AddEventoForm
+          onSubmit={handleAddEvento}
+          onClose={() => setAddEventoModalVisible(false)}
+        />
+      </Modal>
+
+      <ModalConfirmacaoRemocao
+        visivel={confirmacaoVisivel}
+        onConfirmar={confirmarRemocao}
+        onCancelar={cancelarRemocao}
       />
+
+      {selectedEvento && (
+        <InfoEventoModal
+          visible={infoEventoModalVisible}
+          evento={selectedEvento}
+          onClose={() => setInfoEventoModalVisible(false)}
+        />
+      )}
     </SafeAreaView>
   );
 }
