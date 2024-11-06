@@ -1,22 +1,27 @@
 /* eslint-disable prettier/prettier */
-import { MaterialIcons, Ionicons, AntDesign, FontAwesome6 } from '@expo/vector-icons';
-import { Link, Tabs } from 'expo-router';
-import { StyleSheet, Pressable } from 'react-native';
+import {
+  MaterialIcons,
+  Ionicons,
+  AntDesign,
+  FontAwesome6,
+} from "@expo/vector-icons";
+import { Link, Tabs } from "expo-router";
+import { StyleSheet, Pressable } from "react-native";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#B8D9D3',
-        tabBarInactiveTintColor: '#fff',
+        tabBarActiveTintColor: "#B8D9D3",
+        tabBarInactiveTintColor: "#fff",
         tabBarShowLabel: true,
         tabBarStyle: {
-          position: 'absolute',
-          backgroundColor: '#282A36',
+          position: "absolute",
+          backgroundColor: "#282A36",
           borderTopWidth: 0,
-          width: '90.3%',
+          width: "90.3%",
           bottom: 15,
-          alignSelf: 'center',
+          alignSelf: "center",
           left: 18,
           right: 15,
           elevation: 3,
@@ -27,13 +32,14 @@ export default function TabLayout() {
         },
         tabBarLabelStyle: {
           fontSize: 12,
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Início',
+          title: "Início",
           headerShown: true,
           tabBarIcon: ({ color, size, focused }) => {
             if (focused) {
@@ -57,11 +63,11 @@ export default function TabLayout() {
             </Link>
           ),
           headerStyle: {
-            backgroundColor: '#3E4A59',
+            backgroundColor: "#3E4A59",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: 'bold',
+            fontWeight: "bold",
             fontSize: 25,
           },
         }}
@@ -69,13 +75,17 @@ export default function TabLayout() {
       <Tabs.Screen
         name="celulas"
         options={{
-          title: 'Células',
+          title: "Células",
           headerShown: true,
           tabBarIcon: ({ color, size, focused }) => {
             if (focused) {
-              return <FontAwesome6 name="people-roof" size={size} color={color} />;
+              return (
+                <FontAwesome6 name="people-roof" size={size} color={color} />
+              );
             }
-            return <FontAwesome6 name="people-roof" size={size} color={color} />;
+            return (
+              <FontAwesome6 name="people-roof" size={size} color={color} />
+            );
           },
           headerRight: () => (
             <Link href="/perfil" asChild>
@@ -92,11 +102,11 @@ export default function TabLayout() {
             </Link>
           ),
           headerStyle: {
-            backgroundColor: '#3E4A59',
+            backgroundColor: "#3E4A59",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: 'bold',
+            fontWeight: "bold",
             fontSize: 25,
           },
         }}
@@ -104,7 +114,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="eventos"
         options={{
-          title: 'Eventos',
+          title: "Eventos",
           headerShown: true,
           tabBarIcon: ({ color, focused }) => {
             if (focused) {
@@ -127,11 +137,11 @@ export default function TabLayout() {
             </Link>
           ),
           headerStyle: {
-            backgroundColor: '#3E4A59',
+            backgroundColor: "#3E4A59",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: 'bold',
+            fontWeight: "bold",
             fontSize: 25,
           },
         }}
@@ -139,7 +149,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="more"
         options={{
-          title: 'Mais',
+          title: "Mais",
           headerShown: true,
           tabBarIcon: ({ color, size, focused }) => {
             if (focused) {
@@ -162,11 +172,11 @@ export default function TabLayout() {
             </Link>
           ),
           headerStyle: {
-            backgroundColor: '#3E4A59',
+            backgroundColor: "#3E4A59",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: 'bold',
+            fontWeight: "bold",
             fontSize: 25,
           },
         }}
