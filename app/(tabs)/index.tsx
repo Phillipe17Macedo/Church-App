@@ -1,6 +1,6 @@
 import { launchImageLibraryAsync } from "expo-image-picker";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   ScrollView,
   SafeAreaView,
@@ -41,37 +41,20 @@ export default function Home() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [eventoItems, setEventoItems] = useState<Evento[]>([]);
   const [confirmacaoVisivel, setConfirmacaoVisivel] = useState(false);
-  const [eventoIndexToRemove, setEventoIndexToRemove] = useState(-1);
+  const [eventoIndexToRemove, setEventoIndexToRemove] = useState<number | null>(
+    null
+  );
   const [refreshing, setRefreshing] = useState(false);
-  const [tituloEvento, setTituloEvento] = useState("");
-  const [dataDoEvento, setDataDoEvento] = useState("");
-  const [horarioDoEvento, setHorarioDoEvento] = useState("");
-  const [enderecoDoEvento, setEnderecoDoEvento] = useState("");
-  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState("");
-  const [numeroContato, setNumeroContato] = useState("");
-  const [valor, setValor] = useState("");
-  const [descricao, setDescricao] = useState("");
-
   const [addEventoModalVisible, setAddEventoModalVisible] = useState(false);
   const [infoEventoModalVisible, setInfoEventoModalVisible] = useState(false);
   const [selectedEvento, setSelectedEvento] = useState<Evento | null>(null);
 
   useEffect(() => {
-    const checkAdminStatus = async () => {
-      const isAdminResult = await isAdmin();
-      setIsAdminUser(isAdminResult);
-    };
-    checkAdminStatus();
-
-    const fetchEventos = async () => {
-      try {
-        const eventosDoBanco = await buscarEventosDoBanco();
-        setEventoItems(eventosDoBanco);
-      } catch (error) {
-        console.error("Erro ao buscar eventos:", error);
-      }
-    };
-    fetchEventos();
+    const initializeAdminStatus = async () => setIsAdminUser(await isAdmin());
+    const initializeEventos = async () =>
+      setEventoItems(await buscarEventosDoBanco());
+    initializeAdminStatus();
+    initializeEventos();
   }, []);
 
   const handleAddEvento = async (eventoData: {
@@ -94,12 +77,15 @@ export default function Home() {
         const imageUri = result.assets[0].uri;
         const imageName = imageUri.substring(imageUri.lastIndexOf("/") + 1);
         const storage = getStorage();
-        const storageReference = storageRef(storage, `eventos/${imageName}`);
+        const storageReference = storageRef(
+          getStorage(),
+          `eventos/${imageName}`
+        );
         const imageBlob = await fetch(imageUri).then((response) =>
           response.blob()
         );
-        await uploadBytes(storageReference, imageBlob);
 
+        await uploadBytes(storageReference, imageBlob);
         const downloadURL = await getDownloadURL(storageReference);
 
         const eventoId = await salvarEventoNoBanco(
@@ -132,39 +118,25 @@ export default function Home() {
     setConfirmacaoVisivel(true);
   };
 
-  const cancelarRemocao = () => {
-    setConfirmacaoVisivel(false);
-    setEventoIndexToRemove(-1);
-  };
-
   const confirmarRemocao = async () => {
+    if (eventoIndexToRemove === null) return;
+    const eventoToRemove = eventoItems[eventoIndexToRemove];
     try {
-      if (eventoIndexToRemove === -1) {
-        console.error("O evento a ser removido não foi encontrado.");
-        return;
-      }
-
-      const eventoToRemove = eventoItems[eventoIndexToRemove];
-      if (!isAdminUser) {
-        console.error("Apenas usuários administradores podem remover eventos.");
-        return;
-      }
-
-      const updatedEventoItems = eventoItems.filter(
-        (_, i) => i !== eventoIndexToRemove
-      );
-      setEventoItems(updatedEventoItems);
-
       await removerEventoDoBanco(eventoToRemove.id);
+      setEventoItems(eventoItems.filter((_, i) => i !== eventoIndexToRemove));
     } catch (error) {
       console.error("Erro ao remover evento:", error);
     } finally {
-      setConfirmacaoVisivel(false);
-      setEventoIndexToRemove(-1);
+      cancelarRemocao();
     }
   };
 
-  const onRefresh = async () => {
+  const cancelarRemocao = () => {
+    setConfirmacaoVisivel(false);
+    setEventoIndexToRemove(null);
+  };
+
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
       const eventosDoBanco = await buscarEventosDoBanco();
@@ -174,7 +146,7 @@ export default function Home() {
     } finally {
       setRefreshing(false);
     }
-  };
+  }, []);
 
   const handleEventoPress = (evento: Evento) => {
     setSelectedEvento(evento);
@@ -207,16 +179,15 @@ export default function Home() {
               )}
             </TouchableOpacity>
           ))}
+          {isAdminUser && (
+            <TouchableOpacity onPress={() => setAddEventoModalVisible(true)}>
+              <View style={styles.containerIconeAddEvento}>
+                <Text style={styles.iconeAddEvento}>+</Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
-
-      {isAdminUser && (
-        <TouchableOpacity onPress={() => setAddEventoModalVisible(true)}>
-          <View style={styles.containerIconeAddEvento}>
-            <Text style={styles.iconeAddEvento}>+</Text>
-          </View>
-        </TouchableOpacity>
-      )}
 
       <Modal
         visible={addEventoModalVisible}
