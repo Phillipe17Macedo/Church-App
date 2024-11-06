@@ -1,5 +1,12 @@
 import React from "react";
-import { Modal, View, Text, TouchableOpacity, Linking } from "react-native";
+import {
+  Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  Linking,
+  Alert,
+} from "react-native";
 import { Evento } from "@/types";
 import { styles } from "./styles";
 import { Fontisto } from "@expo/vector-icons";
@@ -21,9 +28,32 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
     }
   };
 
-  const handleCell = () => {
+  const handleContactOptions = () => {
     if (evento && evento.numeroContato) {
-      Linking.openURL(`tel:${evento.numeroContato}`);
+      const formattedNumber = evento.numeroContato.replace(/\D/g, ""); // Remove caracteres não numéricos
+
+      Alert.alert(
+        "Contato do Evento",
+        "Escolha o aplicativo para entrar em contato:",
+        [
+          {
+            text: "Telefone",
+            onPress: () => Linking.openURL(`tel:${formattedNumber}`),
+          },
+          {
+            text: "WhatsApp",
+            onPress: () => Linking.openURL(`https://wa.me/${formattedNumber}`),
+          },
+          {
+            text: "Telegram",
+            onPress: () => Linking.openURL(`https://t.me/+${formattedNumber}`),
+          },
+          {
+            text: "Cancelar",
+            style: "cancel",
+          },
+        ]
+      );
     }
   };
 
@@ -67,8 +97,11 @@ const InfoEventoModal: React.FC<InfoEventoModalProps> = ({
                 </Text>
               </Text>
               <Text style={styles.textoPadraoModal}>
-                Número de Contato:{"  "}
-                <Text style={styles.textoNumeroContato} onPress={handleCell}>
+                Número de Contato:{" "}
+                <Text
+                  style={styles.textoNumeroContato}
+                  onPress={handleContactOptions}
+                >
                   {evento.numeroContato}
                 </Text>
               </Text>
