@@ -22,8 +22,8 @@ export default function TabLayout() {
           width: "90.3%",
           bottom: 15,
           alignSelf: "center",
-          left: 18,
-          right: 15,
+          marginLeft: 20,
+          marginRight: 15,
           elevation: 3,
           borderRadius: 20,
           height: 70,
@@ -111,7 +111,7 @@ export default function TabLayout() {
           },
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="eventos"
         options={{
           title: "Eventos",
@@ -145,7 +145,7 @@ export default function TabLayout() {
             fontSize: 25,
           },
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="more"
         options={{
