@@ -37,6 +37,7 @@ export default function Celulas() {
   );
   const [refreshing, setRefreshing] = useState(false);
   const [addCelulaModalVisible, setAddCelulaModalVisible] = useState(false);
+  const [editCelulaModalVisible, setEditCelulaModalVisible] = useState(false);
   const [selectedCelula, setSelectedCelula] = useState<Celula | null>(null);
 
   useEffect(() => {
@@ -82,6 +83,36 @@ export default function Celulas() {
     } catch (error) {
       console.error("Erro ao adicionar célula:", error);
     }
+  };
+
+  const handleEditCelula = async (
+    celulaData: Omit<Celula, "imagem" | "id">
+  ) => {
+    if (!selectedCelula) return;
+
+    try {
+      const updatedCelula = {
+        ...selectedCelula,
+        ...celulaData,
+      };
+
+      await salvarCelulaNoBanco(updatedCelula);
+
+      setCelulaItems((prevCelulas) =>
+        prevCelulas.map((celula) =>
+          celula.id === updatedCelula.id ? updatedCelula : celula
+        )
+      );
+
+      setEditCelulaModalVisible(false);
+    } catch (error) {
+      console.error("Erro ao editar célula:", error);
+    }
+  };
+
+  const exibirModalEdicao = (celula: Celula) => {
+    setSelectedCelula(celula);
+    setEditCelulaModalVisible(true);
   };
 
   const exibirConfirmacao = (index: number) => {
@@ -145,12 +176,29 @@ export default function Celulas() {
                 />
               </TouchableOpacity>
               {isAdminUser && (
-                <TouchableOpacity
-                  style={styles.removerCelulaButton}
-                  onPress={() => exibirConfirmacao(index)}
+                <View
+                  style={{
+                    flexDirection: "row-reverse",
+                    marginTop: 10,
+                    justifyContent: "space-between",
+                    position: "absolute",
+                    width: "85%",
+                    alignSelf: "center",
+                  }}
                 >
-                  <Text style={styles.removerCelulaButtonText}>Remover</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.removerCelulaButton}
+                    onPress={() => exibirConfirmacao(index)}
+                  >
+                    <Text style={styles.removerCelulaButtonText}>Remover</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.removerCelulaButton}
+                    onPress={() => exibirModalEdicao(item)}
+                  >
+                    <Text style={styles.removerCelulaButtonText}>Editar</Text>
+                  </TouchableOpacity>
+                </View>
               )}
             </View>
           ))}
@@ -173,6 +221,20 @@ export default function Celulas() {
           onSubmit={handleAddCelula}
           onClose={() => setAddCelulaModalVisible(false)}
         />
+      </Modal>
+
+      <Modal
+        visible={editCelulaModalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        {selectedCelula && (
+          <AddCelulaForm
+            onSubmit={handleEditCelula}
+            celula={selectedCelula}
+            onClose={() => setEditCelulaModalVisible(false)}
+          />
+        )}
       </Modal>
 
       <ModalConfirmacaoRemocaoCelula
