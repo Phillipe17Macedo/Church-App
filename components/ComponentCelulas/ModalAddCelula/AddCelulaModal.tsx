@@ -7,20 +7,39 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { styles } from "./styles"; // Substitua pelo caminho correto do seu arquivo de estilos
+import { styles } from "./styles";
+import { Celula } from "@/types";
 
 type AddCelulaFormProps = {
-  onSubmit: (celulaData: {
-    titulo: string;
-    data: string;
-    horario: string;
-    endereco: string;
-    linkEnderecoMaps: string;
-    nomeLider: string;
-    numeroLider: string;
-    descricao: string;
-  }) => void;
+  onSubmit: (celulaData: Omit<Celula, "id" | "imagem">) => void;
   onClose: () => void;
+  celula?: Partial<Celula>;
+};
+
+// Função para formatar o campo de data
+const formatDate = (value: string) => {
+  return value
+    .replace(/\D/g, "") // Remove caracteres não numéricos
+    .replace(/(\d{2})(\d)/, "$1/$2") // Adiciona barra após o dia
+    .replace(/(\d{2})(\d)/, "$1/$2") // Adiciona barra após o mês
+    .slice(0, 10); // Limita ao formato dd/mm/yyyy
+};
+
+// Função para formatar o campo de horário
+const formatTime = (value: string) => {
+  return value
+    .replace(/\D/g, "") // Remove caracteres não numéricos
+    .replace(/(\d{2})(\d)/, "$1:$2") // Adiciona dois pontos após a hora
+    .slice(0, 5); // Limita ao formato hh:mm
+};
+
+// Função para formatar o campo de telefone
+const formatPhone = (value: string) => {
+  return value
+    .replace(/\D/g, "") // Remove caracteres não numéricos
+    .replace(/(\d{2})(\d)/, "($1) $2") // Adiciona parênteses no DDD
+    .replace(/(\d{5})(\d)/, "$1-$2") // Adiciona o traço no número
+    .slice(0, 15); // Limita ao formato (XX) XXXXX-XXXX
 };
 
 export default function AddCelulaForm({
@@ -63,15 +82,17 @@ export default function AddCelulaForm({
       />
       <TextInput
         style={styles.inputTextoCelula}
-        placeholder="Dia da Célula"
+        placeholder="Dia da Célula (dd/mm/yyyy)"
         value={data}
-        onChangeText={setData}
+        onChangeText={(text) => setData(formatDate(text))}
+        keyboardType="numeric"
       />
       <TextInput
         style={styles.inputTextoCelula}
-        placeholder="Horário da Célula"
+        placeholder="Horário da Célula (00:00)"
         value={horario}
-        onChangeText={setHorario}
+        onChangeText={(text) => setHorario(formatTime(text))}
+        keyboardType="numeric"
       />
       <TextInput
         style={styles.inputTextoCelula}
@@ -93,9 +114,10 @@ export default function AddCelulaForm({
       />
       <TextInput
         style={styles.inputTextoCelula}
-        placeholder="Número do Líder"
+        placeholder="Número do Líder (XX) XXXXX-XXXX"
         value={numeroLider}
-        onChangeText={setNumeroLider}
+        onChangeText={(text) => setNumeroLider(formatPhone(text))}
+        keyboardType="phone-pad"
       />
       <TextInput
         style={styles.inputTextoCelula}
