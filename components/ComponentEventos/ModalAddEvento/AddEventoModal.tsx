@@ -9,32 +9,71 @@ import {
 } from "react-native";
 import { styles } from "./styles";
 
+import { Evento } from "@/types";
+
 type AddEventoFormProps = {
-  onSubmit: (eventoData: {
-    titulo: string;
-    data: string;
-    horario: string;
-    endereco: string;
-    linkEnderecoMaps: string;
-    numeroContato: string;
-    valor: string;
-    descricao: string;
-  }) => void;
+  onSubmit: (
+    eventoData: Partial<
+      Pick<
+        Evento,
+        | "titulo"
+        | "data"
+        | "horario"
+        | "endereco"
+        | "linkEnderecoMaps"
+        | "numeroContato"
+        | "valor"
+        | "descricao"
+      >
+    >
+  ) => void;
   onClose: () => void;
+  evento?: Partial<Evento>;
+};
+
+// Função para formatar o campo de data
+const formatDate = (value: string) => {
+  return value
+    .replace(/\D/g, "") // Remove caracteres não numéricos
+    .replace(/(\d{2})(\d)/, "$1/$2") // Adiciona barra após o dia
+    .replace(/(\d{2})(\d)/, "$1/$2") // Adiciona barra após o mês
+    .slice(0, 10); // Limita ao formato dd/mm/yyyy
+};
+
+// Função para formatar o campo de horário
+const formatTime = (value: string) => {
+  return value
+    .replace(/\D/g, "") // Remove caracteres não numéricos
+    .replace(/(\d{2})(\d)/, "$1:$2") // Adiciona dois pontos após a hora
+    .slice(0, 5); // Limita ao formato hh:mm
+};
+
+// Função para formatar o campo de telefone
+const formatPhone = (value: string) => {
+  return value
+    .replace(/\D/g, "") // Remove caracteres não numéricos
+    .replace(/(\d{2})(\d)/, "($1) $2") // Adiciona parênteses no DDD
+    .replace(/(\d{5})(\d)/, "$1-$2") // Adiciona o traço no número
+    .slice(0, 15); // Limita ao formato (XX) XXXXX-XXXX
 };
 
 export default function AddEventoForm({
   onSubmit,
   onClose,
+  evento,
 }: AddEventoFormProps) {
-  const [titulo, setTitulo] = useState("");
-  const [data, setData] = useState("");
-  const [horario, setHorario] = useState("");
-  const [endereco, setEndereco] = useState("");
-  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState("");
-  const [numeroContato, setNumeroContato] = useState("");
-  const [valor, setValor] = useState("");
-  const [descricao, setDescricao] = useState("");
+  const [titulo, setTitulo] = useState(evento?.titulo || "");
+  const [data, setData] = useState(evento?.data || "");
+  const [horario, setHorario] = useState(evento?.horario || "");
+  const [endereco, setEndereco] = useState(evento?.endereco || "");
+  const [linkEnderecoMaps, setLinkEnderecoMaps] = useState(
+    evento?.linkEnderecoMaps || ""
+  );
+  const [numeroContato, setNumeroContato] = useState(
+    evento?.numeroContato || ""
+  );
+  const [valor, setValor] = useState(evento?.valor || "");
+  const [descricao, setDescricao] = useState(evento?.descricao || "");
 
   const handleAddEvento = () => {
     onSubmit({
@@ -63,15 +102,17 @@ export default function AddEventoForm({
       />
       <TextInput
         style={styles.inputTextoEvento}
-        placeholder="Data do Evento"
+        placeholder="Data do Evento (dd/mm/yyyy)"
         value={data}
-        onChangeText={setData}
+        onChangeText={(text) => setData(formatDate(text))}
+        keyboardType="numeric"
       />
       <TextInput
         style={styles.inputTextoEvento}
-        placeholder="Horário do Evento"
+        placeholder="Horário do Evento (00:00)"
         value={horario}
-        onChangeText={setHorario}
+        onChangeText={(text) => setHorario(formatTime(text))}
+        keyboardType="numeric"
       />
       <TextInput
         style={styles.inputTextoEvento}
@@ -87,9 +128,10 @@ export default function AddEventoForm({
       />
       <TextInput
         style={styles.inputTextoEvento}
-        placeholder="Número de Contato"
+        placeholder="Número de Contato (XX) XXXXX-XXXX"
         value={numeroContato}
-        onChangeText={setNumeroContato}
+        onChangeText={(text) => setNumeroContato(formatPhone(text))}
+        keyboardType="phone-pad" // Mostra teclado numérico para telefones
       />
       <TextInput
         style={styles.inputTextoEvento}
