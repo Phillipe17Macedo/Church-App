@@ -2,16 +2,14 @@
   "expo": {
     "name": "Church App",
     "slug": "church-App",
-    "version": "2.0.9",
+    "version": "1.0.0",
     "scheme": "church-app",
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/iconVideira.png"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router", "expo-font"],
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
@@ -24,26 +22,21 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "buildNumber": "9",
+      "buildNumber": "1",
       "supportsTablet": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Permissão para acessar a biblioteca de fotos"
       }
     },
     "android": {
-      "versionCode": 9,
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/iconVideira.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
-      ],
+      "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
       "package": "com.phillipe17macedo.churchApp"
     },
     "extra": {
@@ -53,6 +46,7 @@
       "eas": {
         "projectId": "b99c9c55-931a-4417-aadf-7258716dcd9a"
       }
-    }
+    },
+    "newArchEnabled": true
   }
 }
