@@ -46,6 +46,7 @@ export default function Home() {
   );
   const [refreshing, setRefreshing] = useState(false);
   const [addEventoModalVisible, setAddEventoModalVisible] = useState(false);
+  const [editEventoModalVisible, setEditEventoModalVisible] = useState(false);
   const [infoEventoModalVisible, setInfoEventoModalVisible] = useState(false);
   const [selectedEvento, setSelectedEvento] = useState<Evento | null>(null);
 
@@ -57,30 +58,33 @@ export default function Home() {
     initializeEventos();
   }, []);
 
-  const handleAddEvento = async (eventoData: {
-    titulo: string;
-    data: string;
-    horario: string;
-    endereco: string;
-    linkEnderecoMaps: string;
-    numeroContato: string;
-    valor: string;
-    descricao: string;
-  }) => {
+  const handleAddEvento = async (
+    eventoData: Partial<
+      Pick<
+        Evento,
+        | "titulo"
+        | "data"
+        | "horario"
+        | "endereco"
+        | "linkEnderecoMaps"
+        | "numeroContato"
+        | "valor"
+        | "descricao"
+      >
+    >
+  ) => {
     try {
       const result = await launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [3, 2],
         quality: 1,
       });
+
       if (!result.canceled) {
         const imageUri = result.assets[0].uri;
         const imageName = imageUri.substring(imageUri.lastIndexOf("/") + 1);
         const storage = getStorage();
-        const storageReference = storageRef(
-          getStorage(),
-          `eventos/${imageName}`
-        );
+        const storageReference = storageRef(storage, `eventos/${imageName}`);
         const imageBlob = await fetch(imageUri).then((response) =>
           response.blob()
         );
@@ -89,15 +93,15 @@ export default function Home() {
         const downloadURL = await getDownloadURL(storageReference);
 
         const eventoId = await salvarEventoNoBanco(
-          eventoData.titulo,
-          eventoData.data,
-          eventoData.horario,
+          eventoData.titulo!,
+          eventoData.data!,
+          eventoData.horario!,
           downloadURL,
-          eventoData.endereco,
-          eventoData.linkEnderecoMaps,
-          eventoData.numeroContato,
-          eventoData.valor,
-          eventoData.descricao
+          eventoData.endereco!,
+          eventoData.linkEnderecoMaps!,
+          eventoData.numeroContato!,
+          eventoData.valor!,
+          eventoData.descricao!
         );
 
         const novoEvento: Evento = {
@@ -111,6 +115,39 @@ export default function Home() {
     } catch (error) {
       console.error("Erro ao adicionar evento:", error);
     }
+  };
+
+  const handleEditEvento = async (eventoData: Partial<Evento>) => {
+    if (!selectedEvento) return;
+
+    try {
+      const updatedEvento = { ...selectedEvento, ...eventoData };
+      await salvarEventoNoBanco(
+        updatedEvento.titulo!,
+        updatedEvento.data!,
+        updatedEvento.horario!,
+        updatedEvento.imagem!,
+        updatedEvento.endereco!,
+        updatedEvento.linkEnderecoMaps!,
+        updatedEvento.numeroContato!,
+        updatedEvento.valor!,
+        updatedEvento.descricao! // Excluímos `id`
+      );
+
+      setEventoItems((prevEventos) =>
+        prevEventos.map((evento) =>
+          evento.id === updatedEvento.id ? updatedEvento : evento
+        )
+      );
+      setEditEventoModalVisible(false);
+    } catch (error) {
+      console.error("Erro ao editar evento:", error);
+    }
+  };
+
+  const exibirModalEdicao = (evento: Evento) => {
+    setSelectedEvento(evento);
+    setEditEventoModalVisible(true);
   };
 
   const exibirConfirmacao = (index: number) => {
@@ -175,7 +212,45 @@ export default function Home() {
                 onPress={() => handleEventoPress(item)}
               />
               {isAdminUser && (
-                <RemoverEventoButton onPress={() => exibirConfirmacao(index)} />
+                <View
+                  style={{
+                    width: "100%",
+                    position: "absolute",
+                    flexDirection: "row",
+                    alignContent: "center",
+                    justifyContent: "space-between",
+                    paddingHorizontal: 15,
+                    // backgroundColor: "#FFF",
+                    alignSelf: "center",
+                    top: 10,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => exibirModalEdicao(item)}
+                    style={{
+                      // position: "absolute",
+                      top: 22,
+                      right: 8,
+                      backgroundColor: "#3E4A59",
+                      paddingVertical: 5,
+                      paddingHorizontal: 8,
+                      borderRadius: 7,
+                      borderWidth: 1,
+                      borderColor: "#B8D9D3",
+                      shadowOffset: { width: 5, height: 5 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 10,
+                      elevation: 5,
+                    }}
+                  >
+                    <Text style={{ color: "white", fontWeight: "bold" }}>
+                      Editar
+                    </Text>
+                  </TouchableOpacity>
+                  <RemoverEventoButton
+                    onPress={() => exibirConfirmacao(index)}
+                  />
+                </View>
               )}
             </TouchableOpacity>
           ))}
@@ -198,6 +273,20 @@ export default function Home() {
           onSubmit={handleAddEvento}
           onClose={() => setAddEventoModalVisible(false)}
         />
+      </Modal>
+
+      <Modal
+        visible={editEventoModalVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        {selectedEvento && (
+          <AddEventoForm
+            onSubmit={handleEditEvento}
+            evento={selectedEvento}
+            onClose={() => setEditEventoModalVisible(false)}
+          />
+        )}
       </Modal>
 
       <ModalConfirmacaoRemocao
