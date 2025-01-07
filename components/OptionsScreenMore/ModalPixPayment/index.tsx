@@ -7,15 +7,14 @@ import { styles } from "./styles";
 interface ModalPixPaymentProps {
   visible: boolean;
   onClose: () => void;
+  pixCode: string;
 }
 
 const ModalPixPayment: React.FC<ModalPixPaymentProps> = ({
   visible,
   onClose,
+  pixCode,
 }) => {
-  const pixCode =
-    "00020126580014BR.GOV.BCB.PIX01366b2da3e8-64b7-497c-a7c7-2bc1a6cc06715204000053039865802BR5924Phillipe Ferreira Macedo6009SAO PAULO62140510OUeswRH4Ii63043367";
-
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(pixCode);
     Alert.alert(
