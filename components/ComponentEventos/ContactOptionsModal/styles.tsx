@@ -32,6 +32,7 @@ export const styles = StyleSheet.create({
   opcaoTexto: {
     color: "white",
     fontSize: 16,
+    fontWeight: "bold",
   },
   botaoCancelar: {
     width: "100%",
@@ -44,5 +45,6 @@ export const styles = StyleSheet.create({
   textoBotaoCancelar: {
     color: "white",
     fontSize: 16,
+    fontWeight: "bold",
   },
 });
