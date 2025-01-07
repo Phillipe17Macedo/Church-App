@@ -9,7 +9,7 @@ export interface Celula {
   nomeLider: string;
   numeroLider: string;
   descricao: string;
-};
+}
 
 export interface Evento {
   id: string;
@@ -22,4 +22,18 @@ export interface Evento {
   numeroContato: string;
   valor: string;
   descricao: string;
-};
+}
+
+export interface ChavePix {
+  id: string;
+  chavePix: string;
+  dataCadastro: string;
+  dataAlteracao: string;
+}
+
+export interface Opcao {
+  id?: string;
+  nomeOpcao: string;
+  url: string;
+  dataCadastro: string;
+}
