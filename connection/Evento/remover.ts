@@ -21,8 +21,6 @@ const firebaseConfig = {
   measurementId: "G-KHDPWMVYNN",
 };
 
-import { Evento } from "@/types";
-
 const firebaseApp = initializeApp(firebaseConfig);
 const database = getDatabase(firebaseApp);
 
