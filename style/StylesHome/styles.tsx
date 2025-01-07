@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     color: "gray",
   },
   removerEventoButton: {
-    position: "absolute",
+    // position: "absolute",
     top: 22,
     right: 8,
     backgroundColor: "#3E4A59",

@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   },
   inputDados: {
     backgroundColor: '#fff',
-    height: 40,
+    height: 45,
     width: '90%',
     borderRadius: 15,
     paddingLeft: 10,
