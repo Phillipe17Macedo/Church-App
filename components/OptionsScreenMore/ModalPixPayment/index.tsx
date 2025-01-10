@@ -27,7 +27,7 @@ const ModalPixPayment: React.FC<ModalPixPaymentProps> = ({
     <Modal
       visible={visible}
       transparent={true}
-      animationType="slide"
+      animationType="fade"
       onRequestClose={onClose}
     >
       <View style={styles.overlay}>
