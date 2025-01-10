@@ -63,7 +63,10 @@ export default function OptionsMore() {
     carregarOpcoes();
   }, []);
 
-  const openPixModal = () => setPixModalVisible(true);
+  const openPixModal = () => {
+    setPixModalVisible(true);
+    console.log("Abrindo modal de Pix");
+  };
   const closePixModal = () => setPixModalVisible(false);
 
   const openEditPixModal = () => {
@@ -173,7 +176,7 @@ export default function OptionsMore() {
       }
     >
       <TouchableOpacity style={styles.button} onPress={openPixModal}>
-        <Text style={styles.buttonText}>Dízimos & Ofertas</Text>
+        <Text style={styles.buttonText}>{"° "}Dízimos & Ofertas</Text>
       </TouchableOpacity>
 
       {isAdminUser && (
@@ -191,7 +194,10 @@ export default function OptionsMore() {
           onPress={() => handleOptionRedirect(item.url)}
         >
           <View style={styles.optionContent}>
-            <Text style={styles.optionTitle}>{item.nomeOpcao}</Text>
+            <Text style={styles.optionTitle}>
+              {"° "}
+              {item.nomeOpcao}
+            </Text>
           </View>
           {isAdminUser && (
             <View style={styles.optionActions}>
@@ -242,6 +248,7 @@ export default function OptionsMore() {
       </Modal>
 
       {/* Modal Pix */}
+
       <ModalPixPayment
         visible={pixModalVisible}
         onClose={closePixModal}

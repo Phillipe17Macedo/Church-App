@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#3E4A59",
     borderRadius: 8,
     marginVertical: 8,
-    alignItems: "center",
+    // alignItems: "center",
   },
   buttonText: {
     color: "#FFFFFF",
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
     elevation: 3,
   },
   optionContent: {
-    width: '65%',
+    width: "65%",
     // backgroundColor: '#FFF'
   },
   optionTitle: {
